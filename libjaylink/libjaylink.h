@@ -30,11 +30,22 @@ enum jaylink_error {
 	JAYLINK_ERR_ARG = -3
 };
 
+enum jaylink_log_level {
+	JAYLINK_LOG_LEVEL_NONE = 0,
+	JAYLINK_LOG_LEVEL_ERROR = 1,
+	JAYLINK_LOG_LEVEL_WARNING = 2,
+	JAYLINK_LOG_LEVEL_INFO = 3,
+	JAYLINK_LOG_LEVEL_DEBUG = 4
+};
+
 struct jaylink_context;
 struct jaylink_device;
 
 int jaylink_init(struct jaylink_context **ctx);
 void jaylink_exit(struct jaylink_context *ctx);
+
+int jaylink_log_set_level(struct jaylink_context *ctx, int level);
+int jaylink_log_get_level(const struct jaylink_context *ctx);
 
 ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
 		struct jaylink_device ***list);

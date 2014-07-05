@@ -41,6 +41,10 @@ int jaylink_init(struct jaylink_context **ctx)
 	}
 
 	context->devs = NULL;
+
+	/* Show error and warning messages by default. */
+	context->log_level = JAYLINK_LOG_LEVEL_WARNING;
+
 	*ctx = context;
 
 	return JAYLINK_OK;

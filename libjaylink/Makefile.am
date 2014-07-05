@@ -23,7 +23,8 @@ libjaylink_la_SOURCES = \
 	core.c \
 	device.c \
 	discovery.c \
-	list.c
+	list.c \
+	log.c
 
 library_includedir = $(includedir)/libjaylink
 library_include_HEADERS = libjaylink.h

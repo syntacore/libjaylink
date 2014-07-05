@@ -118,8 +118,13 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	uint32_t serial_number;
 	int onboard_device;
 
-	if (libusb_get_device_descriptor(usb_dev, &desc) < 0)
+	ret = libusb_get_device_descriptor(usb_dev, &desc);
+
+	if (ret < 0) {
+		log_warn(ctx, "Failed to get device descriptor: %s.",
+			libusb_error_name(ret));
 		return NULL;
+	}
 
 	/* Check for USB Vendor ID (VID) of SEGGER. */
 	if (desc.idVendor != USB_VENDOR_ID)
@@ -132,14 +137,21 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	if (desc.idProduct > USB_PRODUCT_ID_OB)
 		return NULL;
 
+	log_dbg(ctx, "Found device (VID:PID = %04x:%04x, bus:address = "
+		"%03u:%03u).", desc.idVendor, desc.idProduct,
+		libusb_get_bus_number(usb_dev),
+		libusb_get_device_address(usb_dev));
+
 	/*
 	 * Search for an already allocated device instance for this J-Link
 	 * device and if found return a reference to it.
 	 */
 	dev = find_device(ctx, usb_dev);
 
-	if (dev)
+	if (dev) {
+		log_dbg(ctx, "Using existing device instance.");
 		return jaylink_ref_device(dev);
+	}
 
 	/*
 	 * J-Link OB devices always have the USB address 0. The USB address of
@@ -154,24 +166,42 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	}
 
 	/* Open the device to be able to retrieve its serial number. */
-	if (libusb_open(usb_dev, &usb_devh) < 0)
+	ret = libusb_open(usb_dev, &usb_devh);
+
+	if (ret < 0) {
+		log_warn(ctx, "Failed to open device: %s.",
+			libusb_error_name(ret));
 		return NULL;
+	}
 
 	ret = libusb_get_string_descriptor_ascii(usb_devh, desc.iSerialNumber,
 		(unsigned char *)buf, USB_SERIAL_NUMBER_LENGTH + 1);
 
 	libusb_close(usb_devh);
 
-	if (ret < 0)
+	if (ret < 0) {
+		log_warn(ctx, "Failed to retrieve serial number: %s.",
+			libusb_error_name(ret));
 		return NULL;
+	}
 
-	if (!parse_serial_number(buf, &serial_number))
+	if (!parse_serial_number(buf, &serial_number)) {
+		log_warn(ctx, "Failed to parse serial number.");
 		return NULL;
+	}
+
+	log_dbg(ctx, "Device: USB address = %u.", usb_address);
+	log_dbg(ctx, "Device: Serial number = %u.", serial_number);
+	log_dbg(ctx, "Device: Onboard = %u.", onboard_device);
+
+	log_dbg(ctx, "Allocating new device instance.");
 
 	dev = device_allocate(ctx);
 
-	if (!dev)
+	if (!dev) {
+		log_warn(ctx, "Device instance malloc failed.");
 		return NULL;
+	}
 
 	dev->usb_dev = libusb_ref_device(usb_dev);
 	dev->onboard_device = onboard_device;
@@ -194,8 +224,11 @@ ssize_t discovery_get_device_list(struct jaylink_context *ctx,
 
 	ret = libusb_get_device_list(ctx->usb_ctx, &usb_devs);
 
-	if (ret < 0)
+	if (ret < 0) {
+		log_err(ctx, "Failed to retrieve device list: %s.",
+			libusb_error_name(ret));
 		return JAYLINK_ERR;
+	}
 
 	num_usb_devs = ret;
 
@@ -207,6 +240,7 @@ ssize_t discovery_get_device_list(struct jaylink_context *ctx,
 
 	if (!devs) {
 		libusb_free_device_list(usb_devs, 1);
+		log_err(ctx, "Device list malloc failed.");
 		return JAYLINK_ERR_MALLOC;
 	}
 
@@ -225,6 +259,8 @@ ssize_t discovery_get_device_list(struct jaylink_context *ctx,
 
 	libusb_free_device_list(usb_devs, 1);
 	*list = devs;
+
+	log_dbg(ctx, "Found %zu device(s).", num_devs);
 
 	return num_devs;
 }

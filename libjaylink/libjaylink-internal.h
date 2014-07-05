@@ -20,6 +20,7 @@
 #ifndef LIBJAYLINK_LIBJAYLINK_INTERNAL_H
 #define LIBJAYLINK_LIBJAYLINK_INTERNAL_H
 
+#include <stdarg.h>
 #include <stdint.h>
 #include <libusb.h>
 
@@ -31,6 +32,9 @@ struct jaylink_context {
 	 * instances for the same J-Link device.
 	 */
 	struct list *devs;
+
+	/* Current log level. */
+	int log_level;
 };
 
 struct jaylink_device {
@@ -78,5 +82,12 @@ struct list *list_find_custom(struct list *list, list_compare_callback cb,
 		const void *cb_data);
 
 void list_free(struct list *list);
+
+/*--- log.c -----------------------------------------------------------------*/
+
+void log_err(struct jaylink_context *ctx, const char *format, ...);
+void log_warn(struct jaylink_context *ctx, const char *format, ...);
+void log_info(struct jaylink_context *ctx, const char *format, ...);
+void log_dbg(struct jaylink_context *ctx, const char *format, ...);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_INTERNAL_H */
