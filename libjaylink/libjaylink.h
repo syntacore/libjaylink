@@ -40,6 +40,7 @@ enum jaylink_log_level {
 
 struct jaylink_context;
 struct jaylink_device;
+struct jaylink_device_handle;
 
 int jaylink_init(struct jaylink_context **ctx);
 void jaylink_exit(struct jaylink_context *ctx);
@@ -59,5 +60,10 @@ int jaylink_device_get_usb_address(const struct jaylink_device *dev);
 
 struct jaylink_device *jaylink_ref_device(struct jaylink_device *dev);
 void jaylink_unref_device(struct jaylink_device *dev);
+
+int jaylink_open(struct jaylink_device *dev,
+		struct jaylink_device_handle **devh);
+
+void jaylink_close(struct jaylink_device_handle *devh);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_H */

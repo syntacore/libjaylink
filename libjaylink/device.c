@@ -49,6 +49,27 @@ struct jaylink_device *device_allocate(struct jaylink_context *ctx)
 	return dev;
 }
 
+static struct jaylink_device_handle *allocate_device_handle(
+		struct jaylink_device *dev)
+{
+	struct jaylink_device_handle *devh;
+
+	devh = malloc(sizeof(struct jaylink_device_handle));
+
+	if (!devh)
+		return NULL;
+
+	devh->dev = jaylink_ref_device(dev);
+
+	return devh;
+}
+
+static void free_device_handle(struct jaylink_device_handle *devh)
+{
+	jaylink_unref_device(devh->dev);
+	free(devh);
+}
+
 ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
 		struct jaylink_device ***list)
 {
@@ -121,4 +142,41 @@ void jaylink_unref_device(struct jaylink_device *dev)
 
 		free(dev);
 	}
+}
+
+int jaylink_open(struct jaylink_device *dev,
+		struct jaylink_device_handle **devh)
+{
+	int ret;
+	struct jaylink_device_handle *handle;
+
+	if (!dev || !devh)
+		return JAYLINK_ERR_ARG;
+
+	handle = allocate_device_handle(dev);
+
+	if (!handle) {
+		log_err(dev->ctx, "Device handle malloc failed.");
+		return JAYLINK_ERR_MALLOC;
+	}
+
+	ret = transport_open(handle);
+
+	if (ret < 0) {
+		free_device_handle(handle);
+		return ret;
+	}
+
+	*devh = handle;
+
+	return JAYLINK_OK;
+}
+
+void jaylink_close(struct jaylink_device_handle *devh)
+{
+	if (!devh)
+		return;
+
+	transport_close(devh);
+	free_device_handle(devh);
 }

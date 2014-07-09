@@ -56,6 +56,11 @@ struct jaylink_device {
 	uint32_t serial_number;
 };
 
+struct jaylink_device_handle {
+	struct jaylink_device *dev;
+	struct libusb_device_handle *usb_devh;
+};
+
 /*--- device.c --------------------------------------------------------------*/
 
 struct jaylink_device *device_allocate(struct jaylink_context *ctx);
@@ -89,5 +94,10 @@ void log_err(struct jaylink_context *ctx, const char *format, ...);
 void log_warn(struct jaylink_context *ctx, const char *format, ...);
 void log_info(struct jaylink_context *ctx, const char *format, ...);
 void log_dbg(struct jaylink_context *ctx, const char *format, ...);
+
+/*--- transport.c -----------------------------------------------------------*/
+
+int transport_open(struct jaylink_device_handle *devh);
+void transport_close(struct jaylink_device_handle *devh);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_INTERNAL_H */
