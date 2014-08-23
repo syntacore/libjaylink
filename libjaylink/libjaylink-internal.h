@@ -24,6 +24,8 @@
 #include <stdint.h>
 #include <libusb.h>
 
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
 struct jaylink_context {
 	struct libusb_context *usb_ctx;
 
@@ -58,7 +60,49 @@ struct jaylink_device {
 
 struct jaylink_device_handle {
 	struct jaylink_device *dev;
+
 	struct libusb_device_handle *usb_devh;
+
+	/* USB interface number of the device. */
+	uint8_t interface_number;
+
+	/* USB interface IN endpoint of the device. */
+	uint8_t endpoint_in;
+
+	/* USB interface OUT endpoint of the device. */
+	uint8_t endpoint_out;
+
+	/*
+	 * Buffer for write and read operations.
+	 *
+	 * Note that write and read operations are always processed
+	 * consecutively and therefore the same buffer can be used for both.
+	 */
+	uint8_t *buffer;
+
+	/*
+	 * Number of bytes left to be received from the device for the read
+	 * operation.
+	 */
+	uint16_t read_length;
+
+	/* Number of bytes available in the buffer to be read. */
+	uint16_t bytes_available;
+
+	/* Current read position in the buffer. */
+	uint16_t read_pos;
+
+	/*
+	 * Number of bytes left to be written before the write operation will
+	 * be performed.
+	 */
+	uint16_t write_length;
+
+	/*
+	 * Current write position in the buffer. This is equivalent to the
+	 * number of bytes in the buffer and used for write operations only.
+	 */
+	uint16_t write_pos;
 };
 
 /*--- device.c --------------------------------------------------------------*/
@@ -98,6 +142,15 @@ void log_dbg(struct jaylink_context *ctx, const char *format, ...);
 /*--- transport.c -----------------------------------------------------------*/
 
 int transport_open(struct jaylink_device_handle *devh);
-void transport_close(struct jaylink_device_handle *devh);
+int transport_close(struct jaylink_device_handle *devh);
+int transport_start_write_read(struct jaylink_device_handle *devh,
+		uint16_t write_length, uint16_t read_length, int has_command);
+int transport_start_write(struct jaylink_device_handle *devh, uint16_t length,
+		int has_command);
+int transport_start_read(struct jaylink_device_handle *devh, uint16_t length);
+int transport_write(struct jaylink_device_handle *devh, const uint8_t *buffer,
+		uint16_t length);
+int transport_read(struct jaylink_device_handle *devh, uint8_t *buffer,
+		uint16_t length);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_INTERNAL_H */

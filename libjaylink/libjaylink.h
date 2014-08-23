@@ -27,7 +27,8 @@ enum jaylink_error {
 	JAYLINK_OK = 0,
 	JAYLINK_ERR = -1,
 	JAYLINK_ERR_MALLOC = -2,
-	JAYLINK_ERR_ARG = -3
+	JAYLINK_ERR_ARG = -3,
+	JAYLINK_ERR_TIMEOUT = -4
 };
 
 enum jaylink_log_level {
