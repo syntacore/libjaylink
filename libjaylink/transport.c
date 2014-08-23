@@ -32,8 +32,8 @@
 /** USB interface number of J-Link devices. */
 #define USB_INTERFACE_NUMBER		0
 
-/** USB interface number of J-Link OB devices. */
-#define USB_INTERFACE_NUMBER_OB		2
+/** USB interface number of J-Link devices with CDC functionality. */
+#define USB_INTERFACE_NUMBER_CDC	2
 
 /** Timeout of an USB transfer in milliseconds. */
 #define USB_TIMEOUT			1000
@@ -70,8 +70,8 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 
 	ctx = devh->dev->ctx;
 
-	if (devh->dev->onboard_device)
-		devh->interface_number = USB_INTERFACE_NUMBER_OB;
+	if (devh->dev->cdc_device)
+		devh->interface_number = USB_INTERFACE_NUMBER_CDC;
 	else
 		devh->interface_number = USB_INTERFACE_NUMBER;
 

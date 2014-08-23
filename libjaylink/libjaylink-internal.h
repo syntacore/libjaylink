@@ -46,8 +46,8 @@ struct jaylink_device {
 
 	struct libusb_device *usb_dev;
 
-	/* Indicates if the device is a J-Link OB device. */
-	int onboard_device;
+	/* Indicates if the device has CDC functionality. */
+	int cdc_device;
 
 	uint8_t usb_address;
 

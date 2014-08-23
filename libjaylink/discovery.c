@@ -30,10 +30,10 @@
 #define USB_VENDOR_ID			0x1366
 
 /* USB Product ID (PID) of J-Link devices with USB address 0. */
-#define USB_PRODUCT_ID_BASE		0x0101
+#define USB_PRODUCT_ID			0x0101
 
-/* USB Product ID (PID) of J-Link OB devices. */
-#define USB_PRODUCT_ID_OB		0x0105
+/* USB Product ID (PID) of J-Link devices with CDC functionality. */
+#define USB_PRODUCT_ID_CDC		0x0105
 
 /* Maximum length of the USB string descriptor for the serial number. */
 #define USB_SERIAL_NUMBER_LENGTH	12
@@ -116,7 +116,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	char buf[USB_SERIAL_NUMBER_LENGTH + 1];
 	uint8_t usb_address;
 	uint32_t serial_number;
-	int onboard_device;
+	int cdc_device;
 
 	ret = libusb_get_device_descriptor(usb_dev, &desc);
 
@@ -131,10 +131,10 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 		return NULL;
 
 	/* Check for USB Product ID (PID) of J-Link devices. */
-	if (desc.idProduct < USB_PRODUCT_ID_BASE)
+	if (desc.idProduct < USB_PRODUCT_ID)
 		return NULL;
 
-	if (desc.idProduct > USB_PRODUCT_ID_OB)
+	if (desc.idProduct > USB_PRODUCT_ID_CDC)
 		return NULL;
 
 	log_dbg(ctx, "Found device (VID:PID = %04x:%04x, bus:address = "
@@ -154,15 +154,15 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	}
 
 	/*
-	 * J-Link OB devices always have the USB address 0. The USB address of
-	 * all other J-Link devices depends on their USB Product ID (PID).
+	 * Devices with CDC functionality have the USB address 0. The USB
+	 * address of all other devices depends on their USB Product ID (PID).
 	 */
-	if (desc.idProduct == USB_PRODUCT_ID_OB) {
-		onboard_device = 1;
+	if (desc.idProduct == USB_PRODUCT_ID_CDC) {
+		cdc_device = 1;
 		usb_address = 0;
 	} else {
-		onboard_device = 0;
-		usb_address = desc.idProduct - USB_PRODUCT_ID_BASE;
+		cdc_device = 0;
+		usb_address = desc.idProduct - USB_PRODUCT_ID;
 	}
 
 	/* Open the device to be able to retrieve its serial number. */
@@ -192,7 +192,9 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 
 	log_dbg(ctx, "Device: USB address = %u.", usb_address);
 	log_dbg(ctx, "Device: Serial number = %u.", serial_number);
-	log_dbg(ctx, "Device: Onboard = %u.", onboard_device);
+
+	if (cdc_device)
+		log_dbg(ctx, "Device has CDC functionality.");
 
 	log_dbg(ctx, "Allocating new device instance.");
 
@@ -204,7 +206,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	}
 
 	dev->usb_dev = libusb_ref_device(usb_dev);
-	dev->onboard_device = onboard_device;
+	dev->cdc_device = cdc_device;
 	dev->usb_address = usb_address;
 	dev->serial_number = serial_number;
 
