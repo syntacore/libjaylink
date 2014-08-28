@@ -105,6 +105,13 @@ struct jaylink_device_handle {
 	uint16_t write_pos;
 };
 
+/*--- buffer.c --------------------------------------------------------------*/
+
+void buffer_set_u16(uint8_t *buffer, uint16_t value, size_t offset);
+uint16_t buffer_get_u16(const uint8_t *buffer, size_t offset);
+void buffer_set_u32(uint8_t *buffer, uint32_t value, size_t offset);
+uint32_t buffer_get_u32(const uint8_t *buffer, size_t offset);
+
 /*--- device.c --------------------------------------------------------------*/
 
 struct jaylink_device *device_allocate(struct jaylink_context *ctx);

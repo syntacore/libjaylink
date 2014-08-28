@@ -20,6 +20,7 @@
 lib_LTLIBRARIES = libjaylink.la
 
 libjaylink_la_SOURCES = \
+	buffer.c \
 	core.c \
 	device.c \
 	discovery.c \

@@ -52,6 +52,7 @@ PKG_CHECK_MODULES([libusb], [libusb-1.0 >= 1.0.9],
 # Checks for header files.
 
 # Checks for typedefs, structures, and compiler characteristics.
+AC_C_BIGENDIAN
 
 # Checks for library functions.
 
