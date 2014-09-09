@@ -29,6 +29,7 @@
 #define CMD_GET_FREE_MEMORY	0xd4
 #define CMD_GET_CAPS		0xe8
 #define CMD_GET_EXT_CAPS	0xed
+#define CMD_GET_HW_VERSION	0xf0
 
 struct jaylink_device *device_allocate(struct jaylink_context *ctx)
 {
@@ -269,6 +270,67 @@ int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 	*version = tmp;
 
 	return length;
+}
+
+/**
+ * Retrieve the hardware version of a device.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_GET_HW_VERSION capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[out] version Hardware version on success, and undefined on failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @see jaylink_get_caps() to retrieve device capabilities.
+ */
+int jaylink_get_hardware_version(struct jaylink_device_handle *devh,
+		struct jaylink_hardware_version *version)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[4];
+	uint32_t tmp;
+
+	if (!devh || !version)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 1, 4, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_GET_HW_VERSION;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, buf, 4);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	tmp = buffer_get_u32(buf, 0);
+
+	version->type = (tmp / 1000000) % 100;
+	version->major = (tmp / 10000) % 100;
+	version->minor = (tmp / 100) % 100;
+	version->revision = tmp % 100;
+
+	return JAYLINK_OK;
 }
 
 /**

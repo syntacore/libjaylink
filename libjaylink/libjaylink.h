@@ -41,12 +41,36 @@ enum jaylink_log_level {
 
 /** Device capabilities. */
 enum jaylink_device_capability {
+	/** Device supports retrieval of the hardware version. */
+	JAYLINK_DEV_CAP_GET_HW_VERSION = 1,
 	/** Device supports adaptive clocking. */
 	JAYLINK_DEV_CAP_ADAPTIVE_CLOCKING = 3,
 	/** Device supports retrieval of free memory size. */
 	JAYLINK_DEV_CAP_GET_FREE_MEMORY = 11,
 	/** Device supports retrieval of extended capabilities. */
 	JAYLINK_DEV_CAP_GET_EXT_CAPS = 31
+};
+
+/** Device hardware types. */
+enum jaylink_hardware_type {
+	/** J-Link BASE. */
+	JAYLINK_HW_TYPE_BASE = 0
+};
+
+/** Device hardware version. */
+struct jaylink_hardware_version {
+	/**
+	 * Hardware type.
+	 *
+	 * See #jaylink_hardware_type for a description of the hardware types.
+	 */
+	uint8_t type;
+	/** Major version. */
+	uint8_t major;
+	/** Minor version. */
+	uint8_t minor;
+	/** Revision number. */
+	uint8_t revision;
 };
 
 /** Device hardware status. */
@@ -106,6 +130,9 @@ void jaylink_close(struct jaylink_device_handle *devh);
 
 int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 		char **version);
+
+int jaylink_get_hardware_version(struct jaylink_device_handle *devh,
+		struct jaylink_hardware_version *version);
 
 int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
 		struct jaylink_hardware_status *status);
