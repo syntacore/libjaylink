@@ -25,6 +25,8 @@
 
 #define CMD_GET_VERSION		0x01
 #define CMD_GET_HW_STATUS	0x07
+#define CMD_GET_CAPS		0xe8
+#define CMD_GET_EXT_CAPS	0xed
 
 struct jaylink_device *device_allocate(struct jaylink_context *ctx)
 {
@@ -319,6 +321,125 @@ int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
 	status->tms = buf[5];
 	status->tres = buf[6];
 	status->trst = buf[7];
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Retrieve the capabilities of a device.
+ *
+ * The capabilities are stored in a 32-bit bit array consisting of
+ * #JAYLINK_DEV_CAPS_SIZE bytes where each individual bit represents a
+ * capability. The first bit of this array is the least significant bit of the
+ * first byte and the following bits are sequentially numbered in order of
+ * increasing bit significance and byte index. A set bit indicates a supported
+ * capability. See #jaylink_device_capability for a description of the
+ * capabilities and their bit positions.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[out] caps Buffer to store capabilities on success. Its value is
+ * 		    undefined on failure. The size of the buffer must be large
+ * 		    enough to contain at least #JAYLINK_DEV_CAPS_SIZE bytes.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @see jaylink_get_extended_caps() to retrieve extended device capabilities.
+ */
+int jaylink_get_caps(struct jaylink_device_handle *devh, uint8_t *caps)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[1];
+
+	if (!devh || !caps)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 1, JAYLINK_DEV_CAPS_SIZE, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_GET_CAPS;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, caps, JAYLINK_DEV_CAPS_SIZE);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Retrieve the extended capabilities of a device.
+ *
+ * The extended capabilities are stored in a 256-bit bit array consisting of
+ * #JAYLINK_DEV_EXT_CAPS_SIZE bytes. See jaylink_get_caps() for a further
+ * description of how the capabilities are represented in this bit array. For a
+ * description of the capabilities and their bit positions, see
+ * #jaylink_device_capability.
+ *
+ * @note This function must only be used if the device has the
+ *	 #JAYLINK_DEV_CAP_GET_EXT_CAPS capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[out] caps Buffer to store capabilities on success. Its value is
+ * 		    undefined on failure. The size of the buffer must be large
+ * 		    enough to contain at least #JAYLINK_DEV_EXT_CAPS_SIZE bytes.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @see jaylink_get_caps() to retrieve device capabilities.
+ */
+int jaylink_get_extended_caps(struct jaylink_device_handle *devh, uint8_t *caps)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[1];
+
+	if (!devh || !caps)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 1, JAYLINK_DEV_EXT_CAPS_SIZE, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_GET_EXT_CAPS;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, caps, JAYLINK_DEV_EXT_CAPS_SIZE);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
 
 	return JAYLINK_OK;
 }

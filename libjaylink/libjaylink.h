@@ -39,6 +39,12 @@ enum jaylink_log_level {
 	JAYLINK_LOG_LEVEL_DEBUG = 4
 };
 
+/** Device capabilities. */
+enum jaylink_device_capability {
+	/** Device supports retrieval of extended capabilities. */
+	JAYLINK_DEV_CAP_GET_EXT_CAPS = 31
+};
+
 /** Device hardware status. */
 struct jaylink_hardware_status {
 	/** Target reference voltage in mV. */
@@ -56,6 +62,12 @@ struct jaylink_hardware_status {
 	/** TRST pin state. */
 	uint8_t trst;
 };
+
+/** Number of bytes required to store device capabilities. */
+#define JAYLINK_DEV_CAPS_SIZE		4
+
+/** Number of bytes required to store extended device capabilities. */
+#define JAYLINK_DEV_EXT_CAPS_SIZE	32
 
 struct jaylink_context;
 struct jaylink_device;
@@ -90,5 +102,9 @@ int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 
 int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
 		struct jaylink_hardware_status *status);
+
+int jaylink_get_caps(struct jaylink_device_handle *devh, uint8_t *caps);
+int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
+		uint8_t *caps);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_H */
