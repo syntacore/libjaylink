@@ -23,6 +23,8 @@
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
 
+#define CMD_GET_VERSION 0x01
+
 struct jaylink_device *device_allocate(struct jaylink_context *ctx)
 {
 	struct jaylink_device *dev;
@@ -179,4 +181,87 @@ void jaylink_close(struct jaylink_device_handle *devh)
 
 	transport_close(devh);
 	free_device_handle(devh);
+}
+
+/**
+ * Retrieve the firmware version of a device.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[out] version Newly allocated string which contains the firmware
+ * 		       version, and undefined if the device returns no
+ * 		       firmware version or on failure. The string is
+ * 		       null-terminated and must be free'd by the caller.
+ *
+ * @return The length of the newly allocated firmware version string including
+ *	   trailing null-terminator or 0 if the device returns no firmware
+ * 	   version or any #jaylink_error error code on failure.
+ */
+int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
+		char **version)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[2];
+	uint16_t length;
+	char *tmp;
+
+	if (!devh || !version)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 1, 2, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_GET_VERSION;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, buf, 2);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	length = buffer_get_u16(buf, 0);
+
+	if (!length)
+		return 0;
+
+	ret = transport_start_read(devh, length);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_read() failed: %i.", ret);
+		return ret;
+	}
+
+	tmp = malloc(length);
+
+	if (!tmp) {
+		log_err(ctx, "Firmware version string malloc failed.");
+		return JAYLINK_ERR_MALLOC;
+	}
+
+	ret = transport_read(devh, (uint8_t *)tmp, length);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		free(tmp);
+		return ret;
+	}
+
+	/* Last byte is reserved for null-terminator. */
+	tmp[length - 1] = 0;
+	*version = tmp;
+
+	return length;
 }

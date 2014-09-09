@@ -67,4 +67,7 @@ int jaylink_open(struct jaylink_device *dev,
 
 void jaylink_close(struct jaylink_device_handle *devh);
 
+int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
+		char **version);
+
 #endif /* LIBJAYLINK_LIBJAYLINK_H */
