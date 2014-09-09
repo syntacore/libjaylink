@@ -19,3 +19,6 @@
 
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = libjaylink
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libjaylink.pc

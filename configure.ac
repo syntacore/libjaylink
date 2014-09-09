@@ -61,5 +61,6 @@ AC_SUBST(AM_LIBTOOLFLAGS, '--silent')
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([libjaylink/Makefile])
+AC_CONFIG_FILES([libjaylink.pc])
 
 AC_OUTPUT
