@@ -26,7 +26,8 @@ libjaylink_la_SOURCES = \
 	discovery.c \
 	list.c \
 	log.c \
-	transport.c
+	transport.c \
+	util.c
 
 library_includedir = $(includedir)/libjaylink
 library_include_HEADERS = libjaylink.h

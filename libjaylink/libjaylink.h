@@ -118,4 +118,6 @@ int jaylink_get_free_memory(struct jaylink_device_handle *devh, uint32_t *size);
 
 int jaylink_set_speed(struct jaylink_device_handle *devh, uint16_t speed);
 
+int jaylink_has_cap(const uint8_t *caps, uint32_t cap);
+
 #endif /* LIBJAYLINK_LIBJAYLINK_H */
