@@ -248,6 +248,10 @@ int jaylink_read_raw_config(struct jaylink_device_handle *devh,
 int jaylink_write_raw_config(struct jaylink_device_handle *devh,
 		const uint8_t *config);
 
+int jaylink_swd_io(struct jaylink_device_handle *devh,
+		const uint8_t *direction, const uint8_t *out, uint8_t *in,
+		uint16_t length);
+
 int jaylink_has_cap(const uint8_t *caps, uint32_t cap);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_H */
