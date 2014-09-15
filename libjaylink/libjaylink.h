@@ -41,6 +41,8 @@ enum jaylink_log_level {
 
 /** Device capabilities. */
 enum jaylink_device_capability {
+	/** Device supports adaptive clocking. */
+	JAYLINK_DEV_CAP_ADAPTIVE_CLOCKING = 3,
 	/** Device supports retrieval of free memory size. */
 	JAYLINK_DEV_CAP_GET_FREE_MEMORY = 11,
 	/** Device supports retrieval of extended capabilities. */
@@ -64,6 +66,9 @@ struct jaylink_hardware_status {
 	/** TRST pin state. */
 	uint8_t trst;
 };
+
+/** Target interface speed value for adaptive clocking. */
+#define JAYLINK_SPEED_ADAPTIVE_CLOCKING 0xffff
 
 /** Number of bytes required to store device capabilities. */
 #define JAYLINK_DEV_CAPS_SIZE		4
@@ -110,5 +115,7 @@ int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
 		uint8_t *caps);
 
 int jaylink_get_free_memory(struct jaylink_device_handle *devh, uint32_t *size);
+
+int jaylink_set_speed(struct jaylink_device_handle *devh, uint16_t speed);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_H */
