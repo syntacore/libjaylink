@@ -27,6 +27,7 @@ libjaylink_la_SOURCES = \
 	error.c \
 	list.c \
 	log.c \
+	target.c \
 	transport.c \
 	util.c
 

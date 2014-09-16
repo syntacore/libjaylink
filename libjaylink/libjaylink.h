@@ -47,6 +47,8 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_ADAPTIVE_CLOCKING = 3,
 	/** Device supports retrieval of free memory size. */
 	JAYLINK_DEV_CAP_GET_FREE_MEMORY = 11,
+	/** Device supports the setting of the target power supply. */
+	JAYLINK_DEV_CAP_SET_TARGET_POWER = 13,
 	/** Device supports retrieval of extended capabilities. */
 	JAYLINK_DEV_CAP_GET_EXT_CAPS = 31
 };
@@ -147,6 +149,8 @@ int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
 int jaylink_get_free_memory(struct jaylink_device_handle *devh, uint32_t *size);
 
 int jaylink_set_speed(struct jaylink_device_handle *devh, uint16_t speed);
+
+int jaylink_set_target_power(struct jaylink_device_handle *devh, int enable);
 
 int jaylink_has_cap(const uint8_t *caps, uint32_t cap);
 
