@@ -41,6 +41,8 @@ enum jaylink_log_level {
 
 /** Device capabilities. */
 enum jaylink_device_capability {
+	/** Device supports retrieval of free memory size. */
+	JAYLINK_DEV_CAP_GET_FREE_MEMORY = 11,
 	/** Device supports retrieval of extended capabilities. */
 	JAYLINK_DEV_CAP_GET_EXT_CAPS = 31
 };
@@ -106,5 +108,7 @@ int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
 int jaylink_get_caps(struct jaylink_device_handle *devh, uint8_t *caps);
 int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
 		uint8_t *caps);
+
+int jaylink_get_free_memory(struct jaylink_device_handle *devh, uint32_t *size);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_H */

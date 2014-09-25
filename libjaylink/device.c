@@ -25,6 +25,7 @@
 
 #define CMD_GET_VERSION		0x01
 #define CMD_GET_HW_STATUS	0x07
+#define CMD_GET_FREE_MEMORY	0xd4
 #define CMD_GET_CAPS		0xe8
 #define CMD_GET_EXT_CAPS	0xed
 
@@ -440,6 +441,61 @@ int jaylink_get_extended_caps(struct jaylink_device_handle *devh, uint8_t *caps)
 		log_err(ctx, "transport_read() failed: %i.", ret);
 		return ret;
 	}
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Retrieve the size of free memory of a device.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_GET_FREE_MEMORY capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[out] size Size of free memory in bytes on success, and undefined on
+ * 		    failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @see jaylink_get_caps() to retrieve device capabilities.
+ */
+int jaylink_get_free_memory(struct jaylink_device_handle *devh, uint32_t *size)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[4];
+
+	if (!devh || !size)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 1, 4, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_GET_FREE_MEMORY;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, buf, 4);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	*size = buffer_get_u32(buf, 0);
 
 	return JAYLINK_OK;
 }
