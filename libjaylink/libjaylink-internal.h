@@ -24,55 +24,72 @@
 #include <stdint.h>
 #include <libusb.h>
 
+/**
+ * @file
+ *
+ * Internal libjaylink header file.
+ */
+
+/** Calculate the minimum of two numeric values. */
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 struct jaylink_context {
+	/** libusb context. */
 	struct libusb_context *usb_ctx;
 
-	/*
-	 * List of allocated device instances. Used to prevent multiple device
-	 * instances for the same J-Link device.
+	/**
+	 * List of allocated device instances.
+	 *
+	 * Used to prevent multiple device instances for the same device.
 	 */
 	struct list *devs;
 
-	/* Current log level. */
+	/** Current log level. */
 	int log_level;
 };
 
 struct jaylink_device {
+	/** libjaylink context. */
 	struct jaylink_context *ctx;
 
+	/** Number of references held on this device instance. */
 	int refcnt;
 
+	/** libusb device instance. */
 	struct libusb_device *usb_dev;
 
-	/* Indicates if the device has CDC functionality. */
+	/** Indicates if the device has CDC functionality. */
 	int cdc_device;
 
+	/** USB address of the device. */
 	uint8_t usb_address;
 
-	/*
-	 * Serial number of the device. This number is for enumeration purpose
-	 * only and can differ from the real serial number of the device.
+	/**
+	 * Serial number of the device.
+	 *
+	 * This number is for enumeration purpose only and can differ from the
+	 * real serial number of the device.
 	 */
 	uint32_t serial_number;
 };
 
 struct jaylink_device_handle {
+	/** Device instance. */
 	struct jaylink_device *dev;
 
+	/** libusb device handle. */
 	struct libusb_device_handle *usb_devh;
 
-	/* USB interface number of the device. */
+	/** USB interface number of the device. */
 	uint8_t interface_number;
 
-	/* USB interface IN endpoint of the device. */
+	/** USB interface IN endpoint of the device. */
 	uint8_t endpoint_in;
 
-	/* USB interface OUT endpoint of the device. */
+	/** USB interface OUT endpoint of the device. */
 	uint8_t endpoint_out;
 
-	/*
+	/**
 	 * Buffer for write and read operations.
 	 *
 	 * Note that write and read operations are always processed
@@ -80,27 +97,29 @@ struct jaylink_device_handle {
 	 */
 	uint8_t *buffer;
 
-	/*
+	/**
 	 * Number of bytes left to be received from the device for the read
 	 * operation.
 	 */
 	uint16_t read_length;
 
-	/* Number of bytes available in the buffer to be read. */
+	/** Number of bytes available in the buffer to be read. */
 	uint16_t bytes_available;
 
-	/* Current read position in the buffer. */
+	/** Current read position in the buffer. */
 	uint16_t read_pos;
 
-	/*
+	/**
 	 * Number of bytes left to be written before the write operation will
 	 * be performed.
 	 */
 	uint16_t write_length;
 
-	/*
-	 * Current write position in the buffer. This is equivalent to the
-	 * number of bytes in the buffer and used for write operations only.
+	/**
+	 * Current write position in the buffer.
+	 *
+	 * This is equivalent to the number of bytes in the buffer and used for
+	 * write operations only.
 	 */
 	uint16_t write_pos;
 };

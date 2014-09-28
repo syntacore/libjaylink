@@ -23,6 +23,13 @@
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
 
+/**
+ * @file
+ *
+ * Device enumeration and handling.
+ */
+
+/** @cond PRIVATE */
 #define CMD_GET_VERSION		0x01
 #define CMD_SET_SPEED		0x05
 #define CMD_GET_HW_STATUS	0x07
@@ -32,7 +39,9 @@
 #define CMD_GET_HW_VERSION	0xf0
 #define CMD_READ_CONFIG		0xf2
 #define CMD_WRITE_CONFIG	0xf3
+/** @endcond */
 
+/** @private */
 struct jaylink_device *device_allocate(struct jaylink_context *ctx)
 {
 	struct jaylink_device *dev;
@@ -59,6 +68,7 @@ struct jaylink_device *device_allocate(struct jaylink_context *ctx)
 	return dev;
 }
 
+/** @private */
 static struct jaylink_device_handle *allocate_device_handle(
 		struct jaylink_device *dev)
 {
@@ -74,40 +84,74 @@ static struct jaylink_device_handle *allocate_device_handle(
 	return devh;
 }
 
+/** @private */
 static void free_device_handle(struct jaylink_device_handle *devh)
 {
 	jaylink_unref_device(devh->dev);
 	free(devh);
 }
 
+/**
+ * Get a list of available devices.
+ *
+ * @param[in,out] ctx libjaylink context.
+ * @param[out] devices Newly allocated array which contains instances of
+ * 		       available devices on success, and undefined on failure.
+ * 		       The array is NULL-terminated and must be free'd by the
+ * 		       caller with jaylink_free_device_list().
+ *
+ * @return The length of the array excluding the trailing NULL-terminator, or a
+ * 	   negative error code on failure.
+ */
 ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
-		struct jaylink_device ***list)
+		struct jaylink_device ***devices)
 {
-	if (!ctx || !list)
+	if (!ctx || !devices)
 		return JAYLINK_ERR_ARG;
 
-	return discovery_get_device_list(ctx, list);
+	return discovery_get_device_list(ctx, devices);
 }
 
-void jaylink_free_device_list(struct jaylink_device **list, int unref_devices)
+/**
+ * Free a device list.
+ *
+ * @param[in,out] devices Array of device instances. Must be NULL-terminated.
+ * @param[in] unref_devices Determines whether the device instances should be
+ * 			    unreferenced.
+ */
+void jaylink_free_device_list(struct jaylink_device **devices,
+		int unref_devices)
 {
 	size_t i;
 
-	if (!list)
+	if (!devices)
 		return;
 
 	if (unref_devices) {
 		i = 0;
 
-		while (list[i]) {
-			jaylink_unref_device(list[i]);
+		while (devices[i]) {
+			jaylink_unref_device(devices[i]);
 			i++;
 		}
 	}
 
-	free(list);
+	free(devices);
 }
 
+/**
+ * Get the serial number of a device.
+ *
+ * @note This serial number is for enumeration purpose only and might differ
+ * 	 from the real serial number of the device.
+ *
+ * @param[in] dev Device instance.
+ * @param[out] serial_number Serial number of the device on success, and
+ * 			     undefined on failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ */
 int jaylink_device_get_serial_number(const struct jaylink_device *dev,
 		uint32_t *serial_number)
 {
@@ -119,6 +163,20 @@ int jaylink_device_get_serial_number(const struct jaylink_device *dev,
 	return JAYLINK_OK;
 }
 
+/**
+ * Get the USB address of a device.
+ *
+ * @note Identification of a device with the USB address is deprecated and the
+ * 	 serial number should be used instead.
+ *
+ * @param[in] dev Device instance.
+ *
+ * @return The USB address of the device on success, or #JAYLINK_ERR_ARG for
+ * 	   invalid device instance. See #jaylink_usb_address for valid USB
+ * 	   addresses.
+ *
+ * @see jaylink_device_get_serial_number() to get the serial number of a device.
+ */
 int jaylink_device_get_usb_address(const struct jaylink_device *dev)
 {
 	if (!dev)
@@ -127,6 +185,14 @@ int jaylink_device_get_usb_address(const struct jaylink_device *dev)
 	return dev->usb_address;
 }
 
+/**
+ * Increment the reference count of a device.
+ *
+ * @param[in,out] dev Device instance.
+ *
+ * @return The given device instance on success, or NULL for invalid device
+ * 	   instance.
+ */
 struct jaylink_device *jaylink_ref_device(struct jaylink_device *dev)
 {
 	if (!dev)
@@ -137,6 +203,11 @@ struct jaylink_device *jaylink_ref_device(struct jaylink_device *dev)
 	return dev;
 }
 
+/**
+ * Decrement the reference count of a device.
+ *
+ * @param[in,out] dev Device instance.
+ */
 void jaylink_unref_device(struct jaylink_device *dev)
 {
 	if (!dev)
@@ -154,6 +225,19 @@ void jaylink_unref_device(struct jaylink_device *dev)
 	}
 }
 
+/**
+ * Open a device.
+ *
+ * @param[in,out] dev Device instance.
+ * @param[out] devh Newly allocated handle for the opened device on success,
+ * 		    and undefined on failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_MALLOC Memory allocation error.
+ * @retval JAYLINK_ERR Other error conditions.
+ */
 int jaylink_open(struct jaylink_device *dev,
 		struct jaylink_device_handle **devh)
 {
@@ -182,6 +266,11 @@ int jaylink_open(struct jaylink_device *dev,
 	return JAYLINK_OK;
 }
 
+/**
+ * Close a device.
+ *
+ * @param[in,out] devh Device instance.
+ */
 void jaylink_close(struct jaylink_device_handle *devh)
 {
 	if (!devh)
@@ -201,8 +290,8 @@ void jaylink_close(struct jaylink_device_handle *devh)
  * 		       null-terminated and must be free'd by the caller.
  *
  * @return The length of the newly allocated firmware version string including
- *	   trailing null-terminator or 0 if the device returns no firmware
- * 	   version or any #jaylink_error error code on failure.
+ *	   trailing null-terminator, 0 if the device returns no firmware
+ * 	   version, or a negative error code on failure.
  */
 int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 		char **version)
@@ -403,7 +492,7 @@ int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
  * capabilities and their bit positions.
  *
  * @param[in,out] devh Device handle.
- * @param[out] caps Buffer to store capabilities on success. Its value is
+ * @param[out] caps Buffer to store capabilities on success. Its content is
  * 		    undefined on failure. The size of the buffer must be large
  * 		    enough to contain at least #JAYLINK_DEV_CAPS_SIZE bytes.
  *
@@ -463,7 +552,7 @@ int jaylink_get_caps(struct jaylink_device_handle *devh, uint8_t *caps)
  *	 #JAYLINK_DEV_CAP_GET_EXT_CAPS capability.
  *
  * @param[in,out] devh Device handle.
- * @param[out] caps Buffer to store capabilities on success. Its value is
+ * @param[out] caps Buffer to store capabilities on success. Its content is
  * 		    undefined on failure. The size of the buffer must be large
  * 		    enough to contain at least #JAYLINK_DEV_EXT_CAPS_SIZE bytes.
  *

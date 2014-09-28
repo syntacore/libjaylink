@@ -21,6 +21,12 @@
 
 #include "libjaylink-internal.h"
 
+/**
+ * @file
+ *
+ * Singly-linked list functions.
+ */
+
 struct list *list_prepend(struct list *list, void *data)
 {
 	struct list *item;

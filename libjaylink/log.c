@@ -23,6 +23,21 @@
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
 
+/**
+ * @file
+ *
+ * Logging functions.
+ */
+
+/**
+ * Set the libjaylink log level.
+ *
+ * @param[in,out] ctx libjaylink context.
+ * @param[in] level Log level to set. See #jaylink_log_level for valid values.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ */
 int jaylink_log_set_level(struct jaylink_context *ctx, int level)
 {
 	if (!ctx)
@@ -36,6 +51,15 @@ int jaylink_log_set_level(struct jaylink_context *ctx, int level)
 	return JAYLINK_OK;
 }
 
+/**
+ * Get the libjaylink log level.
+ *
+ * @param[in] ctx libjaylink context.
+ *
+ * @return The current log level on success, or a negative error code
+ * 	   on failure. See #jaylink_log_level for a description of each
+ * 	   individual log level.
+ */
 int jaylink_log_get_level(const struct jaylink_context *ctx)
 {
 	if (!ctx)
@@ -44,6 +68,7 @@ int jaylink_log_get_level(const struct jaylink_context *ctx)
 	return ctx->log_level;
 }
 
+/** @private */
 static void log_vprintf(struct jaylink_context *ctx, int level,
 		const char *format, va_list args)
 {
@@ -59,6 +84,7 @@ static void log_vprintf(struct jaylink_context *ctx, int level,
 	fprintf(stderr, "\n");
 }
 
+/** @private */
 void log_err(struct jaylink_context *ctx, const char *format, ...)
 {
 	va_list args;
@@ -71,6 +97,7 @@ void log_err(struct jaylink_context *ctx, const char *format, ...)
 	va_end(args);
 }
 
+/** @private */
 void log_warn(struct jaylink_context *ctx, const char *format, ...)
 {
 	va_list args;
@@ -83,6 +110,7 @@ void log_warn(struct jaylink_context *ctx, const char *format, ...)
 	va_end(args);
 }
 
+/** @private */
 void log_info(struct jaylink_context *ctx, const char *format, ...)
 {
 	va_list args;
@@ -95,6 +123,7 @@ void log_info(struct jaylink_context *ctx, const char *format, ...)
 	va_end(args);
 }
 
+/** @private */
 void log_dbg(struct jaylink_context *ctx, const char *format, ...)
 {
 	va_list args;

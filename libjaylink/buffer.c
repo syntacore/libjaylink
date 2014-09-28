@@ -24,6 +24,12 @@
 #include "config.h"
 
 /**
+ * @file
+ *
+ * Buffer helper functions.
+ */
+
+/**
  * Write a 16-bit unsigned integer value to a buffer.
  *
  * The value is stored in the buffer in device byte order.

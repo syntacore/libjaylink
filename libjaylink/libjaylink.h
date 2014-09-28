@@ -23,19 +23,37 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+/**
+ * @file
+ *
+ * Public libjaylink header file to be used by applications.
+ */
+
+/** Error codes returned by libjaylink functions. */
 enum jaylink_error {
+	/** No error. */
 	JAYLINK_OK = 0,
+	/** Unspecific error. */
 	JAYLINK_ERR = -1,
+	/** Memory allocation error. */
 	JAYLINK_ERR_MALLOC = -2,
+	/** Invalid argument. */
 	JAYLINK_ERR_ARG = -3,
+	/** Timeout occurred. */
 	JAYLINK_ERR_TIMEOUT = -4
 };
 
+/** libjaylink log levels. */
 enum jaylink_log_level {
+	/** Output no messages. */
 	JAYLINK_LOG_LEVEL_NONE = 0,
+	/** Output error messages. */
 	JAYLINK_LOG_LEVEL_ERROR = 1,
+	/** Output warnings. */
 	JAYLINK_LOG_LEVEL_WARNING = 2,
+	/** Output informational messages. */
 	JAYLINK_LOG_LEVEL_INFO = 3,
+	/** Output debug messages. */
 	JAYLINK_LOG_LEVEL_DEBUG = 4
 };
 
@@ -148,8 +166,25 @@ struct jaylink_hardware_status {
 /** Number of bytes required to store extended device capabilities. */
 #define JAYLINK_DEV_EXT_CAPS_SIZE	32
 
+/**
+ * @struct jaylink_context
+ *
+ * Opaque structure representing a libjaylink context.
+ */
 struct jaylink_context;
+
+/**
+ * @struct jaylink_device
+ *
+ * Opaque structure representing a device.
+ */
 struct jaylink_device;
+
+/**
+ * @struct jaylink_device_handle
+ *
+ * Opaque structure representing a handle of a device.
+ */
 struct jaylink_device_handle;
 
 int jaylink_init(struct jaylink_context **ctx);
@@ -162,9 +197,10 @@ int jaylink_log_set_level(struct jaylink_context *ctx, int level);
 int jaylink_log_get_level(const struct jaylink_context *ctx);
 
 ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
-		struct jaylink_device ***list);
+		struct jaylink_device ***devices);
 
-void jaylink_free_device_list(struct jaylink_device **list, int unref_devices);
+void jaylink_free_device_list(struct jaylink_device **devices,
+		int unref_devices);
 
 int jaylink_device_get_serial_number(const struct jaylink_device *dev,
 		uint32_t *serial_number);

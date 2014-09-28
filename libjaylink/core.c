@@ -23,6 +23,24 @@
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
 
+/**
+ * @file
+ *
+ * Core library functions.
+ */
+
+/**
+ * Initialize libjaylink.
+ *
+ * This function must be called before any other libjaylink function is called.
+ *
+ * @param[out] ctx Newly allocated libjaylink context on success, and undefined
+ * 		   on failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR Other error conditions.
+ */
 int jaylink_init(struct jaylink_context **ctx)
 {
 	struct jaylink_context *context;
@@ -50,6 +68,11 @@ int jaylink_init(struct jaylink_context **ctx)
 	return JAYLINK_OK;
 }
 
+/**
+ * Shutdown libjaylink.
+ *
+ * @param[in,out] ctx libjaylink context.
+ */
 void jaylink_exit(struct jaylink_context *ctx)
 {
 	if (!ctx)

@@ -29,10 +29,10 @@
  * Transport abstraction layer.
  */
 
-/** USB interface number of J-Link devices. */
+/** Interface number of USB devices. */
 #define USB_INTERFACE_NUMBER		0
 
-/** USB interface number of J-Link devices with CDC functionality. */
+/** Interface number of USB devices with CDC functionality. */
 #define USB_INTERFACE_NUMBER_CDC	2
 
 /** Timeout of an USB transfer in milliseconds. */
@@ -51,7 +51,7 @@
  * Buffer size in bytes.
  *
  * Note that both write and read operations require a buffer size of at least
- * @link CHUNK_SIZE @endlink bytes.
+ * #CHUNK_SIZE bytes.
  */
 #define BUFFER_SIZE			CHUNK_SIZE
 
@@ -166,8 +166,8 @@ static void cleanup_handle(struct jaylink_device_handle *devh)
  *
  * @param devh Device handle.
  *
- * @return JAYLINK_OK on success.
- * @return JAYLINK_ERR on other error conditions.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR Other error conditions.
  */
 int transport_open(struct jaylink_device_handle *devh)
 {
@@ -224,8 +224,8 @@ int transport_open(struct jaylink_device_handle *devh)
  *
  * @param devh Device handle.
  *
- * @return JAYLINK_OK on success.
- * @return JAYLINK_ERR on other error conditions.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR Other error conditions.
  */
 int transport_close(struct jaylink_device_handle *devh)
 {
@@ -266,8 +266,8 @@ int transport_close(struct jaylink_device_handle *devh)
  * @param has_command Determines whether the data of the write operation
  * 		      contains the protocol command.
  *
- * @return JAYLINK_OK on success.
- * @return JAYLINK_ERR_ARG on invalid arguments.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
 int transport_start_write(struct jaylink_device_handle *devh, uint16_t length,
 		int has_command)
@@ -306,8 +306,8 @@ int transport_start_write(struct jaylink_device_handle *devh, uint16_t length,
  * @param devh Device handle.
  * @param length Number of bytes of the read operation.
  *
- * @return JAYLINK_OK on success.
- * @return JAYLINK_ERR_ARG on invalid arguments.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
 int transport_start_read(struct jaylink_device_handle *devh, uint16_t length)
 {
@@ -343,8 +343,8 @@ int transport_start_read(struct jaylink_device_handle *devh, uint16_t length)
  * meaning from the protocol perspective and can therefore not be replaced by
  * these functions and vice versa.
  *
- * Note that the write operation must be completed first before the read
- * operation must be processed.
+ * @note The write operation must be completed first before the read operation
+ * 	 must be processed.
  *
  * @param devh Device handle.
  * @param write_length Number of bytes of the write operation.
@@ -352,8 +352,8 @@ int transport_start_read(struct jaylink_device_handle *devh, uint16_t length)
  * @param has_command Determines whether the data of the write operation
  * 		      contains the protocol command.
  *
- * @return JAYLINK_OK on success.
- * @return JAYLINK_ERR_ARG on invalid arguments.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
 int transport_start_write_read(struct jaylink_device_handle *devh,
 		uint16_t write_length, uint16_t read_length, int has_command)
@@ -489,18 +489,19 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
  * total number of written bytes must not exceed the number of bytes of the
  * write operation.
  *
- * Note that a write operation will be performed and the data will be sent to
- * the device when the number of written bytes reaches the number of bytes of
- * the write operation. Before that the data will be written into a buffer.
+ * @note A write operation will be performed and the data will be sent to the
+ * 	 device when the number of written bytes reaches the number of bytes of
+ * 	 the write operation. Before that the data will be written into a
+ * 	 buffer.
  *
  * @param devh Device handle.
  * @param buffer Buffer to write data from.
  * @param length Number of bytes to write.
  *
- * @return JAYLINK_OK on success.
- * @return JAYLINK_ERR_ARG on invalid arguments.
- * @return JAYLINK_ERR_TIMEOUT if a timeout occurred.
- * @return JAYLINK_ERR on other error conditions.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
  */
 int transport_write(struct jaylink_device_handle *devh, const uint8_t *buffer,
 		uint16_t length)
@@ -597,13 +598,14 @@ int transport_write(struct jaylink_device_handle *devh, const uint8_t *buffer,
  * operation.
  *
  * @param devh Device handle.
- * @param buffer Buffer to read data into.
+ * @param buffer Buffer to read data into on success. Its content is undefined
+ * 		 on failure.
  * @param length Number of bytes to read.
  *
- * @return JAYLINK_OK on success.
- * @return JAYLINK_ERR_ARG on invalid arguments.
- * @return JAYLINK_ERR_TIMEOUT if a timeout occurred.
- * @return JAYLINK_ERR on other error conditions.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
  */
 int transport_read(struct jaylink_device_handle *devh, uint8_t *buffer,
 		uint16_t length)

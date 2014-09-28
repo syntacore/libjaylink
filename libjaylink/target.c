@@ -28,6 +28,7 @@
  * Target related functions.
  */
 
+/** @cond PRIVATE */
 #define CMD_SET_TARGET_POWER	0x08
 #define CMD_SELECT_TIF		0xc7
 #define CMD_CLEAR_RESET		0xdc
@@ -35,6 +36,7 @@
 
 #define TIF_GET_SELECTED	0xfe
 #define TIF_GET_AVAILABLE	0xff
+/** @endcond */
 
 /**
  * Select the target interface.
@@ -46,8 +48,8 @@
  * @param[in] interface Target interface to select. See
  * 			#jaylink_target_interface for valid values.
  *
- * @return The previously selected target interface on success or any
- * 	   #jaylink_error error code on failure.
+ * @return The previously selected target interface on success, or a negative
+ * 	   error code on failure.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
  */
@@ -171,8 +173,8 @@ int jaylink_get_available_interfaces(struct jaylink_device_handle *devh,
  *
  * @param[in,out] devh Device handle.
  *
- * @return The currently selected target interface on success or any
- * 	   #jaylink_error error code on failure.
+ * @return The currently selected target interface on success, or a negative
+ * 	   error code on failure.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
  */

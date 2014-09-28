@@ -26,22 +26,29 @@
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
 
-/* USB Vendor ID (VID) of SEGGER products. */
+/**
+ * @file
+ *
+ * Device discovery.
+ */
+
+/** USB Vendor ID (VID) of SEGGER products. */
 #define USB_VENDOR_ID			0x1366
 
-/* USB Product ID (PID) of J-Link devices with USB address 0. */
+/** USB Product ID (PID) of devices with USB address 0. */
 #define USB_PRODUCT_ID			0x0101
 
-/* USB Product ID (PID) of J-Link devices with CDC functionality. */
+/** USB Product ID (PID) of devices with CDC functionality. */
 #define USB_PRODUCT_ID_CDC		0x0105
 
-/* Maximum length of the USB string descriptor for the serial number. */
+/** Maximum length of the USB string descriptor for the serial number. */
 #define USB_SERIAL_NUMBER_LENGTH	12
 
-/*
- * Maximum number of digits in a serial number. Note that the serial number of
- * J-Link devices consists of at most 9 digits but user defined serial numbers
- * are allowed with up to 10 digits.
+/**
+ * Maximum number of digits in a serial number
+ *
+ * The serial number of a device consists of at most 9 digits but user defined
+ * serial numbers are allowed with up to 10 digits.
  */
 #define MAX_SERIAL_NUMBER_DIGITS	10
 
@@ -143,8 +150,8 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 		libusb_get_device_address(usb_dev));
 
 	/*
-	 * Search for an already allocated device instance for this J-Link
-	 * device and if found return a reference to it.
+	 * Search for an already allocated device instance for this device and
+	 * if found return a reference to it.
 	 */
 	dev = find_device(ctx, usb_dev);
 
@@ -213,6 +220,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	return dev;
 }
 
+/** @private */
 ssize_t discovery_get_device_list(struct jaylink_context *ctx,
 		struct jaylink_device ***list)
 {
