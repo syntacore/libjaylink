@@ -39,6 +39,24 @@ enum jaylink_log_level {
 	JAYLINK_LOG_LEVEL_DEBUG = 4
 };
 
+/** Device hardware status. */
+struct jaylink_hardware_status {
+	/** Target reference voltage in mV. */
+	uint16_t target_voltage;
+	/** TCK pin state. */
+	uint8_t tck;
+	/** TDI pin state. */
+	uint8_t tdi;
+	/** TDO pin state. */
+	uint8_t tdo;
+	/** TMS pin state. */
+	uint8_t tms;
+	/** TRES pin state. */
+	uint8_t tres;
+	/** TRST pin state. */
+	uint8_t trst;
+};
+
 struct jaylink_context;
 struct jaylink_device;
 struct jaylink_device_handle;
@@ -69,5 +87,8 @@ void jaylink_close(struct jaylink_device_handle *devh);
 
 int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 		char **version);
+
+int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
+		struct jaylink_hardware_status *status);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_H */

@@ -23,7 +23,8 @@
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
 
-#define CMD_GET_VERSION 0x01
+#define CMD_GET_VERSION		0x01
+#define CMD_GET_HW_STATUS	0x07
 
 struct jaylink_device *device_allocate(struct jaylink_context *ctx)
 {
@@ -264,4 +265,60 @@ int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 	*version = tmp;
 
 	return length;
+}
+
+/**
+ * Retrieve the hardware status of a device.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[out] status Hardware status on success, and undefined on failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ */
+int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
+		struct jaylink_hardware_status *status)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[8];
+
+	if (!devh || !status)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 1, 8, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_GET_HW_STATUS;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, buf, 8);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	status->target_voltage = buffer_get_u16(buf, 0);
+	status->tck = buf[2];
+	status->tdi = buf[3];
+	status->tdo = buf[4];
+	status->tms = buf[5];
+	status->tres = buf[6];
+	status->trst = buf[7];
+
+	return JAYLINK_OK;
 }
