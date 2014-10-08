@@ -107,6 +107,9 @@ struct jaylink_device_handle;
 int jaylink_init(struct jaylink_context **ctx);
 void jaylink_exit(struct jaylink_context *ctx);
 
+const char *jaylink_strerror(int error_code);
+const char *jaylink_strerror_name(int error_code);
+
 int jaylink_log_set_level(struct jaylink_context *ctx, int level);
 int jaylink_log_get_level(const struct jaylink_context *ctx);
 

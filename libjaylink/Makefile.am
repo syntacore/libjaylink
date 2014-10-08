@@ -24,6 +24,7 @@ libjaylink_la_SOURCES = \
 	core.c \
 	device.c \
 	discovery.c \
+	error.c \
 	list.c \
 	log.c \
 	transport.c \
