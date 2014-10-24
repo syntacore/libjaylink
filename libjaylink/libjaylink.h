@@ -49,6 +49,8 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_GET_FREE_MEMORY = 11,
 	/** Device supports the setting of the target power supply. */
 	JAYLINK_DEV_CAP_SET_TARGET_POWER = 13,
+	/** Device supports target interface selection. */
+	JAYLINK_DEV_CAP_SELECT_TIF = 17,
 	/** Device supports retrieval of extended capabilities. */
 	JAYLINK_DEV_CAP_GET_EXT_CAPS = 31
 };
@@ -58,6 +60,26 @@ enum jaylink_hardware_type {
 	/** J-Link BASE. */
 	JAYLINK_HW_TYPE_BASE = 0
 };
+
+/** Target interfaces. */
+enum jaylink_target_interface {
+	/** Joint Test Action Group, IEEE 1149.1 (JTAG). */
+	JAYLINK_TIF_JTAG = 0,
+	/** Serial Wire Debug (SWD). */
+	JAYLINK_TIF_SWD = 1,
+	/** Background Debug Mode 3 (BDM3). */
+	JAYLINK_TIF_BDM3 = 2,
+	/** Renesas’ single-wire debug interface (FINE). */
+	JAYLINK_TIF_FINE = 3,
+	/** 2-wire JTAG for PIC32 compliant devices. */
+	JAYLINK_TIF_2W_JTAG_PIC32 = 4,
+
+	/** <i>Helper which must be always the last element</i>. */
+	__JAYLINK_TIF_MAX
+};
+
+/** Maximum valid target interface number. */
+#define JAYLINK_TIF_MAX (__JAYLINK_TIF_MAX - 1)
 
 /** Device hardware version. */
 struct jaylink_hardware_version {
@@ -149,6 +171,12 @@ int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
 int jaylink_get_free_memory(struct jaylink_device_handle *devh, uint32_t *size);
 
 int jaylink_set_speed(struct jaylink_device_handle *devh, uint16_t speed);
+
+int jaylink_select_interface(struct jaylink_device_handle *devh,
+		uint8_t interface);
+int jaylink_get_available_interfaces(struct jaylink_device_handle *devh,
+		uint32_t *interfaces);
+int jaylink_get_selected_interface(struct jaylink_device_handle *devh);
 
 int jaylink_set_target_power(struct jaylink_device_handle *devh, int enable);
 

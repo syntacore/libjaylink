@@ -29,6 +29,195 @@
  */
 
 #define CMD_SET_TARGET_POWER	0x08
+#define CMD_SELECT_TIF		0xc7
+
+#define TIF_GET_SELECTED	0xfe
+#define TIF_GET_AVAILABLE	0xff
+
+/**
+ * Select the target interface.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_SELECT_TIF capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[in] interface Target interface to select. See
+ * 			#jaylink_target_interface for valid values.
+ *
+ * @return The previously selected target interface on success or any
+ * 	   #jaylink_error error code on failure.
+ *
+ * @see jaylink_get_caps() to retrieve device capabilities.
+ */
+int jaylink_select_interface(struct jaylink_device_handle *devh,
+		uint8_t interface)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[4];
+	uint32_t tmp;
+
+	if (!devh)
+		return JAYLINK_ERR_ARG;
+
+	if (interface > JAYLINK_TIF_MAX)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 2, 4, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_SELECT_TIF;
+	buf[1] = interface;
+
+	ret = transport_write(devh, buf, 2);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, buf, 4);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	tmp = buffer_get_u32(buf, 0);
+
+	if (tmp > JAYLINK_TIF_MAX) {
+		log_err(ctx, "Invalid target interface: %u.", tmp);
+		return JAYLINK_ERR;
+	}
+
+	return tmp;
+}
+
+/**
+ * Retrieve the available target interfaces.
+ *
+ * The target interfaces are stored in a 32-bit bit field where each individual
+ * bit represents a target interface. A set bit indicates an available target
+ * interface. See #jaylink_target_interface for a description of the target
+ * interfaces and their bit positions.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_SELECT_TIF capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[out] interfaces Target interfaces on success, and undefined on
+ * 			  failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @see jaylink_get_caps() to retrieve device capabilities.
+ * @see jaylink_select_interface() to select a target interface.
+ */
+int jaylink_get_available_interfaces(struct jaylink_device_handle *devh,
+		uint32_t *interfaces)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[4];
+
+	if (!devh || !interfaces)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 2, 4, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_SELECT_TIF;
+	buf[1] = TIF_GET_AVAILABLE;
+
+	ret = transport_write(devh, buf, 2);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, buf, 4);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	*interfaces = buffer_get_u32(buf, 0);
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Retrieve the selected target interface.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_SELECT_TIF capability.
+ *
+ * @param[in,out] devh Device handle.
+ *
+ * @return The currently selected target interface on success or any
+ * 	   #jaylink_error error code on failure.
+ *
+ * @see jaylink_get_caps() to retrieve device capabilities.
+ */
+int jaylink_get_selected_interface(struct jaylink_device_handle *devh)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[4];
+	uint32_t tmp;
+
+	if (!devh)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 2, 4, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_SELECT_TIF;
+	buf[1] = TIF_GET_SELECTED;
+
+	ret = transport_write(devh, buf, 2);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, buf, 4);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	tmp = buffer_get_u32(buf, 0);
+
+	if (tmp > JAYLINK_TIF_MAX) {
+		log_err(ctx, "Invalid target interface: %u.", tmp);
+		return JAYLINK_ERR;
+	}
+
+	return tmp;
+}
 
 /**
  * Enable or disable the target power supply.
