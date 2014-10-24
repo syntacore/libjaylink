@@ -178,6 +178,9 @@ int jaylink_get_available_interfaces(struct jaylink_device_handle *devh,
 		uint32_t *interfaces);
 int jaylink_get_selected_interface(struct jaylink_device_handle *devh);
 
+int jaylink_clear_reset(struct jaylink_device_handle *devh);
+int jaylink_set_reset(struct jaylink_device_handle *devh);
+
 int jaylink_set_target_power(struct jaylink_device_handle *devh, int enable);
 
 int jaylink_has_cap(const uint8_t *caps, uint32_t cap);

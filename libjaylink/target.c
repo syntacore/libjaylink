@@ -30,6 +30,8 @@
 
 #define CMD_SET_TARGET_POWER	0x08
 #define CMD_SELECT_TIF		0xc7
+#define CMD_CLEAR_RESET		0xdc
+#define CMD_SET_RESET		0xdd
 
 #define TIF_GET_SELECTED	0xfe
 #define TIF_GET_AVAILABLE	0xff
@@ -217,6 +219,84 @@ int jaylink_get_selected_interface(struct jaylink_device_handle *devh)
 	}
 
 	return tmp;
+}
+
+/**
+ * Clear the target reset signal.
+ *
+ * @param[in,out] devh Device handle.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ */
+int jaylink_clear_reset(struct jaylink_device_handle *devh)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[1];
+
+	if (!devh)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write(devh, 1, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_CLEAR_RESET;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Set the target reset signal.
+ *
+ * @param[in,out] devh Device handle.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ */
+int jaylink_set_reset(struct jaylink_device_handle *devh)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[1];
+
+	if (!devh)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write(devh, 1, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_SET_RESET;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	return JAYLINK_OK;
 }
 
 /**
