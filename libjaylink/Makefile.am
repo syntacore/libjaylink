@@ -25,6 +25,7 @@ libjaylink_la_SOURCES = \
 	device.c \
 	discovery.c \
 	error.c \
+	jtag.c \
 	list.c \
 	log.c \
 	swd.c \

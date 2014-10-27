@@ -120,6 +120,24 @@ enum jaylink_target_interface {
 /** Maximum valid target interface number. */
 #define JAYLINK_TIF_MAX (__JAYLINK_TIF_MAX - 1)
 
+/**
+ * JTAG command versions.
+ *
+ * The JTAG command version only affects the device and the communication
+ * protocol. The behaviour of a JTAG operation is not affected at all.
+ */
+enum jaylink_jtag_version {
+	/**
+	 * JTAG command version 2.
+	 *
+	 * This version is obsolete for major hardware version 5 and above. Use
+	 * #JAYLINK_JTAG_V3 for these versions instead.
+	 */
+	JAYLINK_JTAG_V2 = 1,
+	/** JTAG command version 3. */
+	JAYLINK_JTAG_V3 = 2
+};
+
 /** Device hardware version. */
 struct jaylink_hardware_version {
 	/**
@@ -247,6 +265,9 @@ int jaylink_read_raw_config(struct jaylink_device_handle *devh,
 		uint8_t *config);
 int jaylink_write_raw_config(struct jaylink_device_handle *devh,
 		const uint8_t *config);
+
+int jaylink_jtag_io(struct jaylink_device_handle *devh, const uint8_t *tms,
+		const uint8_t *tdi, uint8_t *tdo, uint16_t length, int version);
 
 int jaylink_swd_io(struct jaylink_device_handle *devh,
 		const uint8_t *direction, const uint8_t *out, uint8_t *in,
