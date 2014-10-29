@@ -39,6 +39,23 @@ enum jaylink_log_level {
 	JAYLINK_LOG_LEVEL_DEBUG = 4
 };
 
+/**
+ * USB addresses.
+ *
+ * The USB address is a way to identify USB devices and is related to the USB
+ * Product ID (PID) of a device.
+ */
+enum jaylink_usb_address {
+	/** USB address 0 (Product ID 0x0101). */
+	JAYLINK_USB_ADDRESS_0 = 0,
+	/** USB address 1 (Product ID 0x0102). */
+	JAYLINK_USB_ADDRESS_1 = 1,
+	/** USB address 2 (Product ID 0x0103). */
+	JAYLINK_USB_ADDRESS_2 = 2,
+	/** USB address 3 (Product ID 0x0104). */
+	JAYLINK_USB_ADDRESS_3 = 3
+};
+
 /** Device capabilities. */
 enum jaylink_device_capability {
 	/** Device supports retrieval of the hardware version. */
