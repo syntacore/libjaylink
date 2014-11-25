@@ -30,6 +30,8 @@
 #define CMD_GET_CAPS		0xe8
 #define CMD_GET_EXT_CAPS	0xed
 #define CMD_GET_HW_VERSION	0xf0
+#define CMD_READ_CONFIG		0xf2
+#define CMD_WRITE_CONFIG	0xf3
 
 struct jaylink_device *device_allocate(struct jaylink_context *ctx)
 {
@@ -601,6 +603,114 @@ int jaylink_set_speed(struct jaylink_device_handle *devh, uint16_t speed)
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Read the raw configuration data of a device.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_READ_CONFIG capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[out] config Buffer to store configuration data on success. Its
+ * 		      content is undefined on failure. The size of the buffer
+ * 		      must be large enough to contain at least
+ * 		      #JAYLINK_DEV_CONFIG_SIZE bytes.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ */
+int jaylink_read_raw_config(struct jaylink_device_handle *devh, uint8_t *config)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[1];
+
+	if (!devh || !config)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 1, JAYLINK_DEV_CONFIG_SIZE, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.",
+			ret);
+		return ret;
+	}
+
+	buf[0] = CMD_READ_CONFIG;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, config, JAYLINK_DEV_CONFIG_SIZE);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Write the raw configuration data of a device.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_WRITE_CONFIG capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[in] config Buffer to write configuration data from. The size of the
+ * 		     configuration data is expected to be
+ * 		     #JAYLINK_DEV_CONFIG_SIZE bytes.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ */
+int jaylink_write_raw_config(struct jaylink_device_handle *devh,
+		const uint8_t *config)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[1];
+
+	if (!devh || !config)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write(devh, 1 + JAYLINK_DEV_CONFIG_SIZE, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.",
+			ret);
+		return ret;
+	}
+
+	buf[0] = CMD_WRITE_CONFIG;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_write(devh, config, JAYLINK_DEV_CONFIG_SIZE);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
 		return ret;
 	}
 

@@ -62,6 +62,10 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_GET_HW_VERSION = 1,
 	/** Device supports adaptive clocking. */
 	JAYLINK_DEV_CAP_ADAPTIVE_CLOCKING = 3,
+	/** Device supports reading configuration data. */
+	JAYLINK_DEV_CAP_READ_CONFIG = 4,
+	/** Device supports writing configuration data. */
+	JAYLINK_DEV_CAP_WRITE_CONFIG = 5,
 	/** Device supports retrieval of free memory size. */
 	JAYLINK_DEV_CAP_GET_FREE_MEMORY = 11,
 	/** Device supports the setting of the target power supply. */
@@ -135,6 +139,9 @@ struct jaylink_hardware_status {
 /** Target interface speed value for adaptive clocking. */
 #define JAYLINK_SPEED_ADAPTIVE_CLOCKING 0xffff
 
+/** Size of the device configuration data in bytes. */
+#define JAYLINK_DEV_CONFIG_SIZE		256
+
 /** Number of bytes required to store device capabilities. */
 #define JAYLINK_DEV_CAPS_SIZE		4
 
@@ -199,6 +206,11 @@ int jaylink_clear_reset(struct jaylink_device_handle *devh);
 int jaylink_set_reset(struct jaylink_device_handle *devh);
 
 int jaylink_set_target_power(struct jaylink_device_handle *devh, int enable);
+
+int jaylink_read_raw_config(struct jaylink_device_handle *devh,
+		uint8_t *config);
+int jaylink_write_raw_config(struct jaylink_device_handle *devh,
+		const uint8_t *config);
 
 int jaylink_has_cap(const uint8_t *caps, uint32_t cap);
 
