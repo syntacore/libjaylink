@@ -32,11 +32,14 @@ libjaylink_la_SOURCES = \
 	swo.c \
 	target.c \
 	transport.c \
-	util.c
+	util.c \
+	version.c
 
 libjaylink_la_LDFLAGS = $(JAYLINK_LIB_LDFLAGS)
 
 library_includedir = $(includedir)/libjaylink
-library_include_HEADERS = libjaylink.h
+library_include_HEADERS = \
+	libjaylink.h \
+	version.h
 
 noinst_HEADERS = libjaylink-internal.h

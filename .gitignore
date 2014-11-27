@@ -17,3 +17,4 @@ Makefile
 Makefile.in
 *.o
 stamp-h1
+version.h

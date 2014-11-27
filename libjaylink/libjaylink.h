@@ -353,4 +353,17 @@ JAYLINK_API int jaylink_set_target_power(struct jaylink_device_handle *devh,
 
 JAYLINK_API int jaylink_has_cap(const uint8_t *caps, uint32_t cap);
 
+/*--- version.c -------------------------------------------------------------*/
+
+JAYLINK_API int jaylink_version_package_get_major(void);
+JAYLINK_API int jaylink_version_package_get_minor(void);
+JAYLINK_API int jaylink_version_package_get_micro(void);
+JAYLINK_API const char *jaylink_version_package_get_string(void);
+JAYLINK_API int jaylink_version_lib_get_current(void);
+JAYLINK_API int jaylink_version_lib_get_revision(void);
+JAYLINK_API int jaylink_version_lib_get_age(void);
+JAYLINK_API const char *jaylink_version_lib_get_string(void);
+
+#include "version.h"
+
 #endif /* LIBJAYLINK_LIBJAYLINK_H */

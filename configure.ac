@@ -19,7 +19,14 @@
 
 AC_PREREQ([2.69])
 
-AC_INIT([libjaylink], [0.1.0], [BUG-REPORT-ADDRESS])
+# Package version of libjaylink. This is not the same as the libtool interface
+# version.
+m4_define([jaylink_version_package_major], [0])
+m4_define([jaylink_version_package_minor], [1])
+m4_define([jaylink_version_package_micro], [0])
+m4_define([jaylink_version_package], [jaylink_version_package_major.jaylink_version_package_minor.jaylink_version_package_micro])
+
+AC_INIT([libjaylink], [jaylink_version_package], [BUG-REPORT-ADDRESS])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -62,17 +69,41 @@ AC_C_BIGENDIAN
 # Disable progress and informational output of libtool.
 AC_SUBST(AM_LIBTOOLFLAGS, '--silent')
 
-JAYLINK_LIB_LDFLAGS=""
+# Libtool interface version of libjaylink. This is not the same as the package
+# version. For information about the versioning system of libtool, see:
+# http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning
+JAYLINK_VERSION_LIB_CURRENT=0
+JAYLINK_VERSION_LIB_REVISION=0
+JAYLINK_VERSION_LIB_AGE=0
+JAYLINK_VERSION_LIB="$JAYLINK_VERSION_LIB_CURRENT:$JAYLINK_VERSION_LIB_REVISION:$JAYLINK_VERSION_LIB_AGE"
+
+AC_SUBST(JAYLINK_VERSION_LIB_CURRENT)
+AC_SUBST(JAYLINK_VERSION_LIB_REVISION)
+AC_SUBST(JAYLINK_VERSION_LIB_AGE)
+AC_SUBST(JAYLINK_VERSION_LIB)
+
+JAYLINK_LIB_LDFLAGS="-version-info $JAYLINK_VERSION_LIB"
 
 case $host_os in
 mingw*)
-	JAYLINK_LIB_LDFLAGS+="-no-undefined"
+	JAYLINK_LIB_LDFLAGS="$JAYLINK_LIB_LDFLAGS -no-undefined"
 esac
 
 AC_SUBST([JAYLINK_LIB_LDFLAGS])
 
+JAYLINK_VERSION_PACKAGE_MAJOR=jaylink_version_package_major
+JAYLINK_VERSION_PACKAGE_MINOR=jaylink_version_package_minor
+JAYLINK_VERSION_PACKAGE_MICRO=jaylink_version_package_micro
+JAYLINK_VERSION_PACKAGE=jaylink_version_package
+
+AC_SUBST(JAYLINK_VERSION_PACKAGE_MAJOR)
+AC_SUBST(JAYLINK_VERSION_PACKAGE_MINOR)
+AC_SUBST(JAYLINK_VERSION_PACKAGE_MICRO)
+AC_SUBST(JAYLINK_VERSION_PACKAGE)
+
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([libjaylink/Makefile])
+AC_CONFIG_FILES([libjaylink/version.h])
 AC_CONFIG_FILES([libjaylink.pc])
 
 AC_OUTPUT
