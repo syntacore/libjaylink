@@ -6,6 +6,7 @@ config.log
 config.status
 configure
 .deps
+doxy/
 *.la
 libjaylink.pc
 .libs
