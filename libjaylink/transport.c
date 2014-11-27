@@ -321,16 +321,14 @@ int transport_start_read(struct jaylink_device_handle *devh, uint16_t length)
 	log_dbg(ctx, "Starting read operation (length = %u bytes).", length);
 
 	if (devh->bytes_available)
-		log_warn(ctx, "Last read operation left %u bytes in the "
+		log_dbg(ctx, "Last read operation left %u bytes in the "
 			"buffer.", devh->bytes_available);
 
 	if (devh->read_length)
-		log_warn(ctx, "Last read operation left %u bytes on the "
-			"device.", devh->read_length);
+		log_warn(ctx, "Last read operation left %u bytes.",
+			devh->read_length);
 
 	devh->read_length = length;
-	devh->bytes_available = 0;
-	devh->read_pos = 0;
 
 	return JAYLINK_OK;
 }
@@ -382,8 +380,8 @@ int transport_start_write_read(struct jaylink_device_handle *devh,
 			"buffer.", devh->bytes_available);
 
 	if (devh->read_length)
-		log_warn(ctx, "Last read operation left %u bytes on the "
-			"device.", devh->read_length);
+		log_warn(ctx, "Last read operation left %u bytes.",
+			devh->read_length);
 
 	devh->write_length = write_length;
 	devh->write_pos = 0;
@@ -617,7 +615,7 @@ int transport_read(struct jaylink_device_handle *devh, uint8_t *buffer,
 
 	ctx = devh->dev->ctx;
 
-	if (length > devh->read_length + devh->bytes_available) {
+	if (length > devh->read_length) {
 		log_err(ctx, "Requested to read %u bytes but only %u bytes "
 			"are expected for the read operation.", length,
 			devh->read_length);
@@ -627,6 +625,7 @@ int transport_read(struct jaylink_device_handle *devh, uint8_t *buffer,
 	if (length <= devh->bytes_available) {
 		memcpy(buffer, devh->buffer + devh->read_pos, length);
 
+		devh->read_length -= length;
 		devh->bytes_available -= length;
 		devh->read_pos += length;
 
@@ -640,6 +639,7 @@ int transport_read(struct jaylink_device_handle *devh, uint8_t *buffer,
 
 		buffer += devh->bytes_available;
 		length -= devh->bytes_available;
+		devh->read_length -= devh->bytes_available;
 
 		log_dbg(ctx, "Read %u bytes from buffer to flush it.",
 			devh->bytes_available);
@@ -650,33 +650,19 @@ int transport_read(struct jaylink_device_handle *devh, uint8_t *buffer,
 
 	while (length) {
 		/*
-		 * Store received data from the device in the buffer if less
-		 * than CHUNK_SIZE bytes are requested. This is necessary to
-		 * prevent buffer overflows as the number of requested bytes
-		 * from the device is always CHUNK_SIZE and therefore up to
-		 * CHUNK_SIZE bytes may be received from the device. Note that
-		 * therefore the buffer size must be at least CHUNK_SIZE bytes.
-		 */
-		if (length < CHUNK_SIZE)
-			ret = usb_recv(devh, devh->buffer, &bytes_received);
-		else
-			ret = usb_recv(devh, buffer, &bytes_received);
-
-		if (ret != JAYLINK_OK)
-			return ret;
-
-		if (bytes_received > devh->read_length) {
-			log_err(ctx, "Expected %u bytes from device but %u "
-				"bytes received.", devh->read_length,
-				bytes_received);
-			return JAYLINK_ERR;
-		}
-
-		/*
-		 * Read data from the buffer if less than CHUNK_SIZE bytes are
-		 * requested. Otherwise data was read from the device.
+		 * If less than CHUNK_SIZE bytes are requested from the device,
+		 * store the received data in the internal buffer instead of
+		 * directly into the user provided buffer. This is necessary to
+		 * prevent a possible buffer overflow because the number of
+		 * requested bytes from the device is always CHUNK_SIZE and
+		 * therefore up to CHUNK_SIZE bytes may be received.
 		 */
 		if (length < CHUNK_SIZE) {
+			ret = usb_recv(devh, devh->buffer, &bytes_received);
+
+			if (ret != JAYLINK_OK)
+				return ret;
+
 			tmp = MIN(bytes_received, length);
 			memcpy(buffer, devh->buffer, tmp);
 
@@ -691,17 +677,22 @@ int transport_read(struct jaylink_device_handle *devh, uint8_t *buffer,
 
 			buffer += tmp;
 			length -= tmp;
+			devh->read_length -= tmp;
 
 			log_dbg(ctx, "Read %u bytes from buffer.", tmp);
 		} else {
+			ret = usb_recv(devh, buffer, &bytes_received);
+
+			if (ret != JAYLINK_OK)
+				return ret;
+
 			buffer += bytes_received;
 			length -= bytes_received;
+			devh->read_length -= bytes_received;
 
 			log_dbg(ctx, "Read %u bytes from device.",
 				bytes_received);
 		}
-
-		devh->read_length -= bytes_received;
 	}
 
 	return JAYLINK_OK;

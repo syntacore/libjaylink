@@ -97,10 +97,7 @@ struct jaylink_device_handle {
 	 */
 	uint8_t *buffer;
 
-	/**
-	 * Number of bytes left to be received from the device for the read
-	 * operation.
-	 */
+	/** Number of bytes left for the read operation. */
 	uint16_t read_length;
 
 	/** Number of bytes available in the buffer to be read. */
