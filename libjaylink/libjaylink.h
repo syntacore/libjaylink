@@ -111,6 +111,8 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_REGISTER = 27,
 	/** Device supports retrieval of extended capabilities. */
 	JAYLINK_DEV_CAP_GET_EXT_CAPS = 31,
+	/** Device supports EMUCOM. */
+	JAYLINK_DEV_CAP_EMUCOM = 33,
 	/** Device supports ethernet connectivity. */
 	JAYLINK_DEV_CAP_ETHERNET = 38
 };
@@ -320,6 +322,11 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		const struct jaylink_connection *connection,
 		struct jaylink_connection *connections, uint8_t *info,
 		uint16_t *info_size);
+
+/*--- emucom.c --------------------------------------------------------------*/
+
+JAYLINK_API int jaylink_emucom_write(struct jaylink_device_handle *devh,
+		uint32_t channel, const uint8_t *buffer, uint32_t *length);
 
 /*--- error.c ---------------------------------------------------------------*/
 
