@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,6 +90,8 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_SET_TARGET_POWER = 13,
 	/** Device supports target interface selection. */
 	JAYLINK_DEV_CAP_SELECT_TIF = 17,
+	/** Device supports capturing of SWO trace data. */
+	JAYLINK_DEV_CAP_SWO = 23,
 	/** Device supports retrieval of extended capabilities. */
 	JAYLINK_DEV_CAP_GET_EXT_CAPS = 31
 };
@@ -136,6 +138,12 @@ enum jaylink_jtag_version {
 	JAYLINK_JTAG_V2 = 1,
 	/** JTAG command version 3. */
 	JAYLINK_JTAG_V3 = 2
+};
+
+/** Serial Wire Output (SWO) capture modes. */
+enum jaylink_swo_mode {
+	/** UART capture mode. */
+	JAYLINK_SWO_MODE_UART = 0
 };
 
 /** Device hardware version. */
@@ -274,6 +282,14 @@ int jaylink_jtag_set_trst(struct jaylink_device_handle *devh);
 int jaylink_swd_io(struct jaylink_device_handle *devh,
 		const uint8_t *direction, const uint8_t *out, uint8_t *in,
 		uint16_t length);
+
+int jaylink_swo_start(struct jaylink_device_handle *devh,
+		enum jaylink_swo_mode mode, uint32_t baudrate, uint32_t size);
+int jaylink_swo_stop(struct jaylink_device_handle *devh);
+ssize_t jaylink_swo_read(struct jaylink_device_handle *devh, uint8_t *buffer,
+		uint32_t length);
+int jaylink_swo_get_speed_info(struct jaylink_device_handle *devh,
+		enum jaylink_swo_mode mode, uint32_t *freq, uint32_t *div);
 
 int jaylink_has_cap(const uint8_t *caps, uint32_t cap);
 

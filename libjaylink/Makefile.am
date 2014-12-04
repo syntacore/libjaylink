@@ -29,6 +29,7 @@ libjaylink_la_SOURCES = \
 	list.c \
 	log.c \
 	swd.c \
+	swo.c \
 	target.c \
 	transport.c \
 	util.c
