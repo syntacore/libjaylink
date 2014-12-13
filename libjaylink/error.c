@@ -48,6 +48,8 @@ JAYLINK_API const char *jaylink_strerror(int error_code)
 		return "invalid argument";
 	case JAYLINK_ERR_TIMEOUT:
 		return "timeout occurred";
+	case JAYLINK_ERR_PROTO:
+		return "protocol violation";
 	case JAYLINK_ERR_DEV:
 		return "device: unspecified error";
 	case JAYLINK_ERR_DEV_NOT_SUPPORTED:
@@ -80,6 +82,8 @@ JAYLINK_API const char *jaylink_strerror_name(int error_code)
 		return "JAYLINK_ERR_ARG";
 	case JAYLINK_ERR_TIMEOUT:
 		return "JAYLINK_ERR_TIMEOUT";
+	case JAYLINK_ERR_PROTO:
+		return "JAYLINK_ERR_PROTO";
 	case JAYLINK_ERR_DEV:
 		return "JAYLINK_ERR_DEV";
 	case JAYLINK_ERR_DEV_NOT_SUPPORTED:

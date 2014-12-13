@@ -42,6 +42,8 @@ enum jaylink_error {
 	JAYLINK_ERR_ARG = -3,
 	/** Timeout occurred. */
 	JAYLINK_ERR_TIMEOUT = -4,
+	/** Protocol violation. */
+	JAYLINK_ERR_PROTO = -5,
 	/** Device: unspecified error. */
 	JAYLINK_ERR_DEV = -1000,
 	/** Device: operation not supported. */
