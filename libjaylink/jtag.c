@@ -29,8 +29,10 @@
  */
 
 /** @cond PRIVATE */
-#define CMD_JTAG_IO_V2	0xce
-#define CMD_JTAG_IO_V3	0xcf
+#define CMD_JTAG_IO_V2		0xce
+#define CMD_JTAG_IO_V3		0xcf
+#define CMD_JTAG_CLEAR_TRST	0xde
+#define CMD_JTAG_SET_TRST	0xdf
 /** @endcond */
 
 /**
@@ -145,6 +147,84 @@ int jaylink_jtag_io(struct jaylink_device_handle *devh, const uint8_t *tms,
 				status);
 			return JAYLINK_ERR;
 		}
+	}
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Clear the JTAG test reset (TRST) signal.
+ *
+ * @param[in,out] devh Device handle.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ */
+int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[1];
+
+	if (!devh)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write(devh, 1, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_JTAG_CLEAR_TRST;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Set the JTAG test reset (TRST) signal.
+ *
+ * @param[in,out] devh Device handle.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ */
+int jaylink_jtag_set_trst(struct jaylink_device_handle *devh)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[1];
+
+	if (!devh)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write(devh, 1, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_JTAG_SET_TRST;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
 	}
 
 	return JAYLINK_OK;

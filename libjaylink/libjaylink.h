@@ -268,6 +268,8 @@ int jaylink_write_raw_config(struct jaylink_device_handle *devh,
 
 int jaylink_jtag_io(struct jaylink_device_handle *devh, const uint8_t *tms,
 		const uint8_t *tdi, uint8_t *tdo, uint16_t length, int version);
+int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh);
+int jaylink_jtag_set_trst(struct jaylink_device_handle *devh);
 
 int jaylink_swd_io(struct jaylink_device_handle *devh,
 		const uint8_t *direction, const uint8_t *out, uint8_t *in,
