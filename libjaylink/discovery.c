@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -221,7 +221,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 }
 
 /** @private */
-ssize_t discovery_get_device_list(struct jaylink_context *ctx,
+JAYLINK_PRIV ssize_t discovery_get_device_list(struct jaylink_context *ctx,
 		struct jaylink_device ***list)
 {
 	ssize_t ret;

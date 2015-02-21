@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
  */
 
 #include <stdint.h>
+
+#include "libjaylink.h"
 
 /**
  * @file
@@ -39,7 +41,7 @@
  *
  * @return 1 if the capability is supported, 0 otherwise.
  */
-int jaylink_has_cap(const uint8_t *caps, uint32_t cap)
+JAYLINK_API int jaylink_has_cap(const uint8_t *caps, uint32_t cap)
 {
 	if (!caps)
 		return 0;

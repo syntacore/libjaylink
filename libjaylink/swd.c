@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@
  * @see jaylink_get_available_interfaces() to retrieve the available target
  * 					   interfaces.
  */
-int jaylink_swd_io(struct jaylink_device_handle *devh,
+JAYLINK_API int jaylink_swd_io(struct jaylink_device_handle *devh,
 		const uint8_t *direction, const uint8_t *out, uint8_t *in,
 		uint16_t length)
 {

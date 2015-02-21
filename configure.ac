@@ -1,7 +1,7 @@
 ##
 ## This file is part of the libjaylink project.
 ##
-## Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+## Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -26,8 +26,9 @@ AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
-# Enable additional compiler warnings via -Wall and -Wextra.
-CFLAGS="$CFLAGS -Wall -Wextra -Werror"
+# Enable additional compiler warnings via -Wall and -Wextra. Use hidden
+# visibility for all non-static symbols by default with -fvisibility=hidden.
+CFLAGS="$CFLAGS -Wall -Wextra -Werror -fvisibility=hidden"
 
 # Checks for programs.
 AC_PROG_CC

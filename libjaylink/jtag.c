@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,8 +62,9 @@
  * @see jaylink_get_available_interfaces() to retrieve the available target
  * 					   interfaces.
  */
-int jaylink_jtag_io(struct jaylink_device_handle *devh, const uint8_t *tms,
-		const uint8_t *tdi, uint8_t *tdo, uint16_t length, int version)
+JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
+		const uint8_t *tms, const uint8_t *tdi, uint8_t *tdo,
+		uint16_t length, int version)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -162,7 +163,7 @@ int jaylink_jtag_io(struct jaylink_device_handle *devh, const uint8_t *tms,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  */
-int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh)
+JAYLINK_API int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -201,7 +202,7 @@ int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  */
-int jaylink_jtag_set_trst(struct jaylink_device_handle *devh)
+JAYLINK_API int jaylink_jtag_set_trst(struct jaylink_device_handle *devh)
 {
 	int ret;
 	struct jaylink_context *ctx;

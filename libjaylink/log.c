@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
-int jaylink_log_set_level(struct jaylink_context *ctx, int level)
+JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx, int level)
 {
 	if (!ctx)
 		return JAYLINK_ERR_ARG;
@@ -60,7 +60,7 @@ int jaylink_log_set_level(struct jaylink_context *ctx, int level)
  * 	   on failure. See #jaylink_log_level for a description of each
  * 	   individual log level.
  */
-int jaylink_log_get_level(const struct jaylink_context *ctx)
+JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx)
 {
 	if (!ctx)
 		return JAYLINK_ERR_ARG;
@@ -85,7 +85,7 @@ static void log_vprintf(struct jaylink_context *ctx, int level,
 }
 
 /** @private */
-void log_err(struct jaylink_context *ctx, const char *format, ...)
+JAYLINK_PRIV void log_err(struct jaylink_context *ctx, const char *format, ...)
 {
 	va_list args;
 
@@ -98,7 +98,7 @@ void log_err(struct jaylink_context *ctx, const char *format, ...)
 }
 
 /** @private */
-void log_warn(struct jaylink_context *ctx, const char *format, ...)
+JAYLINK_PRIV void log_warn(struct jaylink_context *ctx, const char *format, ...)
 {
 	va_list args;
 
@@ -111,7 +111,7 @@ void log_warn(struct jaylink_context *ctx, const char *format, ...)
 }
 
 /** @private */
-void log_info(struct jaylink_context *ctx, const char *format, ...)
+JAYLINK_PRIV void log_info(struct jaylink_context *ctx, const char *format, ...)
 {
 	va_list args;
 
@@ -124,7 +124,7 @@ void log_info(struct jaylink_context *ctx, const char *format, ...)
 }
 
 /** @private */
-void log_dbg(struct jaylink_context *ctx, const char *format, ...)
+JAYLINK_PRIV void log_dbg(struct jaylink_context *ctx, const char *format, ...)
 {
 	va_list args;
 

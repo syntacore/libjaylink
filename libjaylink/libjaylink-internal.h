@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,9 @@
  *
  * Internal libjaylink header file.
  */
+
+/** Macro to mark private libjaylink symbol. */
+#define JAYLINK_PRIV __attribute__ ((visibility ("hidden")))
 
 /** Calculate the minimum of two numeric values. */
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
@@ -123,18 +126,21 @@ struct jaylink_device_handle {
 
 /*--- buffer.c --------------------------------------------------------------*/
 
-void buffer_set_u16(uint8_t *buffer, uint16_t value, size_t offset);
-uint16_t buffer_get_u16(const uint8_t *buffer, size_t offset);
-void buffer_set_u32(uint8_t *buffer, uint32_t value, size_t offset);
-uint32_t buffer_get_u32(const uint8_t *buffer, size_t offset);
+JAYLINK_PRIV void buffer_set_u16(uint8_t *buffer, uint16_t value,
+		size_t offset);
+JAYLINK_PRIV uint16_t buffer_get_u16(const uint8_t *buffer, size_t offset);
+JAYLINK_PRIV void buffer_set_u32(uint8_t *buffer, uint32_t value,
+		size_t offset);
+JAYLINK_PRIV uint32_t buffer_get_u32(const uint8_t *buffer, size_t offset);
 
 /*--- device.c --------------------------------------------------------------*/
 
-struct jaylink_device *device_allocate(struct jaylink_context *ctx);
+JAYLINK_PRIV struct jaylink_device *device_allocate(
+		struct jaylink_context *ctx);
 
 /*--- discovery.c -----------------------------------------------------------*/
 
-ssize_t discovery_get_device_list(struct jaylink_context *ctx,
+JAYLINK_PRIV ssize_t discovery_get_device_list(struct jaylink_context *ctx,
 			 struct jaylink_device ***list);
 
 /*--- list.c ----------------------------------------------------------------*/
@@ -146,34 +152,37 @@ struct list {
 
 typedef int (*list_compare_callback)(const void *a, const void *b);
 
-struct list *list_prepend(struct list *list, void *data);
+JAYLINK_PRIV struct list *list_prepend(struct list *list, void *data);
 
-struct list *list_remove(struct list *list, const void *data);
+JAYLINK_PRIV struct list *list_remove(struct list *list, const void *data);
 
-struct list *list_find_custom(struct list *list, list_compare_callback cb,
-		const void *cb_data);
+JAYLINK_PRIV struct list *list_find_custom(struct list *list,
+		list_compare_callback cb, const void *cb_data);
 
-void list_free(struct list *list);
+JAYLINK_PRIV void list_free(struct list *list);
 
 /*--- log.c -----------------------------------------------------------------*/
 
-void log_err(struct jaylink_context *ctx, const char *format, ...);
-void log_warn(struct jaylink_context *ctx, const char *format, ...);
-void log_info(struct jaylink_context *ctx, const char *format, ...);
-void log_dbg(struct jaylink_context *ctx, const char *format, ...);
+JAYLINK_PRIV void log_err(struct jaylink_context *ctx, const char *format, ...);
+JAYLINK_PRIV void log_warn(struct jaylink_context *ctx,
+		const char *format, ...);
+JAYLINK_PRIV void log_info(struct jaylink_context *ctx,
+		const char *format, ...);
+JAYLINK_PRIV void log_dbg(struct jaylink_context *ctx, const char *format, ...);
 
 /*--- transport.c -----------------------------------------------------------*/
 
-int transport_open(struct jaylink_device_handle *devh);
-int transport_close(struct jaylink_device_handle *devh);
-int transport_start_write_read(struct jaylink_device_handle *devh,
+JAYLINK_PRIV int transport_open(struct jaylink_device_handle *devh);
+JAYLINK_PRIV int transport_close(struct jaylink_device_handle *devh);
+JAYLINK_PRIV int transport_start_write_read(struct jaylink_device_handle *devh,
 		uint16_t write_length, uint16_t read_length, int has_command);
-int transport_start_write(struct jaylink_device_handle *devh, uint16_t length,
-		int has_command);
-int transport_start_read(struct jaylink_device_handle *devh, uint16_t length);
-int transport_write(struct jaylink_device_handle *devh, const uint8_t *buffer,
+JAYLINK_PRIV int transport_start_write(struct jaylink_device_handle *devh,
+		uint16_t length, int has_command);
+JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
 		uint16_t length);
-int transport_read(struct jaylink_device_handle *devh, uint8_t *buffer,
-		uint16_t length);
+JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
+		const uint8_t *buffer, uint16_t length);
+JAYLINK_PRIV int transport_read(struct jaylink_device_handle *devh,
+		uint8_t *buffer, uint16_t length);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_INTERNAL_H */

@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include "config.h"
+#include "libjaylink-internal.h"
 
 /**
  * @file
@@ -38,7 +39,7 @@
  * @param value Value to write into the buffer in host byte order.
  * @param offset Offset of the value within the buffer in bytes.
  */
-void buffer_set_u16(uint8_t *buffer, uint16_t value, size_t offset)
+JAYLINK_PRIV void buffer_set_u16(uint8_t *buffer, uint16_t value, size_t offset)
 {
 	/*
 	 * Store the value in the buffer and swap byte order depending on the
@@ -62,7 +63,7 @@ void buffer_set_u16(uint8_t *buffer, uint16_t value, size_t offset)
  *
  * @return The value read from the buffer in host byte order.
  */
-uint16_t buffer_get_u16(const uint8_t *buffer, size_t offset)
+JAYLINK_PRIV uint16_t buffer_get_u16(const uint8_t *buffer, size_t offset)
 {
 	uint16_t value;
 
@@ -89,7 +90,7 @@ uint16_t buffer_get_u16(const uint8_t *buffer, size_t offset)
  * @param value Value to write into the buffer in host byte order.
  * @param offset Offset of the value within the buffer in bytes.
  */
-void buffer_set_u32(uint8_t *buffer, uint32_t value, size_t offset)
+JAYLINK_PRIV void buffer_set_u32(uint8_t *buffer, uint32_t value, size_t offset)
 {
 	/*
 	 * Store the value in the buffer and swap byte order depending on the
@@ -115,7 +116,7 @@ void buffer_set_u32(uint8_t *buffer, uint32_t value, size_t offset)
  *
  * @return The value read from the buffer in host byte order.
  */
-uint32_t buffer_get_u32(const uint8_t *buffer, size_t offset)
+JAYLINK_PRIV uint32_t buffer_get_u32(const uint8_t *buffer, size_t offset)
 {
 	uint32_t value;
 

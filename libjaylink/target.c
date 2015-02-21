@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
  */
-int jaylink_select_interface(struct jaylink_device_handle *devh,
+JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 		uint8_t interface)
 {
 	int ret;
@@ -125,8 +125,8 @@ int jaylink_select_interface(struct jaylink_device_handle *devh,
  * @see jaylink_get_caps() to retrieve device capabilities.
  * @see jaylink_select_interface() to select a target interface.
  */
-int jaylink_get_available_interfaces(struct jaylink_device_handle *devh,
-		uint32_t *interfaces)
+JAYLINK_API int jaylink_get_available_interfaces(
+		struct jaylink_device_handle *devh, uint32_t *interfaces)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -178,7 +178,8 @@ int jaylink_get_available_interfaces(struct jaylink_device_handle *devh,
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
  */
-int jaylink_get_selected_interface(struct jaylink_device_handle *devh)
+JAYLINK_API int jaylink_get_selected_interface(
+		struct jaylink_device_handle *devh)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -233,7 +234,7 @@ int jaylink_get_selected_interface(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  */
-int jaylink_clear_reset(struct jaylink_device_handle *devh)
+JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -272,7 +273,7 @@ int jaylink_clear_reset(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  */
-int jaylink_set_reset(struct jaylink_device_handle *devh)
+JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -321,7 +322,8 @@ int jaylink_set_reset(struct jaylink_device_handle *devh)
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
  */
-int jaylink_set_target_power(struct jaylink_device_handle *devh, int enable)
+JAYLINK_API int jaylink_set_target_power(struct jaylink_device_handle *devh,
+		int enable)
 {
 	int ret;
 	struct jaylink_context *ctx;

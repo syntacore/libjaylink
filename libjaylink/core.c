@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR Other error conditions.
  */
-int jaylink_init(struct jaylink_context **ctx)
+JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 {
 	struct jaylink_context *context;
 
@@ -73,7 +73,7 @@ int jaylink_init(struct jaylink_context **ctx)
  *
  * @param[in,out] ctx libjaylink context.
  */
-void jaylink_exit(struct jaylink_context *ctx)
+JAYLINK_API void jaylink_exit(struct jaylink_context *ctx)
 {
 	if (!ctx)
 		return;

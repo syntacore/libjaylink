@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -169,7 +169,7 @@ static void cleanup_handle(struct jaylink_device_handle *devh)
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR Other error conditions.
  */
-int transport_open(struct jaylink_device_handle *devh)
+JAYLINK_PRIV int transport_open(struct jaylink_device_handle *devh)
 {
 	int ret;
 	struct jaylink_device *dev;
@@ -227,7 +227,7 @@ int transport_open(struct jaylink_device_handle *devh)
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR Other error conditions.
  */
-int transport_close(struct jaylink_device_handle *devh)
+JAYLINK_PRIV int transport_close(struct jaylink_device_handle *devh)
 {
 	int ret;
 	struct jaylink_device *dev;
@@ -269,8 +269,8 @@ int transport_close(struct jaylink_device_handle *devh)
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
-int transport_start_write(struct jaylink_device_handle *devh, uint16_t length,
-		int has_command)
+JAYLINK_PRIV int transport_start_write(struct jaylink_device_handle *devh,
+		uint16_t length, int has_command)
 {
 	struct jaylink_context *ctx;
 
@@ -309,7 +309,8 @@ int transport_start_write(struct jaylink_device_handle *devh, uint16_t length,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
-int transport_start_read(struct jaylink_device_handle *devh, uint16_t length)
+JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
+		uint16_t length)
 {
 	struct jaylink_context *ctx;
 
@@ -353,7 +354,7 @@ int transport_start_read(struct jaylink_device_handle *devh, uint16_t length)
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
-int transport_start_write_read(struct jaylink_device_handle *devh,
+JAYLINK_PRIV int transport_start_write_read(struct jaylink_device_handle *devh,
 		uint16_t write_length, uint16_t read_length, int has_command)
 {
 	struct jaylink_context *ctx;
@@ -501,8 +502,8 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  */
-int transport_write(struct jaylink_device_handle *devh, const uint8_t *buffer,
-		uint16_t length)
+JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
+		const uint8_t *buffer, uint16_t length)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -605,8 +606,8 @@ int transport_write(struct jaylink_device_handle *devh, const uint8_t *buffer,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  */
-int transport_read(struct jaylink_device_handle *devh, uint8_t *buffer,
-		uint16_t length)
+JAYLINK_PRIV int transport_read(struct jaylink_device_handle *devh,
+		uint8_t *buffer, uint16_t length)
 {
 	int ret;
 	struct jaylink_context *ctx;
