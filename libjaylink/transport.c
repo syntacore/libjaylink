@@ -29,12 +29,6 @@
  * Transport abstraction layer.
  */
 
-/** Interface number of USB devices. */
-#define USB_INTERFACE_NUMBER		0
-
-/** Interface number of USB devices with CDC functionality. */
-#define USB_INTERFACE_NUMBER_CDC	2
-
 /** Timeout of an USB transfer in milliseconds. */
 #define USB_TIMEOUT			1000
 
@@ -69,11 +63,7 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 	uint8_t i;
 
 	ctx = devh->dev->ctx;
-
-	if (devh->dev->cdc_device)
-		devh->interface_number = USB_INTERFACE_NUMBER_CDC;
-	else
-		devh->interface_number = USB_INTERFACE_NUMBER;
+	devh->interface_number = 0;
 
 	/*
 	 * Retrieve active configuration descriptor to determine the endpoints
@@ -93,15 +83,22 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 		interface = &config->interface[i];
 		desc = &interface->altsetting[0];
 
-		if (desc->bInterfaceNumber == devh->interface_number) {
-			found_interface = 1;
-			break;
-		}
+		if (desc->bInterfaceClass != LIBUSB_CLASS_VENDOR_SPEC)
+			continue;
+
+		if (desc->bInterfaceSubClass != LIBUSB_CLASS_VENDOR_SPEC)
+			continue;
+
+		if (desc->bNumEndpoints < 2)
+			continue;
+
+		found_interface = 1;
+		devh->interface_number = i;
+		break;
 	}
 
 	if (!found_interface) {
-		log_err(ctx, "Interface %u not found.",
-			devh->interface_number);
+		log_err(ctx, "No suitable interface found.");
 		libusb_free_config_descriptor(config);
 		return JAYLINK_ERR;
 	}

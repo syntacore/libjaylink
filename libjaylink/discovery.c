@@ -35,11 +35,25 @@
 /** USB Vendor ID (VID) of SEGGER products. */
 #define USB_VENDOR_ID			0x1366
 
-/** USB Product ID (PID) of devices with USB address 0. */
-#define USB_PRODUCT_ID			0x0101
-
-/** USB Product ID (PID) of devices with CDC functionality. */
-#define USB_PRODUCT_ID_CDC		0x0105
+/* USB Product IDs (PID) and their corresponding USB addresses. */
+static const uint16_t pids[][2] = {
+	{0x0101, 0},
+	{0x0102, 1},
+	{0x0103, 2},
+	{0x0104, 3},
+	{0x0105, 0},
+	{0x0107, 0},
+	{0x0108, 0},
+	{0x1010, 0},
+	{0x1011, 0},
+	{0x1012, 0},
+	{0x1013, 0},
+	{0x1014, 0},
+	{0x1015, 0},
+	{0x1016, 0},
+	{0x1017, 0},
+	{0x1018, 0}
+};
 
 /** Maximum length of the USB string descriptor for the serial number. */
 #define USB_SERIAL_NUMBER_LENGTH	12
@@ -123,7 +137,8 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	char buf[USB_SERIAL_NUMBER_LENGTH + 1];
 	uint8_t usb_address;
 	uint32_t serial_number;
-	int cdc_device;
+	int found_device;
+	size_t i;
 
 	ret = libusb_get_device_descriptor(usb_dev, &desc);
 
@@ -137,11 +152,17 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	if (desc.idVendor != USB_VENDOR_ID)
 		return NULL;
 
-	/* Check for USB Product ID (PID) of J-Link devices. */
-	if (desc.idProduct < USB_PRODUCT_ID)
-		return NULL;
+	found_device = 0;
 
-	if (desc.idProduct > USB_PRODUCT_ID_CDC)
+	for (i = 0; i < sizeof(pids) / sizeof(pids[0]); i++) {
+		if (pids[i][0] == desc.idProduct) {
+			found_device = 1;
+			usb_address = pids[i][1];
+			break;
+		}
+	}
+
+	if (!found_device)
 		return NULL;
 
 	log_dbg(ctx, "Found device (VID:PID = %04x:%04x, bus:address = "
@@ -158,18 +179,6 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	if (dev) {
 		log_dbg(ctx, "Using existing device instance.");
 		return jaylink_ref_device(dev);
-	}
-
-	/*
-	 * Devices with CDC functionality have the USB address 0. The USB
-	 * address of all other devices depends on their USB Product ID (PID).
-	 */
-	if (desc.idProduct == USB_PRODUCT_ID_CDC) {
-		cdc_device = 1;
-		usb_address = 0;
-	} else {
-		cdc_device = 0;
-		usb_address = desc.idProduct - USB_PRODUCT_ID;
 	}
 
 	/* Open the device to be able to retrieve its serial number. */
@@ -200,9 +209,6 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	log_dbg(ctx, "Device: USB address = %u.", usb_address);
 	log_dbg(ctx, "Device: Serial number = %u.", serial_number);
 
-	if (cdc_device)
-		log_dbg(ctx, "Device has CDC functionality.");
-
 	log_dbg(ctx, "Allocating new device instance.");
 
 	dev = device_allocate(ctx);
@@ -213,7 +219,6 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	}
 
 	dev->usb_dev = libusb_ref_device(usb_dev);
-	dev->cdc_device = cdc_device;
 	dev->usb_address = usb_address;
 	dev->serial_number = serial_number;
 

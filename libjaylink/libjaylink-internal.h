@@ -65,9 +65,6 @@ struct jaylink_device {
 	/** libusb device instance. */
 	struct libusb_device *usb_dev;
 
-	/** Indicates if the device has CDC functionality. */
-	int cdc_device;
-
 	/** USB address of the device. */
 	uint8_t usb_address;
 
