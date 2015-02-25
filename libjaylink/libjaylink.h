@@ -214,7 +214,11 @@ struct jaylink_device;
 struct jaylink_device_handle;
 
 /** Macro to mark public libjaylink API symbol. */
+#ifndef _WIN32
 #define JAYLINK_API __attribute__ ((visibility ("default")))
+#else
+#define JAYLINK_API
+#endif
 
 JAYLINK_API int jaylink_init(struct jaylink_context **ctx);
 JAYLINK_API void jaylink_exit(struct jaylink_context *ctx);

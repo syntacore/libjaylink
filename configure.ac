@@ -24,6 +24,8 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
 
+AC_CANONICAL_HOST
+
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
 # Enable additional compiler warnings via -Wall and -Wextra. Use hidden
@@ -59,6 +61,15 @@ AC_C_BIGENDIAN
 
 # Disable progress and informational output of libtool.
 AC_SUBST(AM_LIBTOOLFLAGS, '--silent')
+
+JAYLINK_LIB_LDFLAGS=""
+
+case $host_os in
+mingw*)
+	JAYLINK_LIB_LDFLAGS+="-no-undefined"
+esac
+
+AC_SUBST([JAYLINK_LIB_LDFLAGS])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([libjaylink/Makefile])

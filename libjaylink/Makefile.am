@@ -1,7 +1,7 @@
 ##
 ## This file is part of the libjaylink project.
 ##
-## Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+## Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@ libjaylink_la_SOURCES = \
 	target.c \
 	transport.c \
 	util.c
+
+libjaylink_la_LDFLAGS = $(JAYLINK_LIB_LDFLAGS)
 
 library_includedir = $(includedir)/libjaylink
 library_include_HEADERS = libjaylink.h
