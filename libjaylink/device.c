@@ -18,6 +18,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <libusb.h>
 
 #include "libjaylink.h"
@@ -32,12 +33,25 @@
 /** @cond PRIVATE */
 #define CMD_GET_VERSION		0x01
 #define CMD_GET_HW_STATUS	0x07
+#define CMD_REGISTER		0x09
 #define CMD_GET_FREE_MEMORY	0xd4
 #define CMD_GET_CAPS		0xe8
 #define CMD_GET_EXT_CAPS	0xed
 #define CMD_GET_HW_VERSION	0xf0
 #define CMD_READ_CONFIG		0xf2
 #define CMD_WRITE_CONFIG	0xf3
+
+#define REG_CMD_REGISTER	0x64
+#define REG_CMD_UNREGISTER	0x65
+
+/** Size of the registration header in bytes. */
+#define REG_HEADER_SIZE		8
+/** Minimum registration information size in bytes. */
+#define REG_MIN_SIZE		0x4c
+/** Maximum registration information size in bytes. */
+#define REG_MAX_SIZE		0x200
+/** Size of a connection entry in bytes. */
+#define REG_CONN_INFO_SIZE	16
 /** @endcond */
 
 /** @private */
@@ -764,4 +778,282 @@ JAYLINK_API int jaylink_write_raw_config(struct jaylink_device_handle *devh,
 	}
 
 	return JAYLINK_OK;
+}
+
+static void parse_conntable(struct jaylink_connection *conns,
+		const uint8_t *buffer, uint16_t num, uint16_t entry_size)
+{
+	unsigned int i;
+	size_t offset;
+
+	offset = 0;
+
+	for (i = 0; i < num; i++) {
+		conns[i].pid = buffer_get_u32(buffer, offset);
+		conns[i].hid = buffer_get_u32(buffer, offset + 4);
+		conns[i].iid = buffer[offset + 8];
+		conns[i].cid = buffer[offset + 9];
+		conns[i].handle = buffer_get_u16(buffer, offset + 10);
+		conns[i].timestamp = buffer_get_u32(buffer, offset + 12);
+		offset = offset + entry_size;
+	}
+}
+
+/**
+ * Register a connection on a device.
+ *
+ * A connection can be registered by using 0 as handle. Additional information
+ * about the connection can be attached whereby the timestamp is a read-only
+ * value and therefore ignored for registration. On success, a new handle
+ * greater than 0 is obtained from the device.
+ *
+ * However, if an obtained handle does not appear in the list of device
+ * connections, the connection was not registered because the maximum number of
+ * connections on the device is reached.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_REGISTER capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[in,out] connection Connection to register on the device.
+ * @param[out] connections Array to store device connections on success.
+ * 			   Its content is undefined on failure. The array must
+ * 			   be large enough to contain at least
+ * 			   #JAYLINK_MAX_CONNECTIONS elements.
+ * @param[out] info Buffer to store additional information on success, or NULL.
+ * 		    The content of the buffer is undefined on failure.
+ * @param[out] info_size Size of the additional information in bytes on success,
+ * 			 and undefined on failure. Can be NULL.
+ *
+ * @return The number of device connections on success, a negative error code on
+ * 	   failure.
+ *
+ * @see jaylink_unregister() to unregister a connection from a device.
+ */
+JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
+		struct jaylink_connection *connection,
+		struct jaylink_connection *connections, uint8_t *info,
+		uint16_t *info_size)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[REG_MAX_SIZE];
+	uint16_t handle;
+	uint16_t num;
+	uint16_t entry_size;
+	uint32_t size;
+	uint32_t table_size;
+	uint16_t addinfo_size;
+
+	if (!devh || !connection || !connections)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 14, REG_MIN_SIZE, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_REGISTER;
+	buf[1] = REG_CMD_REGISTER;
+	buffer_set_u32(buf, connection->pid, 2);
+	buffer_set_u32(buf, connection->hid, 6);
+	buf[10] = connection->iid;
+	buf[11] = connection->cid;
+	buffer_set_u16(buf, connection->handle, 12);
+
+	ret = transport_write(devh, buf, 14);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, buf, REG_MIN_SIZE);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	handle = buffer_get_u16(buf, 0);
+	num = buffer_get_u16(buf, 2);
+	entry_size = buffer_get_u16(buf, 4);
+	addinfo_size = buffer_get_u16(buf, 6);
+
+	if (num > JAYLINK_MAX_CONNECTIONS) {
+		log_err(ctx, "Maximum number of device connections exceeded: "
+			"%u.", num);
+		return JAYLINK_ERR;
+	}
+
+	if (entry_size != REG_CONN_INFO_SIZE) {
+		log_err(ctx, "Invalid connection entry size: %u bytes.",
+			entry_size);
+		return JAYLINK_ERR;
+	}
+
+	table_size = num * entry_size;
+	size = REG_HEADER_SIZE + table_size + addinfo_size;
+
+	if (size > REG_MAX_SIZE) {
+		log_err(ctx, "Maximum registration information size exceeded: "
+			"%u bytes.", size);
+		return JAYLINK_ERR;
+	}
+
+	if (size > REG_MIN_SIZE) {
+		ret = transport_start_read(devh, size - REG_MIN_SIZE);
+
+		if (ret != JAYLINK_OK) {
+			log_err(ctx, "transport_start_read() failed: %i.", ret);
+			return JAYLINK_ERR;
+		}
+
+		ret = transport_read(devh, buf + REG_MIN_SIZE,
+			size - REG_MIN_SIZE);
+
+		if (ret != JAYLINK_OK) {
+			log_err(ctx, "transport_read() failed: %i.", ret);
+			return JAYLINK_ERR;
+		}
+	}
+
+	if (!handle) {
+		log_err(ctx, "Obtained invalid connection handle.");
+		return JAYLINK_ERR;
+	}
+
+	connection->handle = handle;
+	parse_conntable(connections, buf + REG_HEADER_SIZE, num, entry_size);
+
+	if (info)
+		memcpy(info, buf + REG_HEADER_SIZE + table_size, addinfo_size);
+
+	if (info_size)
+		*info_size = addinfo_size;
+
+	return num;
+}
+
+/**
+ * Unregister a connection from a device.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_REGISTER capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[in,out] connection Connection to unregister from the device.
+ * @param[out] connections Array to store device connections on success.
+ * 			   Its content is undefined on failure. The array must
+ * 			   be large enough to contain at least
+ * 			   #JAYLINK_MAX_CONNECTIONS elements.
+ * @param[out] info Buffer to store additional information on success, or NULL.
+ * 		    The content of the buffer is undefined on failure.
+ * @param[out] info_size Size of the additional information in bytes on success,
+ * 			 and undefined on failure. Can be NULL.
+ *
+ * @return The number of device connections on success, a negative error code on
+ * 	   failure.
+ */
+JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
+		const struct jaylink_connection *connection,
+		struct jaylink_connection *connections, uint8_t *info,
+		uint16_t *info_size)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[REG_MAX_SIZE];
+	uint16_t num;
+	uint16_t entry_size;
+	uint32_t size;
+	uint32_t table_size;
+	uint16_t addinfo_size;
+
+	if (!devh || !connection || !connections)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 14, REG_MIN_SIZE, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_REGISTER;
+	buf[1] = REG_CMD_UNREGISTER;
+	buffer_set_u32(buf, connection->pid, 2);
+	buffer_set_u32(buf, connection->hid, 6);
+	buf[10] = connection->iid;
+	buf[11] = connection->cid;
+	buffer_set_u16(buf, connection->handle, 12);
+
+	ret = transport_write(devh, buf, 14);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, buf, REG_MIN_SIZE);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	num = buffer_get_u16(buf, 2);
+	entry_size = buffer_get_u16(buf, 4);
+	addinfo_size = buffer_get_u16(buf, 6);
+
+	if (num > JAYLINK_MAX_CONNECTIONS) {
+		log_err(ctx, "Maximum number of device connections exceeded: "
+			"%u.", num);
+		return JAYLINK_ERR;
+	}
+
+	if (entry_size != REG_CONN_INFO_SIZE) {
+		log_err(ctx, "Invalid connection entry size: %u bytes.",
+			entry_size);
+		return JAYLINK_ERR;
+	}
+
+	table_size = num * entry_size;
+	size = REG_HEADER_SIZE + table_size + addinfo_size;
+
+	if (size > REG_MAX_SIZE) {
+		log_err(ctx, "Maximum registration information size exceeded: "
+			"%u bytes.", size);
+		return JAYLINK_ERR;
+	}
+
+	if (size > REG_MIN_SIZE) {
+		ret = transport_start_read(devh, size - REG_MIN_SIZE);
+
+		if (ret != JAYLINK_OK) {
+			log_err(ctx, "transport_start_read() failed: %i.", ret);
+			return JAYLINK_ERR;
+		}
+
+		ret = transport_read(devh, buf + REG_MIN_SIZE,
+			size - REG_MIN_SIZE);
+
+		if (ret != JAYLINK_OK) {
+			log_err(ctx, "transport_read() failed: %i.", ret);
+			return JAYLINK_ERR;
+		}
+	}
+
+	parse_conntable(connections, buf + REG_HEADER_SIZE, num, entry_size);
+
+	if (info)
+		memcpy(info, buf + REG_HEADER_SIZE + table_size, addinfo_size);
+
+	if (info_size)
+		*info_size = addinfo_size;
+
+	return num;
 }

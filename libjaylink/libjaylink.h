@@ -93,6 +93,8 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_SELECT_TIF = 17,
 	/** Device supports capturing of SWO trace data. */
 	JAYLINK_DEV_CAP_SWO = 23,
+	/** Device supports registration of connections. */
+	JAYLINK_DEV_CAP_REGISTER = 27,
 	/** Device supports retrieval of extended capabilities. */
 	JAYLINK_DEV_CAP_GET_EXT_CAPS = 31
 };
@@ -181,6 +183,35 @@ struct jaylink_hardware_status {
 	uint8_t trst;
 };
 
+/** Device connection. */
+struct jaylink_connection {
+	/** Handle. */
+	uint16_t handle;
+	/**
+	 * Process ID (PID).
+	 *
+	 * Identification of the client process. Usually this is the
+	 * Process ID (PID) of the client process in an arbitrary format.
+	 */
+	uint32_t pid;
+	/**
+	 * Host ID (HID).
+	 *
+	 * IP address of the client in network byte order.
+	 */
+	uint32_t hid;
+	/** IID. */
+	uint8_t iid;
+	/** CID. */
+	uint8_t cid;
+	/**
+	 * Timestamp of the last registration in milliseconds.
+	 *
+	 * The timestamp is relative to the time the device was powered up.
+	 */
+	uint32_t timestamp;
+};
+
 /** Target interface speed value for adaptive clocking. */
 #define JAYLINK_SPEED_ADAPTIVE_CLOCKING 0xffff
 
@@ -192,6 +223,9 @@ struct jaylink_hardware_status {
 
 /** Number of bytes required to store extended device capabilities. */
 #define JAYLINK_DEV_EXT_CAPS_SIZE	32
+
+/** Maximum number of connections that can be registered on a device. */
+#define JAYLINK_MAX_CONNECTIONS		16
 
 /**
  * @struct jaylink_context
@@ -288,6 +322,14 @@ JAYLINK_API int jaylink_read_raw_config(struct jaylink_device_handle *devh,
 		uint8_t *config);
 JAYLINK_API int jaylink_write_raw_config(struct jaylink_device_handle *devh,
 		const uint8_t *config);
+JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
+		struct jaylink_connection *connection,
+		struct jaylink_connection *connections, uint8_t *info,
+		uint16_t *info_size);
+JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
+		const struct jaylink_connection *connection,
+		struct jaylink_connection *connections, uint8_t *info,
+		uint16_t *info_size);
 
 JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 		const uint8_t *tms, const uint8_t *tdi, uint8_t *tdo,
