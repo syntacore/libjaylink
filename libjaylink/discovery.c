@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <string.h>
+#include <sys/types.h>
 #include <libusb.h>
 
 #include "libjaylink.h"
