@@ -31,7 +31,6 @@
 
 /** @cond PRIVATE */
 #define CMD_GET_VERSION		0x01
-#define CMD_SET_SPEED		0x05
 #define CMD_GET_HW_STATUS	0x07
 #define CMD_GET_FREE_MEMORY	0xd4
 #define CMD_GET_CAPS		0xe8
@@ -654,51 +653,6 @@ JAYLINK_API int jaylink_get_free_memory(struct jaylink_device_handle *devh,
 	}
 
 	*size = buffer_get_u32(buf, 0);
-
-	return JAYLINK_OK;
-}
-
-/**
- * Set the target interface speed of a device.
- *
- * @param[in,out] devh Device handle.
- * @param[in] speed Speed in kHz or #JAYLINK_SPEED_ADAPTIVE_CLOCKING for
- * 		    adaptive clocking. Speed of 0 kHz is not allowed and
- * 		    adaptive clocking must only be used if the device has the
- * 		    #JAYLINK_DEV_CAP_ADAPTIVE_CLOCKING capability.
- *
- * @retval JAYLINK_OK Success.
- * @retval JAYLINK_ERR_ARG Invalid arguments.
- * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
- * @retval JAYLINK_ERR Other error conditions.
- */
-JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
-		uint16_t speed)
-{
-	int ret;
-	struct jaylink_context *ctx;
-	uint8_t buf[3];
-
-	if (!devh || !speed)
-		return JAYLINK_ERR_ARG;
-
-	ctx = devh->dev->ctx;
-	ret = transport_start_write(devh, 3, 1);
-
-	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_write() failed: %i.", ret);
-		return ret;
-	}
-
-	buf[0] = CMD_SET_SPEED;
-	buffer_set_u16(buf, speed, 1);
-
-	ret = transport_write(devh, buf, 3);
-
-	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_write() failed: %i.", ret);
-		return ret;
-	}
 
 	return JAYLINK_OK;
 }
