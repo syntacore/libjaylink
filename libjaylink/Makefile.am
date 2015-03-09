@@ -17,7 +17,16 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
+if SUBPROJECT_BUILD
+noinst_LTLIBRARIES = libjaylink.la
+else
 lib_LTLIBRARIES = libjaylink.la
+
+library_includedir = $(includedir)/libjaylink
+library_include_HEADERS = \
+	libjaylink.h \
+	version.h
+endif
 
 libjaylink_la_SOURCES = \
 	buffer.c \
@@ -36,10 +45,5 @@ libjaylink_la_SOURCES = \
 	version.c
 
 libjaylink_la_LDFLAGS = $(JAYLINK_LIB_LDFLAGS)
-
-library_includedir = $(includedir)/libjaylink
-library_include_HEADERS = \
-	libjaylink.h \
-	version.h
 
 noinst_HEADERS = libjaylink-internal.h

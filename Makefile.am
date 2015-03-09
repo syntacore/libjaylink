@@ -1,7 +1,7 @@
 ##
 ## This file is part of the libjaylink project.
 ##
-## Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+## Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -20,5 +20,7 @@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = libjaylink
 
+if !SUBPROJECT_BUILD
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libjaylink.pc
+endif

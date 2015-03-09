@@ -82,7 +82,17 @@ AC_SUBST(JAYLINK_VERSION_LIB_REVISION)
 AC_SUBST(JAYLINK_VERSION_LIB_AGE)
 AC_SUBST(JAYLINK_VERSION_LIB)
 
+AC_ARG_ENABLE([subproject-build], AS_HELP_STRING([--enable-subproject-build],
+	[enable sub-project build [default=no]]))
+
+AM_CONDITIONAL([SUBPROJECT_BUILD],
+	[test "x$enable_subproject_build" == "xyes"])
+
+# Libtool interface version is not used for sub-project build as libjaylink is
+# built as libtool convenience library.
+if test "x$enable_subproject_build" != "xyes"; then
 JAYLINK_LIB_LDFLAGS="-version-info $JAYLINK_VERSION_LIB"
+fi
 
 case $host_os in
 mingw*)
