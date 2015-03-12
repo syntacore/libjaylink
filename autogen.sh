@@ -2,7 +2,7 @@
 ##
 ## This file is part of the libjaylink project.
 ##
-## Copyright (C) 2014 Marc Schink <jaylink-dev@marcschink.de>
+## Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -18,9 +18,16 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
+OS=`uname -s`
+LIBTOOLIZE=libtoolize
+
+if [ "x$OS" = "xDarwin" ]; then
+	LIBTOOLIZE=glibtoolize
+fi
+
 echo "Generating build system..."
 
-libtoolize --install --copy || exit 1
+$LIBTOOLIZE --install --copy || exit 1
 aclocal || exit 1
 autoheader || exit 1
 autoconf || exit 1
