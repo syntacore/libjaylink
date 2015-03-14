@@ -91,6 +91,8 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_READ_CONFIG = 4,
 	/** Device supports writing configuration data. */
 	JAYLINK_DEV_CAP_WRITE_CONFIG = 5,
+	/** Device supports retrieval of target interface speeds. */
+	JAYLINK_DEV_CAP_GET_SPEEDS = 9,
 	/** Device supports retrieval of free memory size. */
 	JAYLINK_DEV_CAP_GET_FREE_MEMORY = 11,
 	/** Device supports the setting of the target power supply. */
@@ -357,6 +359,8 @@ JAYLINK_API int jaylink_swo_get_speed_info(struct jaylink_device_handle *devh,
 
 JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
 		uint16_t speed);
+JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
+		uint32_t *freq, uint16_t *div);
 JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 		uint8_t interface);
 JAYLINK_API int jaylink_get_available_interfaces(

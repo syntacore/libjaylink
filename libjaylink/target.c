@@ -31,6 +31,7 @@
 /** @cond PRIVATE */
 #define CMD_SET_SPEED		0x05
 #define CMD_SET_TARGET_POWER	0x08
+#define CMD_GET_SPEEDS		0xc0
 #define CMD_SELECT_TIF		0xc7
 #define CMD_CLEAR_RESET		0xdc
 #define CMD_SET_RESET		0xdd
@@ -80,6 +81,86 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
 		log_err(ctx, "transport_write() failed: %i.", ret);
 		return ret;
 	}
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Retrieve target interface speeds.
+ *
+ * The speeds are applicable for the currently selected target interface only
+ * and calulcated as follows:
+ *
+ * @par
+ * <tt>speeds = @a freq / n</tt> with <tt>n >= @a div</tt>, where @p n is an
+ * integer
+ *
+ * Assuming, for example, a base frequency @a freq of 4 MHz and a minimum
+ * divider @a div of 4 then the highest possible target interface speed is
+ * 4 MHz / 4 = 1 MHz. The next highest speed is 800 kHz for a divider of 5, and
+ * so on.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_GET_SPEEDS capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[out] freq Base frequency in Hz on success, and undefined on failure.
+ * @param[out] div Minimum divider on success, and undefined on failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @see jaylink_select_interface() to select the target interface.
+ * @see jaylink_get_selected_interface() to retrieve the currently selected
+ * 					 interface.
+ * @see jaylink_set_speed() to set the target interface speed.
+ */
+JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
+		uint32_t *freq, uint16_t *div)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[6];
+	uint16_t dummy;
+
+	if (!devh || !freq || !div)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	ret = transport_start_write_read(devh, 1, 6, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_GET_SPEEDS;
+
+	ret = transport_write(devh, buf, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, buf, 6);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	dummy = buffer_get_u16(buf, 4);
+
+	if (!dummy) {
+		log_err(ctx, "Minimum frequency divider is zero.");
+		return JAYLINK_ERR;
+	}
+
+	*freq = buffer_get_u32(buf, 0);
+	*div = dummy;
 
 	return JAYLINK_OK;
 }
