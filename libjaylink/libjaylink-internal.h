@@ -20,7 +20,6 @@
 #ifndef LIBJAYLINK_LIBJAYLINK_INTERNAL_H
 #define LIBJAYLINK_LIBJAYLINK_INTERNAL_H
 
-#include <stdarg.h>
 #include <stdint.h>
 #include <sys/types.h>
 #include <libusb.h>
@@ -44,14 +43,12 @@
 struct jaylink_context {
 	/** libusb context. */
 	struct libusb_context *usb_ctx;
-
 	/**
 	 * List of allocated device instances.
 	 *
 	 * Used to prevent multiple device instances for the same device.
 	 */
 	struct list *devs;
-
 	/** Current log level. */
 	int log_level;
 };
@@ -59,16 +56,12 @@ struct jaylink_context {
 struct jaylink_device {
 	/** libjaylink context. */
 	struct jaylink_context *ctx;
-
 	/** Number of references held on this device instance. */
 	int refcnt;
-
 	/** libusb device instance. */
 	struct libusb_device *usb_dev;
-
 	/** USB address of the device. */
 	uint8_t usb_address;
-
 	/**
 	 * Serial number of the device.
 	 *
@@ -81,19 +74,14 @@ struct jaylink_device {
 struct jaylink_device_handle {
 	/** Device instance. */
 	struct jaylink_device *dev;
-
 	/** libusb device handle. */
 	struct libusb_device_handle *usb_devh;
-
 	/** USB interface number of the device. */
 	uint8_t interface_number;
-
 	/** USB interface IN endpoint of the device. */
 	uint8_t endpoint_in;
-
 	/** USB interface OUT endpoint of the device. */
 	uint8_t endpoint_out;
-
 	/**
 	 * Buffer for write and read operations.
 	 *
@@ -101,22 +89,17 @@ struct jaylink_device_handle {
 	 * consecutively and therefore the same buffer can be used for both.
 	 */
 	uint8_t *buffer;
-
 	/** Number of bytes left for the read operation. */
 	uint16_t read_length;
-
 	/** Number of bytes available in the buffer to be read. */
 	uint16_t bytes_available;
-
 	/** Current read position in the buffer. */
 	uint16_t read_pos;
-
 	/**
 	 * Number of bytes left to be written before the write operation will
 	 * be performed.
 	 */
 	uint16_t write_length;
-
 	/**
 	 * Current write position in the buffer.
 	 *
@@ -125,6 +108,13 @@ struct jaylink_device_handle {
 	 */
 	uint16_t write_pos;
 };
+
+struct list {
+	void *data;
+	struct list *next;
+};
+
+typedef int (*list_compare_callback)(const void *a, const void *b);
 
 /*--- buffer.c --------------------------------------------------------------*/
 
@@ -143,24 +133,14 @@ JAYLINK_PRIV struct jaylink_device *device_allocate(
 /*--- discovery.c -----------------------------------------------------------*/
 
 JAYLINK_PRIV ssize_t discovery_get_device_list(struct jaylink_context *ctx,
-			 struct jaylink_device ***list);
+		struct jaylink_device ***list);
 
 /*--- list.c ----------------------------------------------------------------*/
 
-struct list {
-	void *data;
-	struct list *next;
-};
-
-typedef int (*list_compare_callback)(const void *a, const void *b);
-
 JAYLINK_PRIV struct list *list_prepend(struct list *list, void *data);
-
 JAYLINK_PRIV struct list *list_remove(struct list *list, const void *data);
-
 JAYLINK_PRIV struct list *list_find_custom(struct list *list,
 		list_compare_callback cb, const void *cb_data);
-
 JAYLINK_PRIV void list_free(struct list *list);
 
 /*--- log.c -----------------------------------------------------------------*/

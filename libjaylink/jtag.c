@@ -143,7 +143,7 @@ JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 			return ret;
 		}
 
-		if (status) {
+		if (status > 0) {
 			log_err(ctx, "JTAG I/O operation failed: %02x.",
 				status);
 			return JAYLINK_ERR;

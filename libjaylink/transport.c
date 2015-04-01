@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -30,16 +31,16 @@
  */
 
 /** Timeout of an USB transfer in milliseconds. */
-#define USB_TIMEOUT			1000
+#define USB_TIMEOUT	1000
 
 /**
  * Number of consecutive timeouts before an USB transfer will be treated as
  * timed out.
  */
-#define NUM_TIMEOUTS			2
+#define NUM_TIMEOUTS	2
 
 /** Chunk size in bytes in which data is transferred. */
-#define CHUNK_SIZE			2048
+#define CHUNK_SIZE	2048
 
 /**
  * Buffer size in bytes.
@@ -47,7 +48,7 @@
  * Note that both write and read operations require a buffer size of at least
  * #CHUNK_SIZE bytes.
  */
-#define BUFFER_SIZE			CHUNK_SIZE
+#define BUFFER_SIZE	CHUNK_SIZE
 
 static int initialize_handle(struct jaylink_device_handle *devh)
 {
@@ -280,11 +281,11 @@ JAYLINK_PRIV int transport_start_write(struct jaylink_device_handle *devh,
 
 	log_dbg(ctx, "Starting write operation (length = %u bytes).", length);
 
-	if (devh->write_pos)
+	if (devh->write_pos > 0)
 		log_warn(ctx, "Last write operation left %u bytes in the "
 			"buffer.", devh->write_pos);
 
-	if (devh->write_length)
+	if (devh->write_length > 0)
 		log_warn(ctx, "Last write operation was not performed.");
 
 	devh->write_length = length;
@@ -318,11 +319,11 @@ JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
 
 	log_dbg(ctx, "Starting read operation (length = %u bytes).", length);
 
-	if (devh->bytes_available)
+	if (devh->bytes_available > 0)
 		log_dbg(ctx, "Last read operation left %u bytes in the "
 			"buffer.", devh->bytes_available);
 
-	if (devh->read_length)
+	if (devh->read_length > 0)
 		log_warn(ctx, "Last read operation left %u bytes.",
 			devh->read_length);
 
@@ -366,18 +367,18 @@ JAYLINK_PRIV int transport_start_write_read(struct jaylink_device_handle *devh,
 	log_dbg(ctx, "Starting write / read operation (length = "
 		"%u / %u bytes).", write_length, read_length);
 
-	if (devh->write_pos)
+	if (devh->write_pos > 0)
 		log_warn(ctx, "Last write operation left %u bytes in the "
 			"buffer.", devh->write_pos);
 
-	if (devh->write_length)
+	if (devh->write_length > 0)
 		log_warn(ctx, "Last write operation was not performed.");
 
-	if (devh->bytes_available)
+	if (devh->bytes_available > 0)
 		log_warn(ctx, "Last read operation left %u bytes in the "
 			"buffer.", devh->bytes_available);
 
-	if (devh->read_length)
+	if (devh->read_length > 0)
 		log_warn(ctx, "Last read operation left %u bytes.",
 			devh->read_length);
 
@@ -403,7 +404,7 @@ static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
 	tries = NUM_TIMEOUTS;
 	transferred = 0;
 
-	while (tries && !transferred) {
+	while (tries > 0 && !transferred) {
 		/* Always request CHUNK_SIZE bytes from the device. */
 		ret = libusb_bulk_transfer(devh->usb_devh, devh->endpoint_in,
 			(unsigned char *)buffer, CHUNK_SIZE, &transferred,
@@ -424,7 +425,7 @@ static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
 	}
 
 	/* Ignore a possible timeout if at least one byte was received. */
-	if (transferred) {
+	if (transferred > 0) {
 		*length = transferred;
 		return JAYLINK_OK;
 	}
@@ -445,7 +446,7 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
 	ctx = devh->dev->ctx;
 	tries = NUM_TIMEOUTS;
 
-	while (tries && length) {
+	while (tries > 0 && length > 0) {
 		/* Send data in chunks of CHUNK_SIZE bytes to the device. */
 		ret = libusb_bulk_transfer(devh->usb_devh, devh->endpoint_out,
 			(unsigned char *)buffer, MIN(CHUNK_SIZE, length),
@@ -562,7 +563,7 @@ JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
 	fill_bytes = (num_chunks * CHUNK_SIZE) - devh->write_pos;
 	tmp = MIN(length, fill_bytes);
 
-	if (tmp) {
+	if (tmp > 0) {
 		memcpy(devh->buffer + devh->write_pos, buffer, tmp);
 
 		length -= tmp;
@@ -646,7 +647,7 @@ JAYLINK_PRIV int transport_read(struct jaylink_device_handle *devh,
 		devh->read_pos = 0;
 	}
 
-	while (length) {
+	while (length > 0) {
 		/*
 		 * If less than CHUNK_SIZE bytes are requested from the device,
 		 * store the received data in the internal buffer instead of

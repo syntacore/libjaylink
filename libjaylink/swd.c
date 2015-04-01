@@ -120,7 +120,7 @@ JAYLINK_API int jaylink_swd_io(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	if (status) {
+	if (status > 0) {
 		log_err(ctx, "SWD I/O operation failed: %02x.", status);
 		return JAYLINK_ERR;
 	}

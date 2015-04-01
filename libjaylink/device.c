@@ -18,6 +18,7 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <libusb.h>
 
@@ -702,8 +703,7 @@ JAYLINK_API int jaylink_read_raw_config(struct jaylink_device_handle *devh,
 	ret = transport_start_write_read(devh, 1, JAYLINK_DEV_CONFIG_SIZE, 1);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_write_read() failed: %i.",
-			ret);
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
 		return ret;
 	}
 
@@ -756,8 +756,7 @@ JAYLINK_API int jaylink_write_raw_config(struct jaylink_device_handle *devh,
 	ret = transport_start_write(devh, 1 + JAYLINK_DEV_CONFIG_SIZE, 1);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_write_read() failed: %i.",
-			ret);
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
 		return ret;
 	}
 

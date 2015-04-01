@@ -20,7 +20,6 @@
 #ifndef LIBJAYLINK_LIBJAYLINK_H
 #define LIBJAYLINK_LIBJAYLINK_H
 
-#include <stdlib.h>
 #include <stdint.h>
 #include <sys/types.h>
 
@@ -255,69 +254,39 @@ struct jaylink_device_handle;
 #define JAYLINK_API
 #endif
 
+/*--- core.c ----------------------------------------------------------------*/
+
 JAYLINK_API int jaylink_init(struct jaylink_context **ctx);
 JAYLINK_API void jaylink_exit(struct jaylink_context *ctx);
 
-JAYLINK_API const char *jaylink_strerror(int error_code);
-JAYLINK_API const char *jaylink_strerror_name(int error_code);
-
-JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx, int level);
-JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx);
+/*--- device.c --------------------------------------------------------------*/
 
 JAYLINK_API ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
 		struct jaylink_device ***devices);
-
 JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
 		int unref_devices);
-
 JAYLINK_API int jaylink_device_get_serial_number(
 		const struct jaylink_device *dev, uint32_t *serial_number);
-
 JAYLINK_API int jaylink_device_get_usb_address(
 		const struct jaylink_device *dev);
-
 JAYLINK_API struct jaylink_device *jaylink_ref_device(
 		struct jaylink_device *dev);
 JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev);
-
 JAYLINK_API int jaylink_open(struct jaylink_device *dev,
 		struct jaylink_device_handle **devh);
-
 JAYLINK_API void jaylink_close(struct jaylink_device_handle *devh);
-
 JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 		char **version);
-
 JAYLINK_API int jaylink_get_hardware_version(struct jaylink_device_handle *devh,
 		struct jaylink_hardware_version *version);
-
 JAYLINK_API int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
 		struct jaylink_hardware_status *status);
-
 JAYLINK_API int jaylink_get_caps(struct jaylink_device_handle *devh,
 		uint8_t *caps);
 JAYLINK_API int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
 		uint8_t *caps);
-
 JAYLINK_API int jaylink_get_free_memory(struct jaylink_device_handle *devh,
 		uint32_t *size);
-
-JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
-		uint16_t speed);
-
-JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
-		uint8_t interface);
-JAYLINK_API int jaylink_get_available_interfaces(
-		struct jaylink_device_handle *devh, uint32_t *interfaces);
-JAYLINK_API int jaylink_get_selected_interface(
-		struct jaylink_device_handle *devh);
-
-JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh);
-JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh);
-
-JAYLINK_API int jaylink_set_target_power(struct jaylink_device_handle *devh,
-		int enable);
-
 JAYLINK_API int jaylink_read_raw_config(struct jaylink_device_handle *devh,
 		uint8_t *config);
 JAYLINK_API int jaylink_write_raw_config(struct jaylink_device_handle *devh,
@@ -331,15 +300,31 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		struct jaylink_connection *connections, uint8_t *info,
 		uint16_t *info_size);
 
+/*--- error.c ---------------------------------------------------------------*/
+
+JAYLINK_API const char *jaylink_strerror(int error_code);
+JAYLINK_API const char *jaylink_strerror_name(int error_code);
+
+/*--- jtag.c ----------------------------------------------------------------*/
+
 JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 		const uint8_t *tms, const uint8_t *tdi, uint8_t *tdo,
 		uint16_t length, int version);
 JAYLINK_API int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_jtag_set_trst(struct jaylink_device_handle *devh);
 
+/*--- log.c -----------------------------------------------------------------*/
+
+JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx, int level);
+JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx);
+
+/*--- swd.c -----------------------------------------------------------------*/
+
 JAYLINK_API int jaylink_swd_io(struct jaylink_device_handle *devh,
 		const uint8_t *direction, const uint8_t *out, uint8_t *in,
 		uint16_t length);
+
+/*--- swo.c -----------------------------------------------------------------*/
 
 JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
 		enum jaylink_swo_mode mode, uint32_t baudrate, uint32_t size);
@@ -348,6 +333,23 @@ JAYLINK_API ssize_t jaylink_swo_read(struct jaylink_device_handle *devh,
 		uint8_t *buffer, uint32_t length);
 JAYLINK_API int jaylink_swo_get_speed_info(struct jaylink_device_handle *devh,
 		enum jaylink_swo_mode mode, uint32_t *freq, uint32_t *div);
+
+/*--- target.c --------------------------------------------------------------*/
+
+JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
+		uint16_t speed);
+JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
+		uint8_t interface);
+JAYLINK_API int jaylink_get_available_interfaces(
+		struct jaylink_device_handle *devh, uint32_t *interfaces);
+JAYLINK_API int jaylink_get_selected_interface(
+		struct jaylink_device_handle *devh);
+JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh);
+JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh);
+JAYLINK_API int jaylink_set_target_power(struct jaylink_device_handle *devh,
+		int enable);
+
+/*--- util.c ----------------------------------------------------------------*/
 
 JAYLINK_API int jaylink_has_cap(const uint8_t *caps, uint32_t cap);
 
