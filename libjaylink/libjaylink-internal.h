@@ -24,6 +24,8 @@
 #include <sys/types.h>
 #include <libusb.h>
 
+#include "libjaylink.h"
+
 /**
  * @file
  *
@@ -51,6 +53,10 @@ struct jaylink_context {
 	struct list *devs;
 	/** Current log level. */
 	int log_level;
+	/** Log callback function. */
+	jaylink_log_callback log_callback;
+	/** User data to be passed to the log callback function. */
+	void *log_callback_data;
 };
 
 struct jaylink_device {
@@ -145,12 +151,16 @@ JAYLINK_PRIV void list_free(struct list *list);
 
 /*--- log.c -----------------------------------------------------------------*/
 
-JAYLINK_PRIV void log_err(struct jaylink_context *ctx, const char *format, ...);
-JAYLINK_PRIV void log_warn(struct jaylink_context *ctx,
+JAYLINK_PRIV int log_vprintf(const struct jaylink_context *ctx, int level,
+		const char *format, va_list args, void *user_data);
+JAYLINK_PRIV void log_err(const struct jaylink_context *ctx,
 		const char *format, ...);
-JAYLINK_PRIV void log_info(struct jaylink_context *ctx,
+JAYLINK_PRIV void log_warn(const struct jaylink_context *ctx,
 		const char *format, ...);
-JAYLINK_PRIV void log_dbg(struct jaylink_context *ctx, const char *format, ...);
+JAYLINK_PRIV void log_info(const struct jaylink_context *ctx,
+		const char *format, ...);
+JAYLINK_PRIV void log_dbg(const struct jaylink_context *ctx,
+		const char *format, ...);
 
 /*--- transport.c -----------------------------------------------------------*/
 

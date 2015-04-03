@@ -21,6 +21,7 @@
 #define LIBJAYLINK_LIBJAYLINK_H
 
 #include <stdint.h>
+#include <stdarg.h>
 #include <sys/types.h>
 
 /**
@@ -254,6 +255,10 @@ struct jaylink_device_handle;
 #define JAYLINK_API
 #endif
 
+/** Log callback function type. */
+typedef int (*jaylink_log_callback)(const struct jaylink_context *ctx,
+		int level, const char *format, va_list args, void *user_data);
+
 /*--- core.c ----------------------------------------------------------------*/
 
 JAYLINK_API int jaylink_init(struct jaylink_context **ctx);
@@ -317,6 +322,8 @@ JAYLINK_API int jaylink_jtag_set_trst(struct jaylink_device_handle *devh);
 
 JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx, int level);
 JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx);
+JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
+		jaylink_log_callback callback, void *user_data);
 
 /*--- swd.c -----------------------------------------------------------------*/
 

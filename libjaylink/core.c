@@ -63,6 +63,9 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 	/* Show error and warning messages by default. */
 	context->log_level = JAYLINK_LOG_LEVEL_WARNING;
 
+	context->log_callback = &log_vprintf;
+	context->log_callback_data = NULL;
+
 	*ctx = context;
 
 	return JAYLINK_OK;

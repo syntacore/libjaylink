@@ -68,24 +68,57 @@ JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx)
 	return ctx->log_level;
 }
 
-/** @private */
-static void log_vprintf(struct jaylink_context *ctx, int level,
-		const char *format, va_list args)
+/**
+ * Set the libjaylink log callback function.
+ *
+ * @param[in,out] ctx libjaylink context.
+ * @param[in] callback Callback function to use, or NULL to use the default log
+ * 		       function.
+ * @param[in] user_data User data to be passed to the callback function.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ */
+JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
+		jaylink_log_callback callback, void *user_data)
 {
+	if (!ctx)
+		return JAYLINK_ERR_ARG;
+
+	if (callback) {
+		ctx->log_callback = callback;
+		ctx->log_callback_data = user_data;
+	} else {
+		ctx->log_callback = &log_vprintf;
+		ctx->log_callback_data = NULL;
+	}
+
+	return JAYLINK_OK;
+}
+
+/** @private */
+JAYLINK_PRIV int log_vprintf(const struct jaylink_context *ctx, int level,
+		const char *format, va_list args, void *user_data)
+{
+	(void)user_data;
+
 	/*
 	 * Filter out messages with higher verbosity than the verbosity of the
 	 * current log level.
 	 */
 	if (level > ctx->log_level)
-		return;
+		return 0;
 
 	fprintf(stderr, "jaylink: ");
 	vfprintf(stderr, format, args);
 	fprintf(stderr, "\n");
+
+	return 0;
 }
 
 /** @private */
-JAYLINK_PRIV void log_err(struct jaylink_context *ctx, const char *format, ...)
+JAYLINK_PRIV void log_err(const struct jaylink_context *ctx,
+		const char *format, ...)
 {
 	va_list args;
 
@@ -93,12 +126,14 @@ JAYLINK_PRIV void log_err(struct jaylink_context *ctx, const char *format, ...)
 		return;
 
 	va_start(args, format);
-	log_vprintf(ctx, JAYLINK_LOG_LEVEL_ERROR, format, args);
+	ctx->log_callback(ctx, JAYLINK_LOG_LEVEL_ERROR, format, args,
+		ctx->log_callback_data);
 	va_end(args);
 }
 
 /** @private */
-JAYLINK_PRIV void log_warn(struct jaylink_context *ctx, const char *format, ...)
+JAYLINK_PRIV void log_warn(const struct jaylink_context *ctx,
+		const char *format, ...)
 {
 	va_list args;
 
@@ -106,12 +141,14 @@ JAYLINK_PRIV void log_warn(struct jaylink_context *ctx, const char *format, ...)
 		return;
 
 	va_start(args, format);
-	log_vprintf(ctx, JAYLINK_LOG_LEVEL_WARNING, format, args);
+	ctx->log_callback(ctx, JAYLINK_LOG_LEVEL_WARNING, format, args,
+		ctx->log_callback_data);
 	va_end(args);
 }
 
 /** @private */
-JAYLINK_PRIV void log_info(struct jaylink_context *ctx, const char *format, ...)
+JAYLINK_PRIV void log_info(const struct jaylink_context *ctx,
+		const char *format, ...)
 {
 	va_list args;
 
@@ -119,12 +156,14 @@ JAYLINK_PRIV void log_info(struct jaylink_context *ctx, const char *format, ...)
 		return;
 
 	va_start(args, format);
-	log_vprintf(ctx, JAYLINK_LOG_LEVEL_INFO, format, args);
+	ctx->log_callback(ctx, JAYLINK_LOG_LEVEL_INFO, format, args,
+		ctx->log_callback_data);
 	va_end(args);
 }
 
 /** @private */
-JAYLINK_PRIV void log_dbg(struct jaylink_context *ctx, const char *format, ...)
+JAYLINK_PRIV void log_dbg(const struct jaylink_context *ctx,
+		const char *format, ...)
 {
 	va_list args;
 
@@ -132,6 +171,7 @@ JAYLINK_PRIV void log_dbg(struct jaylink_context *ctx, const char *format, ...)
 		return;
 
 	va_start(args, format);
-	log_vprintf(ctx, JAYLINK_LOG_LEVEL_DEBUG, format, args);
+	ctx->log_callback(ctx, JAYLINK_LOG_LEVEL_DEBUG, format, args,
+		ctx->log_callback_data);
 	va_end(args);
 }
