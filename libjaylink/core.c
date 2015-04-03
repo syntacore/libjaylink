@@ -43,6 +43,7 @@
  */
 JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 {
+	int ret;
 	struct jaylink_context *context;
 
 	if (!ctx)
@@ -65,6 +66,13 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 
 	context->log_callback = &log_vprintf;
 	context->log_callback_data = NULL;
+
+	ret = jaylink_log_set_domain(context, JAYLINK_LOG_DOMAIN_DEFAULT);
+
+	if (ret != JAYLINK_OK) {
+		free(context);
+		return ret;
+	}
 
 	*ctx = context;
 

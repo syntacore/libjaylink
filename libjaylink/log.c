@@ -96,6 +96,59 @@ JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
 	return JAYLINK_OK;
 }
 
+/**
+ * Set the libjaylink log domain.
+ *
+ * The log domain is a string which is used as prefix for all log messages to
+ * differentiate them from messages of other libraries.
+ *
+ * The maximum length of the log domain is #JAYLINK_LOG_DOMAIN_MAX_LENGTH bytes,
+ * excluding the trailing null-terminator. A log domain which exceeds this
+ * length will be silently truncated.
+ *
+ * @param[in,out] ctx libjaylink context.
+ * @param[in] domain Log domain to use. To set the default log domain, use
+ * 		     #JAYLINK_LOG_DOMAIN_DEFAULT.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR Other error conditions.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ */
+JAYLINK_API int jaylink_log_set_domain(struct jaylink_context *ctx,
+		char *domain)
+{
+	int ret;
+
+	if (!ctx || !domain)
+		return JAYLINK_ERR_ARG;
+
+	ret = snprintf(ctx->log_domain, JAYLINK_LOG_DOMAIN_MAX_LENGTH + 1,
+		"%s", domain);
+
+	if (ret < 0)
+		return JAYLINK_ERR;
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Get the libjaylink log domain.
+ *
+ * @param[in] ctx libjaylink context.
+ *
+ * @return A string which contains the current log domain on success, or NULL
+ * 	   on failure. The string is null-terminated and must not be free'd by
+ * 	   the caller.
+ */
+JAYLINK_API const char *jaylink_log_get_domain(
+		const struct jaylink_context *ctx)
+{
+	if (!ctx)
+		return NULL;
+
+	return ctx->log_domain;
+}
+
 /** @private */
 JAYLINK_PRIV int log_vprintf(const struct jaylink_context *ctx, int level,
 		const char *format, va_list args, void *user_data)
@@ -109,7 +162,9 @@ JAYLINK_PRIV int log_vprintf(const struct jaylink_context *ctx, int level,
 	if (level > ctx->log_level)
 		return 0;
 
-	fprintf(stderr, "jaylink: ");
+	if (ctx->log_domain[0] != '\0')
+		fprintf(stderr, "%s", ctx->log_domain);
+
 	vfprintf(stderr, format, args);
 	fprintf(stderr, "\n");
 

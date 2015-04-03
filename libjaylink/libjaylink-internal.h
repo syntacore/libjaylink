@@ -57,6 +57,8 @@ struct jaylink_context {
 	jaylink_log_callback log_callback;
 	/** User data to be passed to the log callback function. */
 	void *log_callback_data;
+	/** Log domain. */
+	char log_domain[JAYLINK_LOG_DOMAIN_MAX_LENGTH + 1];
 };
 
 struct jaylink_device {

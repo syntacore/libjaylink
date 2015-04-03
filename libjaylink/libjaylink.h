@@ -58,6 +58,12 @@ enum jaylink_log_level {
 	JAYLINK_LOG_LEVEL_DEBUG = 4
 };
 
+/** Default libjaylink log domain. */
+#define JAYLINK_LOG_DOMAIN_DEFAULT	"jaylink: "
+
+/** Maximum length of a libjaylink log domain in bytes. */
+#define JAYLINK_LOG_DOMAIN_MAX_LENGTH	32
+
 /**
  * USB addresses.
  *
@@ -324,6 +330,10 @@ JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx, int level);
 JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx);
 JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
 		jaylink_log_callback callback, void *user_data);
+JAYLINK_API int jaylink_log_set_domain(struct jaylink_context *ctx,
+		char *domain);
+JAYLINK_API const char *jaylink_log_get_domain(
+		const struct jaylink_context *ctx);
 
 /*--- swd.c -----------------------------------------------------------------*/
 
