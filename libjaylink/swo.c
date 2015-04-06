@@ -191,20 +191,24 @@ JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
  * @param[in,out] devh Device handle.
  * @param[out] buffer Buffer to store trace data on success. Its content is
  * 		      undefined on failure.
- * @param[in] length Maximum number of bytes to read.
+ * @param[in,out] length Maximum number of bytes to read. On success, the value
+ * 			 gets updated with the actual number of bytes read. The
+ * 			 value is undefined on failure.
  *
- * @return The number of read bytes on success, or a negative error code on
- * 	   failure.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
  */
-JAYLINK_API ssize_t jaylink_swo_read(struct jaylink_device_handle *devh,
-		uint8_t *buffer, uint32_t length)
+JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
+		uint8_t *buffer, uint32_t *length)
 {
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[32];
 	uint32_t tmp;
 
-	if (!devh || !buffer)
+	if (!devh || !buffer || !length)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
@@ -220,7 +224,7 @@ JAYLINK_API ssize_t jaylink_swo_read(struct jaylink_device_handle *devh,
 
 	buf[2] = 0x04;
 	buf[3] = SWO_PARAM_READ_SIZE;
-	buffer_set_u32(buf, length, 4);
+	buffer_set_u32(buf, *length, 4);
 
 	buf[8] = 0x00;
 
@@ -247,11 +251,13 @@ JAYLINK_API ssize_t jaylink_swo_read(struct jaylink_device_handle *devh,
 
 	tmp = buffer_get_u32(buf, 4);
 
-	if (tmp > length) {
+	if (tmp > *length) {
 		log_err(ctx, "Received %u bytes but only %u bytes were "
-			"requested.", tmp, length);
+			"requested.", tmp, *length);
 		return JAYLINK_ERR;
 	}
+
+	*length = tmp;
 
 	if (tmp > 0) {
 		ret = transport_start_read(devh, tmp);
@@ -269,7 +275,7 @@ JAYLINK_API ssize_t jaylink_swo_read(struct jaylink_device_handle *devh,
 		}
 	}
 
-	return tmp;
+	return JAYLINK_OK;
 }
 
 /**
