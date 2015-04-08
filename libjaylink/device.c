@@ -87,7 +87,6 @@ JAYLINK_PRIV struct jaylink_device *device_allocate(
 
 	dev->ctx = ctx;
 	dev->ref_count = 1;
-	dev->usb_dev = NULL;
 
 	return dev;
 }
@@ -313,15 +312,22 @@ JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev)
 
 	if (!dev->ref_count) {
 		ctx = dev->ctx;
-
-		log_dbg(ctx, "Device destroyed (bus:address = %03u:%03u).",
-			libusb_get_bus_number(dev->usb_dev),
-			libusb_get_device_address(dev->usb_dev));
-
 		ctx->devs = list_remove(dev->ctx->devs, dev);
 
-		if (dev->usb_dev)
+		if (dev->interface == JAYLINK_HIF_USB) {
+			log_dbg(ctx, "Device destroyed (bus:address = "
+				"%03u:%03u).",
+				libusb_get_bus_number(dev->usb_dev),
+				libusb_get_device_address(dev->usb_dev));
+
 			libusb_unref_device(dev->usb_dev);
+		} else if (dev->interface == JAYLINK_HIF_TCP) {
+			log_dbg(ctx, "Device destroyed (IPv4 address = %s).",
+				dev->ipv4_address);
+		} else {
+			log_err(ctx, "BUG: Invalid host interface: %u.",
+				dev->interface);
+		}
 
 		free(dev);
 	}
@@ -359,6 +365,7 @@ static void free_device_handle(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_MALLOC Memory allocation error.
+ * @retval JAYLINK_ERR_NOT_SUPPORTED Operation not supported.
  * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
@@ -372,6 +379,9 @@ JAYLINK_API int jaylink_open(struct jaylink_device *dev,
 
 	if (!dev || !devh)
 		return JAYLINK_ERR_ARG;
+
+	if (dev->interface != JAYLINK_HIF_USB)
+		return JAYLINK_ERR_NOT_SUPPORTED;
 
 	handle = allocate_device_handle(dev);
 

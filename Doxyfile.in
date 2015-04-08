@@ -779,10 +779,13 @@ RECURSIVE              = NO
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = @top_srcdir@/libjaylink/libjaylink-internal.h \
+EXCLUDE                = @top_srcdir@/libjaylink/buffer.c \
+                         @top_srcdir@/libjaylink/discovery_tcp.c \
+                         @top_srcdir@/libjaylink/discovery_usb.c \
+                         @top_srcdir@/libjaylink/libjaylink-internal.h \
                          @top_srcdir@/libjaylink/list.c \
-                         @top_srcdir@/libjaylink/transport.c \
-                         @top_srcdir@/libjaylink/buffer.c
+                         @top_srcdir@/libjaylink/socket.c \
+                         @top_srcdir@/libjaylink/transport.c
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded

@@ -32,12 +32,15 @@ libjaylink_la_SOURCES = \
 	core.c \
 	device.c \
 	discovery.c \
+	discovery_tcp.c \
+	discovery_usb.c \
 	emucom.c \
 	error.c \
 	fileio.c \
 	jtag.c \
 	list.c \
 	log.c \
+	socket.c \
 	strutil.c \
 	swd.c \
 	swo.c \

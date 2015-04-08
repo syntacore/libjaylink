@@ -24,14 +24,16 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#include <sys/types.h>
+#ifdef _WIN32
+#include <ws2tcpip.h>
+#else
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#endif
+#include <libusb.h>
 
 #include "libjaylink.h"
-
-/*
- * libusb.h includes windows.h and therefore must be included after anything
- * that includes winsock2.h.
- */
-#include <libusb.h>
 
 /**
  * @file
@@ -48,6 +50,9 @@
 
 /** Calculate the minimum of two numeric values. */
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
+/** Media Access Control (MAC) address length in bytes. */
+#define MAC_ADDRESS_LENGTH	6
 
 struct jaylink_context {
 	/** libusb context. */
@@ -77,10 +82,6 @@ struct jaylink_device {
 	size_t ref_count;
 	/** Host interface. */
 	enum jaylink_host_interface interface;
-	/** libusb device instance. */
-	struct libusb_device *usb_dev;
-	/** USB address of the device. */
-	uint8_t usb_address;
 	/**
 	 * Serial number of the device.
 	 *
@@ -90,6 +91,55 @@ struct jaylink_device {
 	uint32_t serial_number;
 	/** Indicates whether the serial number is valid. */
 	bool valid_serial_number;
+	/** libusb device instance. */
+	struct libusb_device *usb_dev;
+	/** USB address of the device. */
+	uint8_t usb_address;
+	/**
+	 * IPv4 address.
+	 *
+	 * The address is encoded as string in quad-dotted decimal format.
+	 *
+	 * This field is used for devices with host interface #JAYLINK_HIF_TCP
+	 * only.
+	 */
+	char ipv4_address[INET_ADDRSTRLEN];
+	/**
+	 * Media Access Control (MAC) address.
+	 *
+	 * This field is used for devices with host interface #JAYLINK_HIF_TCP
+	 * only.
+	 */
+	uint8_t mac_address[MAC_ADDRESS_LENGTH];
+	/** Indicates whether the MAC address is available. */
+	bool has_mac_address;
+	/**
+	 * Product name.
+	 *
+	 * This field is used for devices with host interface #JAYLINK_HIF_TCP
+	 * only.
+	 */
+	char product_name[JAYLINK_PRODUCT_NAME_MAX_LENGTH];
+	/** Indicates whether the product name is available. */
+	bool has_product_name;
+	/**
+	 * Nickname.
+	 *
+	 * This field is used for devices with host interface #JAYLINK_HIF_TCP
+	 * only.
+	 */
+	char nickname[JAYLINK_NICKNAME_MAX_LENGTH];
+	/** Indicates whether the nickname is available. */
+	bool has_nickname;
+	/**
+	 * Hardware version.
+	 *
+	 * This field is used for devices with host interface #JAYLINK_HIF_TCP
+	 * only.
+	 */
+	struct jaylink_hardware_version hw_version;
+	/** Indicates whether the hardware version is available. */
+	bool has_hw_version;
 };
 
 struct jaylink_device_handle {
@@ -153,6 +203,14 @@ JAYLINK_PRIV uint32_t buffer_get_u32(const uint8_t *buffer, size_t offset);
 JAYLINK_PRIV struct jaylink_device *device_allocate(
 		struct jaylink_context *ctx);
 
+/*--- discovery_tcp.c -------------------------------------------------------*/
+
+JAYLINK_PRIV int discovery_tcp_scan(struct jaylink_context *ctx);
+
+/*--- discovery_usb.c -------------------------------------------------------*/
+
+JAYLINK_PRIV int discovery_usb_scan(struct jaylink_context *ctx);
+
 /*--- list.c ----------------------------------------------------------------*/
 
 JAYLINK_PRIV struct list *list_prepend(struct list *list, void *data);
@@ -175,6 +233,19 @@ JAYLINK_PRIV void log_info(const struct jaylink_context *ctx,
 		const char *format, ...);
 JAYLINK_PRIV void log_dbg(const struct jaylink_context *ctx,
 		const char *format, ...);
+
+/*--- socket.c --------------------------------------------------------------*/
+
+JAYLINK_PRIV bool socket_close(int sock);
+JAYLINK_PRIV bool socket_bind(int sock, const struct sockaddr *address,
+		size_t length);
+JAYLINK_PRIV bool socket_sendto(int sock, const void *buffer, size_t *length,
+		int flags, const struct sockaddr *address,
+		size_t address_length);
+JAYLINK_PRIV bool socket_recvfrom(int sock, void *buffer, size_t *length,
+		int flags, struct sockaddr *address, size_t *address_length);
+JAYLINK_PRIV bool socket_set_option(int sock, int level, int option,
+		const void *value, size_t length);
 
 /*--- transport.c -----------------------------------------------------------*/
 

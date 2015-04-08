@@ -95,7 +95,9 @@ enum jaylink_capability {
 /** Host interfaces. */
 enum jaylink_host_interface {
 	/** Universal Serial Bus (USB). */
-	JAYLINK_HIF_USB = (1 << 0)
+	JAYLINK_HIF_USB = (1 << 0),
+	/** Transmission Control Protocol (TCP). */
+	JAYLINK_HIF_TCP = (1 << 1)
 };
 
 /**
@@ -324,6 +326,18 @@ struct jaylink_connection {
 
 /** Maximum number of connections that can be registered on a device. */
 #define JAYLINK_MAX_CONNECTIONS			16
+
+/**
+ * Maximum length of a device's nickname including trailing null-terminator in
+ * bytes.
+ */
+#define JAYLINK_NICKNAME_MAX_LENGTH		32
+
+/**
+ * Maximum length of a device's product name including trailing null-terminator
+ * in bytes.
+ */
+#define JAYLINK_PRODUCT_NAME_MAX_LENGTH		32
 
 /** Maximum length of a filename in bytes. */
 #define JAYLINK_FILE_NAME_MAX_LENGTH		255
