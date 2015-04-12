@@ -102,7 +102,9 @@ enum jaylink_device_capability {
 	/** Device supports registration of connections. */
 	JAYLINK_DEV_CAP_REGISTER = 27,
 	/** Device supports retrieval of extended capabilities. */
-	JAYLINK_DEV_CAP_GET_EXT_CAPS = 31
+	JAYLINK_DEV_CAP_GET_EXT_CAPS = 31,
+	/** Device supports ethernet connectivity. */
+	JAYLINK_DEV_CAP_ETHERNET = 38
 };
 
 /** Device hardware types. */
