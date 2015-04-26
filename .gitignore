@@ -5,6 +5,7 @@ config.h*
 config.log
 config.status
 configure
+configure.gnu
 .deps
 doxy/
 *.la
