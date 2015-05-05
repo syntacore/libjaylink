@@ -24,3 +24,5 @@ if !SUBPROJECT_BUILD
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libjaylink.pc
 endif
+
+EXTRA_DIST = Doxyfile
