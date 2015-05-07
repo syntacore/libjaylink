@@ -34,7 +34,7 @@
 #define SWO_CMD_START		0x64
 #define SWO_CMD_STOP		0x65
 #define SWO_CMD_READ		0x66
-#define SWO_CMD_GET_SPEED_INFO	0x6e
+#define SWO_CMD_GET_SPEEDS	0x6e
 
 #define SWO_PARAM_MODE		0x01
 #define SWO_PARAM_BAUDRATE	0x02
@@ -279,13 +279,13 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 }
 
 /**
- * Retrieve SWO speed information.
+ * Retrieve SWO speeds.
  *
  * @note This function must be used only if the device has the
  * 	 #JAYLINK_DEV_CAP_SWO capability.
  *
  * @param[in,out] devh Device handle.
- * @param[in] mode Capture mode to retrieve speed information for.
+ * @param[in] mode Capture mode to retrieve speeds for.
  * @param[out] freq Base frequency on success, and undefined on failure.
  * @param[out] div Minimum divider on success, and undefined on failure.
  *
@@ -294,7 +294,7 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  */
-JAYLINK_API int jaylink_swo_get_speed_info(struct jaylink_device_handle *devh,
+JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 		enum jaylink_swo_mode mode, uint32_t *freq, uint32_t *div)
 {
 	int ret;
@@ -318,7 +318,7 @@ JAYLINK_API int jaylink_swo_get_speed_info(struct jaylink_device_handle *devh,
 	}
 
 	buf[0] = CMD_SWO;
-	buf[1] = SWO_CMD_GET_SPEED_INFO;
+	buf[1] = SWO_CMD_GET_SPEEDS;
 
 	buf[2] = 0x04;
 	buf[3] = SWO_PARAM_MODE;

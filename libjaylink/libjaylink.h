@@ -352,7 +352,7 @@ JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
 JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 		uint8_t *buffer, uint32_t *length);
-JAYLINK_API int jaylink_swo_get_speed_info(struct jaylink_device_handle *devh,
+JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 		enum jaylink_swo_mode mode, uint32_t *freq, uint32_t *div);
 
 /*--- target.c --------------------------------------------------------------*/
