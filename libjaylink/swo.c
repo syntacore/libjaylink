@@ -280,13 +280,24 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 
 /**
  * Retrieve SWO speeds.
+
+ * The speeds are calulcated as follows:
+ *
+ * @par
+ * <tt>speeds = @a freq / n</tt> with <tt>n >= @a div</tt>, where @p n is an
+ * integer
+ *
+ * Assuming, for example, a base frequency @a freq of 4500 kHz and a minimum
+ * divider @a div of 1 then the highest possible SWO speed is
+ * 4500 kHz / 1 = 4500 kHz. The next highest speed is 2250 kHz for a divider of
+ * 2, and so on.
  *
  * @note This function must be used only if the device has the
  * 	 #JAYLINK_DEV_CAP_SWO capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in] mode Capture mode to retrieve speeds for.
- * @param[out] freq Base frequency on success, and undefined on failure.
+ * @param[out] freq Base frequency in Hz on success, and undefined on failure.
  * @param[out] div Minimum divider on success, and undefined on failure.
  *
  * @retval JAYLINK_OK Success.
