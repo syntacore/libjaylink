@@ -48,6 +48,8 @@ JAYLINK_API const char *jaylink_strerror(int error_code)
 		return "invalid argument";
 	case JAYLINK_ERR_TIMEOUT:
 		return "timeout occurred";
+	case JAYLINK_ERR_DEV:
+		return "device: unspecified error";
 	default:
 		return "unknown error";
 	}
@@ -76,6 +78,8 @@ JAYLINK_API const char *jaylink_strerror_name(int error_code)
 		return "JAYLINK_ERR_ARG";
 	case JAYLINK_ERR_TIMEOUT:
 		return "JAYLINK_ERR_TIMEOUT";
+	case JAYLINK_ERR_DEV:
+		return "JAYLINK_ERR_DEV";
 	default:
 		return "unknown error code";
 	}
