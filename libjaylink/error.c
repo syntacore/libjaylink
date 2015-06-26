@@ -50,6 +50,8 @@ JAYLINK_API const char *jaylink_strerror(int error_code)
 		return "timeout occurred";
 	case JAYLINK_ERR_DEV:
 		return "device: unspecified error";
+	case JAYLINK_ERR_DEV_NOT_SUPPORTED:
+		return "device: operation not supported";
 	default:
 		return "unknown error";
 	}
@@ -80,6 +82,8 @@ JAYLINK_API const char *jaylink_strerror_name(int error_code)
 		return "JAYLINK_ERR_TIMEOUT";
 	case JAYLINK_ERR_DEV:
 		return "JAYLINK_ERR_DEV";
+	case JAYLINK_ERR_DEV_NOT_SUPPORTED:
+		return "JAYLINK_ERR_DEV_NOT_SUPPORTED";
 	default:
 		return "unknown error code";
 	}

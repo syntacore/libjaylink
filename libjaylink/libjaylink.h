@@ -43,7 +43,9 @@ enum jaylink_error {
 	/** Timeout occurred. */
 	JAYLINK_ERR_TIMEOUT = -4,
 	/** Device: unspecified error. */
-	JAYLINK_ERR_DEV = -1000
+	JAYLINK_ERR_DEV = -1000,
+	/** Device: operation not supported. */
+	JAYLINK_ERR_DEV_NOT_SUPPORTED = -1001
 };
 
 /** libjaylink log levels. */
