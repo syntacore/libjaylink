@@ -960,13 +960,13 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 	if (num > JAYLINK_MAX_CONNECTIONS) {
 		log_err(ctx, "Maximum number of device connections exceeded: "
 			"%u.", num);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	if (entry_size != REG_CONN_INFO_SIZE) {
 		log_err(ctx, "Invalid connection entry size: %u bytes.",
 			entry_size);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	table_size = num * entry_size;
@@ -975,7 +975,7 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 	if (size > REG_MAX_SIZE) {
 		log_err(ctx, "Maximum registration information size exceeded: "
 			"%u bytes.", size);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	if (size > REG_MIN_SIZE) {
@@ -997,7 +997,7 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 
 	if (!handle) {
 		log_err(ctx, "Obtained invalid connection handle.");
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	connection->handle = handle;
@@ -1086,13 +1086,13 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 	if (num > JAYLINK_MAX_CONNECTIONS) {
 		log_err(ctx, "Maximum number of device connections exceeded: "
 			"%u.", num);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	if (entry_size != REG_CONN_INFO_SIZE) {
 		log_err(ctx, "Invalid connection entry size: %u bytes.",
 			entry_size);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	table_size = num * entry_size;
@@ -1101,7 +1101,7 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 	if (size > REG_MAX_SIZE) {
 		log_err(ctx, "Maximum registration information size exceeded: "
 			"%u bytes.", size);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	if (size > REG_MIN_SIZE) {

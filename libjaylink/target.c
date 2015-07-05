@@ -110,6 +110,7 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_select_interface() to select the target interface.
@@ -156,7 +157,7 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
 
 	if (!dummy) {
 		log_err(ctx, "Minimum frequency divider is zero.");
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	*freq = buffer_get_u32(buf, 0);

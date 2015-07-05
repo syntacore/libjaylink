@@ -200,6 +200,7 @@ JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
  */
@@ -257,7 +258,7 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 	if (tmp > *length) {
 		log_err(ctx, "Received %u bytes but only %u bytes were "
 			"requested.", tmp, *length);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	*length = tmp;
@@ -306,6 +307,7 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
  */
@@ -365,7 +367,7 @@ JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 	if (length != 28) {
 		log_err(ctx, "Unexpected number of bytes received: %u.",
 			length);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	length = length - 4;
@@ -388,7 +390,7 @@ JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 
 	if (!tmp) {
 		log_err(ctx, "Minimum frequency divider is zero.");
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_PROTO;
 	}
 
 	*freq = buffer_get_u32(buf, 4);
