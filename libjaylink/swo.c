@@ -56,6 +56,7 @@
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_free_memory() to retrieve free memory size of a device.
@@ -117,7 +118,7 @@ JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
 
 	if (tmp > 0) {
 		log_err(ctx, "Failed to start capture: %u.", tmp);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_DEV;
 	}
 
 	return JAYLINK_OK;
@@ -134,6 +135,7 @@ JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
@@ -176,7 +178,7 @@ JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
 
 	if (tmp > 0) {
 		log_err(ctx, "Failed to stop capture: %u.", tmp);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_DEV;
 	}
 
 	return JAYLINK_OK;
@@ -198,6 +200,7 @@ JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
@@ -246,7 +249,7 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 
 	if (tmp > 0) {
 		log_err(ctx, "Failed to read data: %u.", tmp);
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_DEV;
 	}
 
 	tmp = buffer_get_u32(buf, 4);
@@ -303,6 +306,7 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
@@ -355,7 +359,7 @@ JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 
 	if (length == 0xffffffff) {
 		log_err(ctx, "Failed to retrieve speed information.");
-		return JAYLINK_ERR;
+		return JAYLINK_ERR_DEV;
 	}
 
 	if (length != 28) {

@@ -56,6 +56,7 @@
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_select_interface() to select the target interface.
@@ -146,7 +147,7 @@ JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 		if (status > 0) {
 			log_err(ctx, "JTAG I/O operation failed: %02x.",
 				status);
-			return JAYLINK_ERR;
+			return JAYLINK_ERR_DEV;
 		}
 	}
 
