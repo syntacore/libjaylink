@@ -111,6 +111,8 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_SELECT_TIF = 17,
 	/** Device supports capturing of SWO trace data. */
 	JAYLINK_DEV_CAP_SWO = 23,
+	/** Device supports file I/O operations. */
+	JAYLINK_DEV_CAP_FILE_IO = 26,
 	/** Device supports registration of connections. */
 	JAYLINK_DEV_CAP_REGISTER = 27,
 	/** Device supports retrieval of extended capabilities. */
@@ -252,19 +254,25 @@ struct jaylink_connection {
 };
 
 /** Target interface speed value for adaptive clocking. */
-#define JAYLINK_SPEED_ADAPTIVE_CLOCKING 0xffff
+#define JAYLINK_SPEED_ADAPTIVE_CLOCKING		0xffff
 
 /** Size of the device configuration data in bytes. */
-#define JAYLINK_DEV_CONFIG_SIZE		256
+#define JAYLINK_DEV_CONFIG_SIZE			256
 
 /** Number of bytes required to store device capabilities. */
-#define JAYLINK_DEV_CAPS_SIZE		4
+#define JAYLINK_DEV_CAPS_SIZE			4
 
 /** Number of bytes required to store extended device capabilities. */
-#define JAYLINK_DEV_EXT_CAPS_SIZE	32
+#define JAYLINK_DEV_EXT_CAPS_SIZE		32
 
 /** Maximum number of connections that can be registered on a device. */
-#define JAYLINK_MAX_CONNECTIONS		16
+#define JAYLINK_MAX_CONNECTIONS			16
+
+/** Maximum length of a filename in bytes. */
+#define JAYLINK_FILE_NAME_MAX_LENGTH		255
+
+/** Maximum transfer size for a file in bytes. */
+#define JAYLINK_FILE_MAX_TRANSFER_SIZE		0x100000
 
 /**
  * @struct jaylink_context
@@ -355,6 +363,19 @@ JAYLINK_API int jaylink_emucom_write(struct jaylink_device_handle *devh,
 
 JAYLINK_API const char *jaylink_strerror(int error_code);
 JAYLINK_API const char *jaylink_strerror_name(int error_code);
+
+/*--- fileio.c --------------------------------------------------------------*/
+
+JAYLINK_API int jaylink_file_read(struct jaylink_device_handle *devh,
+		const char *filename, uint8_t *buffer, uint32_t offset,
+		uint32_t *length);
+JAYLINK_API int jaylink_file_write(struct jaylink_device_handle *devh,
+		const char *filename, const uint8_t *buffer, uint32_t offset,
+		uint32_t *length);
+JAYLINK_API int jaylink_file_get_size(struct jaylink_device_handle *devh,
+		const char *filename, uint32_t *size);
+JAYLINK_API int jaylink_file_delete(struct jaylink_device_handle *devh,
+		const char *filename);
 
 /*--- jtag.c ----------------------------------------------------------------*/
 
