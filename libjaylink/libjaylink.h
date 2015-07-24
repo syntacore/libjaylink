@@ -101,6 +101,8 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_GET_SPEEDS = 9,
 	/** Device supports retrieval of free memory size. */
 	JAYLINK_DEV_CAP_GET_FREE_MEMORY = 11,
+	/** Device supports retrieval of hardware information. */
+	JAYLINK_DEV_CAP_GET_HW_INFO = 12,
 	/** Device supports the setting of the target power supply. */
 	JAYLINK_DEV_CAP_SET_TARGET_POWER = 13,
 	/** Device supports target interface selection. */
@@ -115,6 +117,23 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_EMUCOM = 33,
 	/** Device supports ethernet connectivity. */
 	JAYLINK_DEV_CAP_ETHERNET = 38
+};
+
+/** Hardware information. */
+enum jaylink_hardware_info {
+	/**
+	 * Status of the target power supply.
+	 *
+	 * This indicates whether the target power supply on pin 19 of the
+	 * 20-pin JTAG / SWD connector is enabled or disabled.
+	 *
+	 * @see jaylink_set_target_power() to set the target power supply.
+	 */
+	JAYLINK_HW_INFO_TARGET_POWER = (1 << 0),
+	/** Current consumption of the target in mA. */
+	JAYLINK_HW_INFO_ITARGET = (1 << 2),
+	/** Peak current consumption of the target in mA. */
+	JAYLINK_HW_INFO_ITARGET_PEAK = (1 << 3)
 };
 
 /** Device hardware types. */
@@ -300,6 +319,8 @@ JAYLINK_API int jaylink_open(struct jaylink_device *dev,
 JAYLINK_API void jaylink_close(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 		char **version);
+JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
+		uint32_t mask, uint32_t *info);
 JAYLINK_API int jaylink_get_hardware_version(struct jaylink_device_handle *devh,
 		struct jaylink_hardware_version *version);
 JAYLINK_API int jaylink_get_hardware_status(struct jaylink_device_handle *devh,

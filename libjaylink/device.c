@@ -35,6 +35,7 @@
 #define CMD_GET_VERSION		0x01
 #define CMD_GET_HW_STATUS	0x07
 #define CMD_REGISTER		0x09
+#define CMD_GET_HW_INFO		0xc1
 #define CMD_GET_FREE_MEMORY	0xd4
 #define CMD_GET_CAPS		0xe8
 #define CMD_GET_EXT_CAPS	0xed
@@ -376,6 +377,80 @@ JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 	*version = tmp;
 
 	return length;
+}
+
+/**
+ * Retrieve the hardware information of a device.
+ *
+ * @note This function must only be used if the device has the
+ * 	 #JAYLINK_DEV_CAP_GET_HW_INFO capability.
+ *
+ * @param[in,out] devh Device handle.
+ * @param[in] mask A bit field where each set bit represents hardware
+ * 		   information to request. See #jaylink_hardware_info for a
+ * 		   description of the hardware information and their bit
+ * 		   positions.
+ * @param[out] info Array to store the hardware information on success. Its
+ * 		    content is undefined on failure. The array must be large
+ * 		    enough to contain at least as many elements as bits set in
+ * 		    @a mask.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
+ */
+JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
+		uint32_t mask, uint32_t *info)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	uint8_t buf[5];
+	unsigned int i;
+	unsigned int num;
+	unsigned int length;
+
+	if (!devh || !mask || !info)
+		return JAYLINK_ERR_ARG;
+
+	ctx = devh->dev->ctx;
+	num = 0;
+
+	for (i = 0; i < 32; i++) {
+		if (mask & (1 << i))
+			num++;
+	}
+
+	length = num * sizeof(uint32_t);
+
+	ret = transport_start_write_read(devh, 5, length, 1);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		return ret;
+	}
+
+	buf[0] = CMD_GET_HW_INFO;
+	buffer_set_u32(buf, mask, 1);
+
+	ret = transport_write(devh, buf, 5);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_write() failed: %i.", ret);
+		return ret;
+	}
+
+	ret = transport_read(devh, (uint8_t *)info, length);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	for (i = 0; i < num; i++)
+		info[i] = buffer_get_u32((uint8_t *)info, i * sizeof(uint32_t));
+
+	return JAYLINK_OK;
 }
 
 /**
