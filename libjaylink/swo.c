@@ -285,24 +285,24 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 /**
  * Retrieve SWO speeds.
 
- * The speeds are calulcated as follows:
+ * The speeds are calculated as follows:
  *
  * @par
- * <tt>speeds = @a freq / n</tt> with <tt>n >= @a div</tt>, where @p n is an
- * integer
+ * <tt>speeds = @a freq / n</tt> with <tt>n >= @a min_div</tt> and
+ * <tt>n <= @a max_div</tt>, where @p n is an integer
  *
- * Assuming, for example, a base frequency @a freq of 4500 kHz and a minimum
- * divider @a div of 1 then the highest possible SWO speed is
- * 4500 kHz / 1 = 4500 kHz. The next highest speed is 2250 kHz for a divider of
- * 2, and so on.
+ * Assuming, for example, a base frequency @a freq of 4500 kHz, a minimum
+ * divider @a min_div of 1 and a maximum divider @a max_div of 8 then the
+ * highest possible SWO speed is 4500 kHz / 1 = 4500 kHz. The next highest
+ * speed is 2250 kHz for a divider of 2, and so on. Accordingly, the lowest
+ * possible speed is 4500 kHz / 8 = 562.5 kHz.
  *
  * @note This function must be used only if the device has the
  *       #JAYLINK_DEV_CAP_SWO capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in] mode Capture mode to retrieve speeds for.
- * @param[out] freq Base frequency in Hz on success, and undefined on failure.
- * @param[out] div Minimum divider on success, and undefined on failure.
+ * @param[out] speed Speed information on success, and undefined on failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -312,15 +312,14 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
-		enum jaylink_swo_mode mode, uint32_t *freq, uint32_t *div)
+		enum jaylink_swo_mode mode, struct jaylink_swo_speed *speed)
 {
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[24];
 	uint32_t length;
-	uint32_t tmp;
 
-	if (!devh || !freq || !div)
+	if (!devh || !speed)
 		return JAYLINK_ERR_ARG;
 
 	if (mode != JAYLINK_SWO_MODE_UART)
@@ -371,7 +370,6 @@ JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 	}
 
 	length = length - 4;
-
 	ret = transport_start_read(devh, length);
 
 	if (ret != JAYLINK_OK) {
@@ -386,15 +384,30 @@ JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	tmp = buffer_get_u32(buf, 8);
+	speed->freq = buffer_get_u32(buf, 4);
+	speed->min_div = buffer_get_u32(buf, 8);
 
-	if (!tmp) {
+	if (!speed->min_div) {
 		log_err(ctx, "Minimum frequency divider is zero.");
 		return JAYLINK_ERR_PROTO;
 	}
 
-	*freq = buffer_get_u32(buf, 4);
-	*div = tmp;
+	speed->max_div = buffer_get_u32(buf, 12);
+
+	if (speed->max_div < speed->min_div) {
+		log_err(ctx, "Maximum frequency divider is less than minimum "
+			"frequency divider.");
+		return JAYLINK_ERR_PROTO;
+	}
+
+	speed->min_prescaler = buffer_get_u32(buf, 16);
+	speed->max_prescaler = buffer_get_u32(buf, 20);
+
+	if (speed->max_prescaler < speed->min_prescaler) {
+		log_err(ctx, "Maximum prescaler is less than minimum "
+			"prescaler.");
+		return JAYLINK_ERR_PROTO;
+	}
 
 	return JAYLINK_OK;
 }
