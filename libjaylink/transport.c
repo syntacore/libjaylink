@@ -42,14 +42,6 @@
 /** Chunk size in bytes in which data is transferred. */
 #define CHUNK_SIZE	2048
 
-/**
- * Buffer size in bytes.
- *
- * Note that both write and read operations require a buffer size of at least
- * #CHUNK_SIZE bytes.
- */
-#define BUFFER_SIZE	CHUNK_SIZE
-
 static int initialize_handle(struct jaylink_device_handle *devh)
 {
 	int ret;
@@ -134,7 +126,9 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 	log_dbg(ctx, "Using endpoint %02x (IN) and %02x (OUT).",
 		devh->endpoint_in, devh->endpoint_out);
 
-	devh->buffer = malloc(BUFFER_SIZE);
+	/* Buffer size must be a multiple of CHUNK_SIZE bytes. */
+	devh->buffer_size = CHUNK_SIZE;
+	devh->buffer = malloc(devh->buffer_size);
 
 	if (!devh->buffer) {
 		log_err(ctx, "Transport buffer malloc failed.");
@@ -478,6 +472,37 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
 	return JAYLINK_ERR_TIMEOUT;
 }
 
+static int adjust_buffer(struct jaylink_device_handle *devh, size_t size)
+{
+	struct jaylink_context *ctx;
+	size_t num_chunks;
+	uint8_t *buffer;
+
+	ctx = devh->dev->ctx;
+
+	/* Adjust buffer size to a multiple of CHUNK_SIZE bytes. */
+	num_chunks = size / CHUNK_SIZE;
+
+	if (size % CHUNK_SIZE > 0)
+		num_chunks++;
+
+	size = num_chunks * CHUNK_SIZE;
+	buffer = realloc(devh->buffer, size);
+
+	if (!buffer) {
+		log_err(ctx, "Failed to adjust buffer size to %zu bytes.",
+			size);
+		return 0;
+	}
+
+	devh->buffer = buffer;
+	devh->buffer_size = size;
+
+	log_dbg(ctx, "Adjusted buffer size to %zu bytes.", size);
+
+	return 1;
+}
+
 /**
  * Write data to a device.
  *
@@ -523,10 +548,9 @@ JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
 	 * write operation is not reached.
 	 */
 	if (length < devh->write_length) {
-		if (devh->write_pos + length > BUFFER_SIZE) {
-			log_err(ctx, "Write request is too large for the "
-				"buffer.");
-			return JAYLINK_ERR_ARG;
+		if (devh->write_pos + length > devh->buffer_size) {
+			if (!adjust_buffer(devh, devh->write_pos + length))
+				return JAYLINK_ERR_MALLOC;
 		}
 
 		memcpy(devh->buffer + devh->write_pos, buffer, length);
@@ -552,8 +576,8 @@ JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
 	 * Calculate the number of bytes to fill up the buffer to reach a
 	 * multiple of CHUNK_SIZE bytes. This ensures that the data from the
 	 * buffer will be sent to the device in chunks of CHUNK_SIZE bytes.
-	 * Note that this is why the buffer size must be at least CHUNK_SIZE
-	 * bytes.
+	 * Note that this is why the buffer size must be a multiple of
+	 * CHUNK_SIZE bytes.
 	 */
 	num_chunks = devh->write_pos / CHUNK_SIZE;
 
@@ -650,11 +674,13 @@ JAYLINK_PRIV int transport_read(struct jaylink_device_handle *devh,
 	while (length > 0) {
 		/*
 		 * If less than CHUNK_SIZE bytes are requested from the device,
-		 * store the received data in the internal buffer instead of
+		 * store the received data into the internal buffer instead of
 		 * directly into the user provided buffer. This is necessary to
 		 * prevent a possible buffer overflow because the number of
 		 * requested bytes from the device is always CHUNK_SIZE and
 		 * therefore up to CHUNK_SIZE bytes may be received.
+		 * Note that this is why the internal buffer size must be at
+		 * least CHUNK_SIZE bytes.
 		 */
 		if (length < CHUNK_SIZE) {
 			ret = usb_recv(devh, devh->buffer, &bytes_received);

@@ -97,6 +97,8 @@ struct jaylink_device_handle {
 	 * consecutively and therefore the same buffer can be used for both.
 	 */
 	uint8_t *buffer;
+	/** Buffer size. */
+	size_t buffer_size;
 	/** Number of bytes left for the read operation. */
 	uint16_t read_length;
 	/** Number of bytes available in the buffer to be read. */
