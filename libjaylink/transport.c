@@ -18,6 +18,7 @@
  */
 
 #include <stdlib.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -262,7 +263,7 @@ JAYLINK_PRIV int transport_close(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
 JAYLINK_PRIV int transport_start_write(struct jaylink_device_handle *devh,
-		uint16_t length, int has_command)
+		size_t length, int has_command)
 {
 	struct jaylink_context *ctx;
 
@@ -302,7 +303,7 @@ JAYLINK_PRIV int transport_start_write(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
 JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
-		uint16_t length)
+		size_t length)
 {
 	struct jaylink_context *ctx;
 
@@ -347,7 +348,7 @@ JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
 JAYLINK_PRIV int transport_start_write_read(struct jaylink_device_handle *devh,
-		uint16_t write_length, uint16_t read_length, int has_command)
+		size_t write_length, size_t read_length, int has_command)
 {
 	struct jaylink_context *ctx;
 
@@ -387,7 +388,7 @@ JAYLINK_PRIV int transport_start_write_read(struct jaylink_device_handle *devh,
 }
 
 static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
-		uint16_t *length)
+		size_t *length)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -430,7 +431,7 @@ static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
 }
 
 static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
-		uint16_t length)
+		size_t length)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -526,13 +527,13 @@ static int adjust_buffer(struct jaylink_device_handle *devh, size_t size)
  * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
-		const uint8_t *buffer, uint16_t length)
+		const uint8_t *buffer, size_t length)
 {
 	int ret;
 	struct jaylink_context *ctx;
-	uint8_t num_chunks;
-	uint16_t fill_bytes;
-	uint16_t tmp;
+	size_t num_chunks;
+	size_t fill_bytes;
+	size_t tmp;
 
 	ctx = devh->dev->ctx;
 
@@ -629,12 +630,12 @@ JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_PRIV int transport_read(struct jaylink_device_handle *devh,
-		uint8_t *buffer, uint16_t length)
+		uint8_t *buffer, size_t length)
 {
 	int ret;
 	struct jaylink_context *ctx;
-	uint16_t bytes_received;
-	uint16_t tmp;
+	size_t bytes_received;
+	size_t tmp;
 
 	ctx = devh->dev->ctx;
 

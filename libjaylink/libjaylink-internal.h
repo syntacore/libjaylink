@@ -21,6 +21,7 @@
 #define LIBJAYLINK_LIBJAYLINK_INTERNAL_H
 
 #include <stdint.h>
+#include <stddef.h>
 #include <sys/types.h>
 #include <libusb.h>
 
@@ -100,23 +101,23 @@ struct jaylink_device_handle {
 	/** Buffer size. */
 	size_t buffer_size;
 	/** Number of bytes left for the read operation. */
-	uint16_t read_length;
+	size_t read_length;
 	/** Number of bytes available in the buffer to be read. */
-	uint16_t bytes_available;
+	size_t bytes_available;
 	/** Current read position in the buffer. */
-	uint16_t read_pos;
+	size_t read_pos;
 	/**
 	 * Number of bytes left to be written before the write operation will
 	 * be performed.
 	 */
-	uint16_t write_length;
+	size_t write_length;
 	/**
 	 * Current write position in the buffer.
 	 *
 	 * This is equivalent to the number of bytes in the buffer and used for
 	 * write operations only.
 	 */
-	uint16_t write_pos;
+	size_t write_pos;
 };
 
 struct list {
@@ -171,14 +172,14 @@ JAYLINK_PRIV void log_dbg(const struct jaylink_context *ctx,
 JAYLINK_PRIV int transport_open(struct jaylink_device_handle *devh);
 JAYLINK_PRIV int transport_close(struct jaylink_device_handle *devh);
 JAYLINK_PRIV int transport_start_write_read(struct jaylink_device_handle *devh,
-		uint16_t write_length, uint16_t read_length, int has_command);
+		size_t write_length, size_t read_length, int has_command);
 JAYLINK_PRIV int transport_start_write(struct jaylink_device_handle *devh,
-		uint16_t length, int has_command);
+		size_t length, int has_command);
 JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
-		uint16_t length);
+		size_t length);
 JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
-		const uint8_t *buffer, uint16_t length);
+		const uint8_t *buffer, size_t length);
 JAYLINK_PRIV int transport_read(struct jaylink_device_handle *devh,
-		uint8_t *buffer, uint16_t length);
+		uint8_t *buffer, size_t length);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_INTERNAL_H */
