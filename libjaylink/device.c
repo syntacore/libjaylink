@@ -305,24 +305,29 @@ JAYLINK_API void jaylink_close(struct jaylink_device_handle *devh)
  *
  * @param[in,out] devh Device handle.
  * @param[out] version Newly allocated string which contains the firmware
- *                     version, and undefined if the device returns no
- *                     firmware version or on failure. The string is
- *                     null-terminated and must be free'd by the caller.
+ *                     version  on success, and undefined if @p length is zero
+ *                     or on failure. The string is null-terminated and must be
+ *                     free'd by the caller.
+ * @param[out] length Length of the firmware version string including trailing
+ *                    null-terminator on success, and undefined on failure.
+ *                    Zero if no firmware version string is available.
  *
- * @return The length of the newly allocated firmware version string including
- *         trailing null-terminator, 0 if the device returns no firmware
- *         version, or a negative error code on failure.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_MALLOC Memory allocation error.
+ * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
-		char **version)
+		char **version, size_t *length)
 {
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[2];
-	uint16_t length;
+	uint16_t dummy;
 	char *tmp;
 
-	if (!devh || !version)
+	if (!devh || !version || !length)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
@@ -349,26 +354,27 @@ JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	length = buffer_get_u16(buf, 0);
+	dummy = buffer_get_u16(buf, 0);
+	*length = dummy;
 
-	if (!length)
-		return 0;
+	if (!dummy)
+		return JAYLINK_OK;
 
-	ret = transport_start_read(devh, length);
+	ret = transport_start_read(devh, dummy);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_read() failed: %i.", ret);
 		return ret;
 	}
 
-	tmp = malloc(length);
+	tmp = malloc(dummy);
 
 	if (!tmp) {
 		log_err(ctx, "Firmware version string malloc failed.");
 		return JAYLINK_ERR_MALLOC;
 	}
 
-	ret = transport_read(devh, (uint8_t *)tmp, length);
+	ret = transport_read(devh, (uint8_t *)tmp, dummy);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_read() failed: %i.", ret);
@@ -377,10 +383,10 @@ JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 	}
 
 	/* Last byte is reserved for null-terminator. */
-	tmp[length - 1] = 0;
+	tmp[dummy - 1] = 0;
 	*version = tmp;
 
-	return length;
+	return JAYLINK_OK;
 }
 
 /**

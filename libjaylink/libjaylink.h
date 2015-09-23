@@ -328,7 +328,7 @@ JAYLINK_API int jaylink_open(struct jaylink_device *dev,
 		struct jaylink_device_handle **devh);
 JAYLINK_API void jaylink_close(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
-		char **version);
+		char **version, size_t *length);
 JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
 		uint32_t mask, uint32_t *info);
 JAYLINK_API int jaylink_get_hardware_version(struct jaylink_device_handle *devh,
