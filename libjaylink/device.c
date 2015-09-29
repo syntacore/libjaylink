@@ -189,19 +189,23 @@ JAYLINK_API int jaylink_device_get_serial_number(
  *       serial number should be used instead.
  *
  * @param[in] dev Device instance.
+ * @param[out] address USB address of the device on success, and undefined on
+ *                     failure.
  *
- * @return The USB address of the device on success, or #JAYLINK_ERR_ARG for
- *         invalid device instance. See #jaylink_usb_address for valid USB
- *         addresses.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
  *
  * @see jaylink_device_get_serial_number() to get the serial number of a device.
  */
-JAYLINK_API int jaylink_device_get_usb_address(const struct jaylink_device *dev)
+JAYLINK_API int jaylink_device_get_usb_address(const struct jaylink_device *dev,
+		enum jaylink_usb_address *address)
 {
-	if (!dev)
+	if (!dev || !address)
 		return JAYLINK_ERR_ARG;
 
-	return dev->usb_address;
+	*address = dev->usb_address;
+
+	return JAYLINK_OK;
 }
 
 /**

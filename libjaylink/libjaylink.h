@@ -319,8 +319,8 @@ JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
 		int unref_devices);
 JAYLINK_API int jaylink_device_get_serial_number(
 		const struct jaylink_device *dev, uint32_t *serial_number);
-JAYLINK_API int jaylink_device_get_usb_address(
-		const struct jaylink_device *dev);
+JAYLINK_API int jaylink_device_get_usb_address(const struct jaylink_device *dev,
+		enum jaylink_usb_address *address);
 JAYLINK_API struct jaylink_device *jaylink_ref_device(
 		struct jaylink_device *dev);
 JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev);
