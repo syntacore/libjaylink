@@ -327,6 +327,9 @@ struct jaylink_connection {
 /** Maximum number of connections that can be registered on a device. */
 #define JAYLINK_MAX_CONNECTIONS			16
 
+/** Media Access Control (MAC) address length in bytes. */
+#define JAYLINK_MAC_ADDRESS_LENGTH		6
+
 /**
  * Maximum length of a device's nickname including trailing null-terminator in
  * bytes.
@@ -425,6 +428,17 @@ JAYLINK_API int jaylink_device_get_serial_number(
 JAYLINK_API int jaylink_device_get_usb_address(
 		const struct jaylink_device *dev,
 		enum jaylink_usb_address *address);
+JAYLINK_API int jaylink_device_get_ipv4_address(
+		const struct jaylink_device *dev, char *address);
+JAYLINK_API int jaylink_device_get_mac_address(
+		const struct jaylink_device *dev, uint8_t *address);
+JAYLINK_API int jaylink_device_get_hardware_version(
+		const struct jaylink_device *dev,
+		struct jaylink_hardware_version *version);
+JAYLINK_API int jaylink_device_get_product_name(
+		const struct jaylink_device *dev, char *name);
+JAYLINK_API int jaylink_device_get_nickname(const struct jaylink_device *dev,
+		char *nickname);
 JAYLINK_API struct jaylink_device *jaylink_ref_device(
 		struct jaylink_device *dev);
 JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev);

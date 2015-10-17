@@ -51,9 +51,6 @@
 /** Calculate the minimum of two numeric values. */
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
-/** Media Access Control (MAC) address length in bytes. */
-#define MAC_ADDRESS_LENGTH	6
-
 struct jaylink_context {
 	/** libusb context. */
 	struct libusb_context *usb_ctx;
@@ -110,7 +107,7 @@ struct jaylink_device {
 	 * This field is used for devices with host interface #JAYLINK_HIF_TCP
 	 * only.
 	 */
-	uint8_t mac_address[MAC_ADDRESS_LENGTH];
+	uint8_t mac_address[JAYLINK_MAC_ADDRESS_LENGTH];
 	/** Indicates whether the MAC address is available. */
 	bool has_mac_address;
 	/**

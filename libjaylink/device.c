@@ -275,6 +275,169 @@ JAYLINK_API int jaylink_device_get_usb_address(
 }
 
 /**
+ * Get the IPv4 address string of a device.
+ *
+ * @param[in] dev Device instance.
+ * @param[out] address IPv4 address string in quad-dotted decimal format of the
+ *                     device on success and undefined on failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_NOT_SUPPORTED Supported for devices with host interface
+ *                                   #JAYLINK_HIF_TCP only.
+ *
+ * @since 0.2.0
+ */
+JAYLINK_API int jaylink_device_get_ipv4_address(
+		const struct jaylink_device *dev, char *address)
+{
+	if (!dev || !address)
+		return JAYLINK_ERR_ARG;
+
+	if (dev->interface != JAYLINK_HIF_TCP)
+		return JAYLINK_ERR_NOT_SUPPORTED;
+
+	memcpy(address, dev->ipv4_address, sizeof(dev->ipv4_address));
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Get the MAC address of a device.
+ *
+ * @param[in] dev Device instance.
+ * @param[out] address MAC address of the device on success and undefined on
+ *                     failure. The length of the MAC address is
+ *                     #JAYLINK_MAC_ADDRESS_LENGTH bytes.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_NOT_SUPPORTED Supported for devices with host interface
+ *                                   #JAYLINK_HIF_TCP only.
+ * @retval JAYLINK_ERR_NOT_AVAILABLE MAC address is not available.
+ *
+ * @since 0.2.0
+ */
+JAYLINK_API int jaylink_device_get_mac_address(
+		const struct jaylink_device *dev, uint8_t *address)
+{
+	if (!dev || !address)
+		return JAYLINK_ERR_ARG;
+
+	if (dev->interface != JAYLINK_HIF_TCP)
+		return JAYLINK_ERR_NOT_SUPPORTED;
+
+	if (!dev->has_mac_address)
+		return JAYLINK_ERR_NOT_AVAILABLE;
+
+	memcpy(address, dev->mac_address, sizeof(dev->mac_address));
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Get the hardware version of a device.
+ *
+ * @note The hardware type can not be obtained by this function, use
+ *       jaylink_get_hardware_version() instead.
+ *
+ * @param[in] dev Device instance.
+ * @param[out] version Hardware version of the device on success and undefined
+ *                     on failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_NOT_SUPPORTED Supported for devices with host interface
+ *                                   #JAYLINK_HIF_TCP only.
+ * @retval JAYLINK_ERR_NOT_AVAILABLE Hardware version is not available.
+ *
+ * @since 0.2.0
+ */
+JAYLINK_API int jaylink_device_get_hardware_version(
+		const struct jaylink_device *dev,
+		struct jaylink_hardware_version *version)
+{
+	if (!dev || !version)
+		return JAYLINK_ERR_ARG;
+
+	if (dev->interface != JAYLINK_HIF_TCP)
+		return JAYLINK_ERR_NOT_SUPPORTED;
+
+	if (!dev->has_hw_version)
+		return JAYLINK_ERR_NOT_AVAILABLE;
+
+	*version = dev->hw_version;
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Get the product name of a device.
+ *
+ * @param[in] dev Device instance.
+ * @param[out] name Product name of the device on success and undefined on
+ *                  failure. The maximum length of the product name is
+ *                  #JAYLINK_PRODUCT_NAME_MAX_LENGTH bytes.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_NOT_SUPPORTED Supported for devices with host interface
+ *                                   #JAYLINK_HIF_TCP only.
+ * @retval JAYLINK_ERR_NOT_AVAILABLE Product name is not available.
+ *
+ * @since 0.2.0
+ */
+JAYLINK_API int jaylink_device_get_product_name(
+		const struct jaylink_device *dev, char *name)
+{
+	if (!dev || !name)
+		return JAYLINK_ERR_ARG;
+
+	if (dev->interface != JAYLINK_HIF_TCP)
+		return JAYLINK_ERR_NOT_SUPPORTED;
+
+	if (!dev->has_product_name)
+		return JAYLINK_ERR_NOT_AVAILABLE;
+
+	memcpy(name, dev->product_name, sizeof(dev->product_name));
+
+	return JAYLINK_OK;
+}
+
+/**
+ * Get the nickname of a device.
+ *
+ * @param[in] dev Device instance.
+ * @param[out] nickname Nickname of the device on success and undefined on
+ *                      failure. The maximum length of the nickname is
+ *                      #JAYLINK_NICKNAME_MAX_LENGTH bytes.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_NOT_SUPPORTED Supported for devices with host interface
+ *                                   #JAYLINK_HIF_TCP only.
+ * @retval JAYLINK_ERR_NOT_AVAILABLE Nickname is not available.
+ *
+ * @since 0.2.0
+ */
+JAYLINK_API int jaylink_device_get_nickname(const struct jaylink_device *dev,
+		char *nickname)
+{
+	if (!dev || !nickname)
+		return JAYLINK_ERR_ARG;
+
+	if (dev->interface != JAYLINK_HIF_TCP)
+		return JAYLINK_ERR_NOT_SUPPORTED;
+
+	if (!dev->has_nickname)
+		return JAYLINK_ERR_NOT_AVAILABLE;
+
+	memcpy(nickname, dev->nickname, sizeof(dev->nickname));
+
+	return JAYLINK_OK;
+}
+
+/**
  * Increment the reference count of a device.
  *
  * @param[in,out] dev Device instance.
