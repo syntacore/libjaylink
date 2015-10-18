@@ -46,6 +46,8 @@ libjaylink_la_SOURCES = \
 	swo.c \
 	target.c \
 	transport.c \
+	transport_tcp.c \
+	transport_usb.c \
 	util.c \
 	version.c
 

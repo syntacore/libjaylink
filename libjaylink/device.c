@@ -528,7 +528,6 @@ static void free_device_handle(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_MALLOC Memory allocation error.
- * @retval JAYLINK_ERR_NOT_SUPPORTED Operation not supported.
  * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
@@ -542,9 +541,6 @@ JAYLINK_API int jaylink_open(struct jaylink_device *dev,
 
 	if (!dev || !devh)
 		return JAYLINK_ERR_ARG;
-
-	if (dev->interface != JAYLINK_HIF_USB)
-		return JAYLINK_ERR_NOT_SUPPORTED;
 
 	handle = allocate_device_handle(dev);
 

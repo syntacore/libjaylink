@@ -142,14 +142,6 @@ struct jaylink_device {
 struct jaylink_device_handle {
 	/** Device instance. */
 	struct jaylink_device *dev;
-	/** libusb device handle. */
-	struct libusb_device_handle *usb_devh;
-	/** USB interface number of the device. */
-	uint8_t interface_number;
-	/** USB interface IN endpoint of the device. */
-	uint8_t endpoint_in;
-	/** USB interface OUT endpoint of the device. */
-	uint8_t endpoint_out;
 	/**
 	 * Buffer for write and read operations.
 	 *
@@ -177,6 +169,21 @@ struct jaylink_device_handle {
 	 * write operations only.
 	 */
 	size_t write_pos;
+	/** libusb device handle. */
+	struct libusb_device_handle *usb_devh;
+	/** USB interface number of the device. */
+	uint8_t interface_number;
+	/** USB interface IN endpoint of the device. */
+	uint8_t endpoint_in;
+	/** USB interface OUT endpoint of the device. */
+	uint8_t endpoint_out;
+	/**
+	 * Socket descriptor.
+	 *
+	 * This field is used for devices with host interface #JAYLINK_HIF_TCP
+	 * only.
+	 */
+	int sock;
 };
 
 struct list {
@@ -236,6 +243,10 @@ JAYLINK_PRIV void log_dbg(const struct jaylink_context *ctx,
 JAYLINK_PRIV bool socket_close(int sock);
 JAYLINK_PRIV bool socket_bind(int sock, const struct sockaddr *address,
 		size_t length);
+JAYLINK_PRIV bool socket_send(int sock, const void *buffer, size_t *length,
+		int flags);
+JAYLINK_PRIV bool socket_recv(int sock, void *buffer, size_t *length,
+		int flags);
 JAYLINK_PRIV bool socket_sendto(int sock, const void *buffer, size_t *length,
 		int flags, const struct sockaddr *address,
 		size_t address_length);
@@ -257,6 +268,38 @@ JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
 JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
 		const uint8_t *buffer, size_t length);
 JAYLINK_PRIV int transport_read(struct jaylink_device_handle *devh,
+		uint8_t *buffer, size_t length);
+
+/*--- transport_usb.c -------------------------------------------------------*/
+
+JAYLINK_PRIV int transport_usb_open(struct jaylink_device_handle *devh);
+JAYLINK_PRIV int transport_usb_close(struct jaylink_device_handle *devh);
+JAYLINK_PRIV int transport_usb_start_write_read(
+		struct jaylink_device_handle *devh, size_t write_length,
+		size_t read_length, bool has_command);
+JAYLINK_PRIV int transport_usb_start_write(struct jaylink_device_handle *devh,
+		size_t length, bool has_command);
+JAYLINK_PRIV int transport_usb_start_read(struct jaylink_device_handle *devh,
+		size_t length);
+JAYLINK_PRIV int transport_usb_write(struct jaylink_device_handle *devh,
+		const uint8_t *buffer, size_t length);
+JAYLINK_PRIV int transport_usb_read(struct jaylink_device_handle *devh,
+		uint8_t *buffer, size_t length);
+
+/*--- transport_tcp.c -------------------------------------------------------*/
+
+JAYLINK_PRIV int transport_tcp_open(struct jaylink_device_handle *devh);
+JAYLINK_PRIV int transport_tcp_close(struct jaylink_device_handle *devh);
+JAYLINK_PRIV int transport_tcp_start_write_read(
+		struct jaylink_device_handle *devh, size_t write_length,
+		size_t read_length, bool has_command);
+JAYLINK_PRIV int transport_tcp_start_write(struct jaylink_device_handle *devh,
+		size_t length, bool has_command);
+JAYLINK_PRIV int transport_tcp_start_read(struct jaylink_device_handle *devh,
+		size_t length);
+JAYLINK_PRIV int transport_tcp_write(struct jaylink_device_handle *devh,
+		const uint8_t *buffer, size_t length);
+JAYLINK_PRIV int transport_tcp_read(struct jaylink_device_handle *devh,
 		uint8_t *buffer, size_t length);
 
 #endif /* LIBJAYLINK_LIBJAYLINK_INTERNAL_H */

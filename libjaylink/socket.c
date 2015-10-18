@@ -94,6 +94,71 @@ JAYLINK_PRIV bool socket_bind(int sock, const struct sockaddr *address,
  *                       value is undefined on failure.
  * @param[in] flags Flags to modify the function behaviour. Use bitwise OR to
  *                  specify multiple flags.
+ *
+ * @return Whether the message was sent successfully.
+ */
+JAYLINK_PRIV bool socket_send(int sock, const void *buffer, size_t *length,
+		int flags)
+{
+	ssize_t ret;
+
+	ret = send(sock, buffer, *length, flags);
+#ifdef _WIN32
+	if (ret == SOCKET_ERROR)
+		return false;
+#else
+	if (ret < 0)
+		return false;
+#endif
+	*length = ret;
+
+	return true;
+}
+
+/**
+ * Receive a message from a socket.
+ *
+ * @param[in] sock Socket descriptor.
+ * @param[out] buffer Buffer to store the received message on success. Its
+ *                    content is undefined on failure.
+ * @param[in,out] length Maximum length of the message in bytes. On success,
+ *                       the value gets updated with the actual number of
+ *                       received bytes. The value is undefined on failure.
+ * @param[in] flags Flags to modify the function behaviour. Use bitwise OR to
+ *                  specify multiple flags.
+ *
+ * @return Whether a message was successfully received.
+ */
+JAYLINK_PRIV bool socket_recv(int sock, void *buffer, size_t *length,
+		int flags)
+{
+	ssize_t ret;
+
+	ret = recv(sock, buffer, *length, flags);
+
+#ifdef _WIN32
+	if (ret == SOCKET_ERROR)
+		return false;
+#else
+	if (ret < 0)
+		return false;
+#endif
+
+	*length = ret;
+
+	return true;
+}
+
+/**
+ * Send a message on a socket.
+ *
+ * @param[in] sock Socket descriptor.
+ * @param[in] buffer Buffer to send message from.
+ * @param[in,out] length Number of bytes to send. On success, the value gets
+ *                       updated with the actual number of bytes sent. The
+ *                       value is undefined on failure.
+ * @param[in] flags Flags to modify the function behaviour. Use bitwise OR to
+ *                  specify multiple flags.
  * @param[in] address Destination address of the message.
  * @param[in] address_length Length of the structure pointed to by @p address
  *                           in bytes.
