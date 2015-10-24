@@ -173,16 +173,20 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
  *       #JAYLINK_DEV_CAP_SELECT_TIF capability.
  *
  * @param[in,out] devh Device handle.
- * @param[in] interface Target interface to select. See
- *                      #jaylink_target_interface for valid values.
+ * @param[in] interface Target interface to select.
+ * @param[out] prev_interface Previously selected target interface on success,
+ *                            and undefined on failure. Can be NULL.
  *
- * @return The previously selected target interface on success, or a negative
- *         error code on failure.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
  */
 JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
-		uint8_t interface)
+		enum jaylink_target_interface interface,
+		enum jaylink_target_interface *prev_interface)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -227,7 +231,10 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR;
 	}
 
-	return tmp;
+	if (prev_interface)
+		*prev_interface = tmp;
+
+	return JAYLINK_OK;
 }
 
 /**

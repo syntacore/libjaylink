@@ -419,7 +419,8 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
 JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
 		uint32_t *freq, uint16_t *div);
 JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
-		uint8_t interface);
+		enum jaylink_target_interface interface,
+		enum jaylink_target_interface *prev_interface);
 JAYLINK_API int jaylink_get_available_interfaces(
 		struct jaylink_device_handle *devh, uint32_t *interfaces);
 JAYLINK_API int jaylink_get_selected_interface(
