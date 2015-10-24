@@ -423,7 +423,8 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 JAYLINK_API int jaylink_get_available_interfaces(
 		struct jaylink_device_handle *devh, uint32_t *interfaces);
 JAYLINK_API int jaylink_get_selected_interface(
-		struct jaylink_device_handle *devh);
+		struct jaylink_device_handle *devh,
+		enum jaylink_target_interface *interface);
 JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_set_target_power(struct jaylink_device_handle *devh,
