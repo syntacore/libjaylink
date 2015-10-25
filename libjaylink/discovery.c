@@ -138,6 +138,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	char buf[USB_SERIAL_NUMBER_LENGTH + 1];
 	uint8_t usb_address;
 	uint32_t serial_number;
+	int valid_serial_number;
 	int found_device;
 	size_t i;
 
@@ -191,6 +192,8 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 		return NULL;
 	}
 
+	valid_serial_number = 1;
+
 	ret = libusb_get_string_descriptor_ascii(usb_devh, desc.iSerialNumber,
 		(unsigned char *)buf, USB_SERIAL_NUMBER_LENGTH + 1);
 
@@ -199,16 +202,22 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	if (ret < 0) {
 		log_warn(ctx, "Failed to retrieve serial number: %s.",
 			libusb_error_name(ret));
-		return NULL;
+		valid_serial_number = 0;
 	}
 
-	if (!parse_serial_number(buf, &serial_number)) {
-		log_warn(ctx, "Failed to parse serial number.");
-		return NULL;
+	if (valid_serial_number) {
+		if (!parse_serial_number(buf, &serial_number)) {
+			log_warn(ctx, "Failed to parse serial number.");
+			return NULL;
+		}
 	}
 
 	log_dbg(ctx, "Device: USB address = %u.", usb_address);
-	log_dbg(ctx, "Device: Serial number = %u.", serial_number);
+
+	if (valid_serial_number)
+		log_dbg(ctx, "Device: Serial number = %u.", serial_number);
+	else
+		log_dbg(ctx, "Device: Serial number = N/A.");
 
 	log_dbg(ctx, "Allocating new device instance.");
 
@@ -222,6 +231,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	dev->usb_dev = libusb_ref_device(usb_dev);
 	dev->usb_address = usb_address;
 	dev->serial_number = serial_number;
+	dev->valid_serial_number = valid_serial_number;
 
 	return dev;
 }

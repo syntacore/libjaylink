@@ -78,6 +78,8 @@ struct jaylink_device {
 	 * real serial number of the device.
 	 */
 	uint32_t serial_number;
+	/** Indicates whether the serial number is valid. */
+	int valid_serial_number;
 };
 
 struct jaylink_device_handle {

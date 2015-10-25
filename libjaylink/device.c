@@ -166,12 +166,16 @@ JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_NOT_AVAILABLE Serial number is not available.
  */
 JAYLINK_API int jaylink_device_get_serial_number(
 		const struct jaylink_device *dev, uint32_t *serial_number)
 {
 	if (!dev || !serial_number)
 		return JAYLINK_ERR_ARG;
+
+	if (!dev->valid_serial_number)
+		return JAYLINK_ERR_NOT_AVAILABLE;
 
 	*serial_number = dev->serial_number;
 
