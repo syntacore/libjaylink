@@ -100,14 +100,14 @@ JAYLINK_API int jaylink_emucom_write(struct jaylink_device_handle *devh,
 	ret = transport_start_write_read(devh, *length, 4, 0);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_read() failed: %i.", ret);
+		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
 		return ret;
 	}
 
 	ret = transport_write(devh, buffer, *length);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_read() failed: %i.", ret);
+		log_err(ctx, "transport_write() failed: %i.", ret);
 		return ret;
 	}
 
