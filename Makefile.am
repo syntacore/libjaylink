@@ -25,4 +25,4 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libjaylink.pc
 endif
 
-EXTRA_DIST = Doxyfile contrib/99-libjaylink.rules
+EXTRA_DIST = Doxyfile README contrib/99-libjaylink.rules
