@@ -257,7 +257,7 @@ JAYLINK_PRIV int transport_close(struct jaylink_device_handle *devh)
  * @param devh Device handle.
  * @param length Number of bytes of the write operation.
  * @param has_command Determines whether the data of the write operation
- * 		      contains the protocol command.
+ *                    contains the protocol command.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -336,13 +336,13 @@ JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
  * these functions and vice versa.
  *
  * @note The write operation must be completed first before the read operation
- * 	 must be processed.
+ *       must be processed.
  *
  * @param devh Device handle.
  * @param write_length Number of bytes of the write operation.
  * @param read_length Number of bytes of the read operation.
  * @param has_command Determines whether the data of the write operation
- * 		      contains the protocol command.
+ *                    contains the protocol command.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -513,9 +513,9 @@ static int adjust_buffer(struct jaylink_device_handle *devh, size_t size)
  * write operation.
  *
  * @note A write operation will be performed and the data will be sent to the
- * 	 device when the number of written bytes reaches the number of bytes of
- * 	 the write operation. Before that the data will be written into a
- * 	 buffer.
+ *       device when the number of written bytes reaches the number of bytes of
+ *       the write operation. Before that the data will be written into a
+ *       buffer.
  *
  * @param devh Device handle.
  * @param buffer Buffer to write data from.
@@ -621,7 +621,7 @@ JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
  *
  * @param devh Device handle.
  * @param buffer Buffer to read data into on success. Its content is undefined
- * 		 on failure.
+ *               on failure.
  * @param length Number of bytes to read.
  *
  * @retval JAYLINK_OK Success.

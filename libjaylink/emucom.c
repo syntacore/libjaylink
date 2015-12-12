@@ -44,14 +44,14 @@
  * Write to an EMUCOM channel.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_EMUCOM capability.
+ *       #JAYLINK_DEV_CAP_EMUCOM capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in] channel Channel to write data to.
  * @param[in] buffer Buffer to write data from.
  * @param[in,out] length Number of bytes to write. On success, the value gets
- * 			 updated with the actual number of bytes written. The
- * 			 value is undefined on failure.
+ *                       updated with the actual number of bytes written. The
+ *                       value is undefined on failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.

@@ -46,7 +46,7 @@
  * Start SWO capture.
  *
  * @note This function must be used only if the device has the
- * 	 #JAYLINK_DEV_CAP_SWO capability.
+ *       #JAYLINK_DEV_CAP_SWO capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in] mode Mode to capture data with.
@@ -128,7 +128,7 @@ JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
  * Stop SWO capture.
  *
  * @note This function must be used only if the device has the
- * 	 #JAYLINK_DEV_CAP_SWO capability.
+ *       #JAYLINK_DEV_CAP_SWO capability.
  *
  * @param[in,out] devh Device handle.
  *
@@ -188,14 +188,14 @@ JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
  * Read SWO trace data.
  *
  * @note This function must be used only if the device has the
- * 	 #JAYLINK_DEV_CAP_SWO capability.
+ *       #JAYLINK_DEV_CAP_SWO capability.
  *
  * @param[in,out] devh Device handle.
  * @param[out] buffer Buffer to store trace data on success. Its content is
- * 		      undefined on failure.
+ *                    undefined on failure.
  * @param[in,out] length Maximum number of bytes to read. On success, the value
- * 			 gets updated with the actual number of bytes read. The
- * 			 value is undefined on failure.
+ *                       gets updated with the actual number of bytes read. The
+ *                       value is undefined on failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -297,7 +297,7 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
  * 2, and so on.
  *
  * @note This function must be used only if the device has the
- * 	 #JAYLINK_DEV_CAP_SWO capability.
+ *       #JAYLINK_DEV_CAP_SWO capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in] mode Capture mode to retrieve speeds for.

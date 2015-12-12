@@ -36,16 +36,16 @@
  * Perform a SWD I/O operation.
  *
  * @note This function must only be used if the #JAYLINK_TIF_SWD interface is
- * 	 available and selected.
+ *       available and selected.
  *
  * @param[in,out] devh Device handle.
  * @param[in] direction Buffer to read the transfer direction from.
  * @param[in] out Buffer to read host-to-target data from.
  * @param[out] in Buffer to store target-to-host data on success. Its content is
- * 		  undefined on failure. The buffer must be large enough to
- * 		  contain at least the specified number of bits to transfer.
+ *                undefined on failure. The buffer must be large enough to
+ *                contain at least the specified number of bits to transfer.
  * @param[in] length Total number of bits to transfer from host to target and
- * 		     vice versa.
+ *                   vice versa.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -55,7 +55,7 @@
  *
  * @see jaylink_select_interface() to select the target interface.
  * @see jaylink_get_available_interfaces() to retrieve the available target
- * 					   interfaces.
+ *                                         interfaces.
  */
 JAYLINK_API int jaylink_swd_io(struct jaylink_device_handle *devh,
 		const uint8_t *direction, const uint8_t *out, uint8_t *in,

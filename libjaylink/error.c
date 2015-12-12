@@ -29,7 +29,7 @@
  * Return a human-readable description of a libjaylink error code.
  *
  * @param error_code A libjaylink error code. See #jaylink_error for valid
- * 		     values.
+ *                   values.
  *
  * @return A string which describes the given error code, or the string
  *         <i>unknown error</i> if the error code is not known. The string is
@@ -65,7 +65,7 @@ JAYLINK_API const char *jaylink_strerror(int error_code)
  * Return the name of a libjaylink error code.
  *
  * @param error_code A libjaylink error code. See #jaylink_error for valid
- * 		     values.
+ *                   values.
  *
  * @return A string which contains the name for the given error code, or the
  *         string <i>unknown error code</i> if the error code is not known. The

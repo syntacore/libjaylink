@@ -39,19 +39,19 @@
  * Perform a JTAG I/O operation.
  *
  * @note This function must only be used if the #JAYLINK_TIF_JTAG interface is
- * 	 available and selected. Nevertheless, this function can be used if the
- *	 device doesn't have the #JAYLINK_DEV_CAP_SELECT_TIF capability.
+ *       available and selected. Nevertheless, this function can be used if the
+ *       device doesn't have the #JAYLINK_DEV_CAP_SELECT_TIF capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in] tms Buffer to read TMS data from.
  * @param[in] tdi Buffer to read TDI data from.
  * @param[out] tdo Buffer to store TDO data on success. Its content is undefined
- * 		   on failure. The buffer must be large enough to contain at
- * 		   least the specified number of bits to transfer.
+ *                 on failure. The buffer must be large enough to contain at
+ *                 least the specified number of bits to transfer.
  * @param[in] length Number of bits to transfer.
  * @param[in] version Version of the JTAG command to use. See
- * 		      #jaylink_jtag_version for further information and a
- * 		      description of the different versions.
+ *                    #jaylink_jtag_version for further information and a
+ *                    description of the different versions.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -61,7 +61,7 @@
  *
  * @see jaylink_select_interface() to select the target interface.
  * @see jaylink_get_available_interfaces() to retrieve the available target
- * 					   interfaces.
+ *                                         interfaces.
  */
 JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 		const uint8_t *tms, const uint8_t *tdi, uint8_t *tdo,

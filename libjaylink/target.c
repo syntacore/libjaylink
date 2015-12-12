@@ -45,9 +45,9 @@
  *
  * @param[in,out] devh Device handle.
  * @param[in] speed Speed in kHz or #JAYLINK_SPEED_ADAPTIVE_CLOCKING for
- * 		    adaptive clocking. Speed of 0 kHz is not allowed and
- * 		    adaptive clocking must only be used if the device has the
- * 		    #JAYLINK_DEV_CAP_ADAPTIVE_CLOCKING capability.
+ *                  adaptive clocking. Speed of 0 kHz is not allowed and
+ *                  adaptive clocking must only be used if the device has the
+ *                  #JAYLINK_DEV_CAP_ADAPTIVE_CLOCKING capability.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -101,7 +101,7 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
  * so on.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_GET_SPEEDS capability.
+ *       #JAYLINK_DEV_CAP_GET_SPEEDS capability.
  *
  * @param[in,out] devh Device handle.
  * @param[out] freq Base frequency in Hz on success, and undefined on failure.
@@ -115,7 +115,7 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
  *
  * @see jaylink_select_interface() to select the target interface.
  * @see jaylink_get_selected_interface() to retrieve the currently selected
- * 					 interface.
+ *                                       interface.
  * @see jaylink_set_speed() to set the target interface speed.
  */
 JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
@@ -170,14 +170,14 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
  * Select the target interface.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_SELECT_TIF capability.
+ *       #JAYLINK_DEV_CAP_SELECT_TIF capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in] interface Target interface to select. See
- * 			#jaylink_target_interface for valid values.
+ *                      #jaylink_target_interface for valid values.
  *
  * @return The previously selected target interface on success, or a negative
- * 	   error code on failure.
+ *         error code on failure.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
  */
@@ -239,11 +239,11 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
  * interfaces and their bit positions.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_SELECT_TIF capability.
+ *       #JAYLINK_DEV_CAP_SELECT_TIF capability.
  *
  * @param[in,out] devh Device handle.
  * @param[out] interfaces Target interfaces on success, and undefined on
- * 			  failure.
+ *                        failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -297,12 +297,12 @@ JAYLINK_API int jaylink_get_available_interfaces(
  * Retrieve the selected target interface.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_SELECT_TIF capability.
+ *       #JAYLINK_DEV_CAP_SELECT_TIF capability.
  *
  * @param[in,out] devh Device handle.
  *
  * @return The currently selected target interface on success, or a negative
- * 	   error code on failure.
+ *         error code on failure.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
  */
@@ -437,11 +437,11 @@ JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh)
  * JTAG / SWD connector.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_SET_TARGET_POWER capability.
+ *       #JAYLINK_DEV_CAP_SET_TARGET_POWER capability.
  *
  * @param devh Device handle.
  * @param enable Determines whether to enable or disable the target power
- * 		 supply.
+ *               supply.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.

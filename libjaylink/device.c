@@ -111,12 +111,12 @@ static void free_device_handle(struct jaylink_device_handle *devh)
  *
  * @param[in,out] ctx libjaylink context.
  * @param[out] devices Newly allocated array which contains instances of
- * 		       available devices on success, and undefined on failure.
- * 		       The array is NULL-terminated and must be free'd by the
- * 		       caller with jaylink_free_device_list().
+ *                     available devices on success, and undefined on failure.
+ *                     The array is NULL-terminated and must be free'd by the
+ *                     caller with jaylink_free_device_list().
  *
  * @return The length of the array excluding the trailing NULL-terminator, or a
- * 	   negative error code on failure.
+ *         negative error code on failure.
  */
 JAYLINK_API ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
 		struct jaylink_device ***devices)
@@ -132,7 +132,7 @@ JAYLINK_API ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
  *
  * @param[in,out] devices Array of device instances. Must be NULL-terminated.
  * @param[in] unref_devices Determines whether the device instances should be
- * 			    unreferenced.
+ *                          unreferenced.
  */
 JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
 		int unref_devices)
@@ -158,11 +158,11 @@ JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
  * Get the serial number of a device.
  *
  * @note This serial number is for enumeration purpose only and might differ
- * 	 from the real serial number of the device.
+ *       from the real serial number of the device.
  *
  * @param[in] dev Device instance.
  * @param[out] serial_number Serial number of the device on success, and
- * 			     undefined on failure.
+ *                           undefined on failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -186,13 +186,13 @@ JAYLINK_API int jaylink_device_get_serial_number(
  * Get the USB address of a device.
  *
  * @note Identification of a device with the USB address is deprecated and the
- * 	 serial number should be used instead.
+ *       serial number should be used instead.
  *
  * @param[in] dev Device instance.
  *
  * @return The USB address of the device on success, or #JAYLINK_ERR_ARG for
- * 	   invalid device instance. See #jaylink_usb_address for valid USB
- * 	   addresses.
+ *         invalid device instance. See #jaylink_usb_address for valid USB
+ *         addresses.
  *
  * @see jaylink_device_get_serial_number() to get the serial number of a device.
  */
@@ -210,7 +210,7 @@ JAYLINK_API int jaylink_device_get_usb_address(const struct jaylink_device *dev)
  * @param[in,out] dev Device instance.
  *
  * @return The given device instance on success, or NULL for invalid device
- * 	   instance.
+ *         instance.
  */
 JAYLINK_API struct jaylink_device *jaylink_ref_device(
 		struct jaylink_device *dev)
@@ -250,7 +250,7 @@ JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev)
  *
  * @param[in,out] dev Device instance.
  * @param[out] devh Newly allocated handle for the opened device on success,
- * 		    and undefined on failure.
+ *                  and undefined on failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -305,13 +305,13 @@ JAYLINK_API void jaylink_close(struct jaylink_device_handle *devh)
  *
  * @param[in,out] devh Device handle.
  * @param[out] version Newly allocated string which contains the firmware
- * 		       version, and undefined if the device returns no
- * 		       firmware version or on failure. The string is
- * 		       null-terminated and must be free'd by the caller.
+ *                     version, and undefined if the device returns no
+ *                     firmware version or on failure. The string is
+ *                     null-terminated and must be free'd by the caller.
  *
  * @return The length of the newly allocated firmware version string including
- *	   trailing null-terminator, 0 if the device returns no firmware
- * 	   version, or a negative error code on failure.
+ *         trailing null-terminator, 0 if the device returns no firmware
+ *         version, or a negative error code on failure.
  */
 JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 		char **version)
@@ -387,17 +387,17 @@ JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
  * Retrieve the hardware information of a device.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_GET_HW_INFO capability.
+ *       #JAYLINK_DEV_CAP_GET_HW_INFO capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in] mask A bit field where each set bit represents hardware
- * 		   information to request. See #jaylink_hardware_info for a
- * 		   description of the hardware information and their bit
- * 		   positions.
+ *                 information to request. See #jaylink_hardware_info for a
+ *                 description of the hardware information and their bit
+ *                 positions.
  * @param[out] info Array to store the hardware information on success. Its
- * 		    content is undefined on failure. The array must be large
- * 		    enough to contain at least as many elements as bits set in
- * 		    @a mask.
+ *                  content is undefined on failure. The array must be large
+ *                  enough to contain at least as many elements as bits set in
+ *                  @a mask.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -461,7 +461,7 @@ JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
  * Retrieve the hardware version of a device.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_GET_HW_VERSION capability.
+ *       #JAYLINK_DEV_CAP_GET_HW_VERSION capability.
  *
  * @param[in,out] devh Device handle.
  * @param[out] version Hardware version on success, and undefined on failure.
@@ -587,8 +587,8 @@ JAYLINK_API int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
  *
  * @param[in,out] devh Device handle.
  * @param[out] caps Buffer to store capabilities on success. Its content is
- * 		    undefined on failure. The size of the buffer must be large
- * 		    enough to contain at least #JAYLINK_DEV_CAPS_SIZE bytes.
+ *                  undefined on failure. The size of the buffer must be large
+ *                  enough to contain at least #JAYLINK_DEV_CAPS_SIZE bytes.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -644,12 +644,12 @@ JAYLINK_API int jaylink_get_caps(struct jaylink_device_handle *devh,
  * #jaylink_device_capability.
  *
  * @note This function must only be used if the device has the
- *	 #JAYLINK_DEV_CAP_GET_EXT_CAPS capability.
+ *       #JAYLINK_DEV_CAP_GET_EXT_CAPS capability.
  *
  * @param[in,out] devh Device handle.
  * @param[out] caps Buffer to store capabilities on success. Its content is
- * 		    undefined on failure. The size of the buffer must be large
- * 		    enough to contain at least #JAYLINK_DEV_EXT_CAPS_SIZE bytes.
+ *                  undefined on failure. The size of the buffer must be large
+ *                  enough to contain at least #JAYLINK_DEV_EXT_CAPS_SIZE bytes.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -699,11 +699,11 @@ JAYLINK_API int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
  * Retrieve the size of free memory of a device.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_GET_FREE_MEMORY capability.
+ *       #JAYLINK_DEV_CAP_GET_FREE_MEMORY capability.
  *
  * @param[in,out] devh Device handle.
  * @param[out] size Size of free memory in bytes on success, and undefined on
- * 		    failure.
+ *                  failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -755,13 +755,13 @@ JAYLINK_API int jaylink_get_free_memory(struct jaylink_device_handle *devh,
  * Read the raw configuration data of a device.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_READ_CONFIG capability.
+ *       #JAYLINK_DEV_CAP_READ_CONFIG capability.
  *
  * @param[in,out] devh Device handle.
  * @param[out] config Buffer to store configuration data on success. Its
- * 		      content is undefined on failure. The size of the buffer
- * 		      must be large enough to contain at least
- * 		      #JAYLINK_DEV_CONFIG_SIZE bytes.
+ *                    content is undefined on failure. The size of the buffer
+ *                    must be large enough to contain at least
+ *                    #JAYLINK_DEV_CONFIG_SIZE bytes.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -809,12 +809,12 @@ JAYLINK_API int jaylink_read_raw_config(struct jaylink_device_handle *devh,
  * Write the raw configuration data of a device.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_WRITE_CONFIG capability.
+ *       #JAYLINK_DEV_CAP_WRITE_CONFIG capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in] config Buffer to write configuration data from. The size of the
- * 		     configuration data is expected to be
- * 		     #JAYLINK_DEV_CONFIG_SIZE bytes.
+ *                   configuration data is expected to be
+ *                   #JAYLINK_DEV_CONFIG_SIZE bytes.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -890,21 +890,21 @@ static void parse_conntable(struct jaylink_connection *conns,
  * connections on the device is reached.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_REGISTER capability.
+ *       #JAYLINK_DEV_CAP_REGISTER capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in,out] connection Connection to register on the device.
  * @param[out] connections Array to store device connections on success.
- * 			   Its content is undefined on failure. The array must
- * 			   be large enough to contain at least
- * 			   #JAYLINK_MAX_CONNECTIONS elements.
+ *                         Its content is undefined on failure. The array must
+ *                         be large enough to contain at least
+ *                         #JAYLINK_MAX_CONNECTIONS elements.
  * @param[out] info Buffer to store additional information on success, or NULL.
- * 		    The content of the buffer is undefined on failure.
+ *                  The content of the buffer is undefined on failure.
  * @param[out] info_size Size of the additional information in bytes on success,
- * 			 and undefined on failure. Can be NULL.
+ *                       and undefined on failure. Can be NULL.
  *
  * @return The number of device connections on success, a negative error code on
- * 	   failure.
+ *         failure.
  *
  * @see jaylink_unregister() to unregister a connection from a device.
  */
@@ -1020,21 +1020,21 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
  * Unregister a connection from a device.
  *
  * @note This function must only be used if the device has the
- * 	 #JAYLINK_DEV_CAP_REGISTER capability.
+ *       #JAYLINK_DEV_CAP_REGISTER capability.
  *
  * @param[in,out] devh Device handle.
  * @param[in,out] connection Connection to unregister from the device.
  * @param[out] connections Array to store device connections on success.
- * 			   Its content is undefined on failure. The array must
- * 			   be large enough to contain at least
- * 			   #JAYLINK_MAX_CONNECTIONS elements.
+ *                         Its content is undefined on failure. The array must
+ *                         be large enough to contain at least
+ *                         #JAYLINK_MAX_CONNECTIONS elements.
  * @param[out] info Buffer to store additional information on success, or NULL.
- * 		    The content of the buffer is undefined on failure.
+ *                  The content of the buffer is undefined on failure.
  * @param[out] info_size Size of the additional information in bytes on success,
- * 			 and undefined on failure. Can be NULL.
+ *                       and undefined on failure. Can be NULL.
  *
  * @return The number of device connections on success, a negative error code on
- * 	   failure.
+ *         failure.
  */
 JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		const struct jaylink_connection *connection,

@@ -57,8 +57,8 @@ JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx, int level)
  * @param[in] ctx libjaylink context.
  *
  * @return The current log level on success, or a negative error code
- * 	   on failure. See #jaylink_log_level for a description of each
- * 	   individual log level.
+ *         on failure. See #jaylink_log_level for a description of each
+ *         individual log level.
  */
 JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx)
 {
@@ -73,7 +73,7 @@ JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx)
  *
  * @param[in,out] ctx libjaylink context.
  * @param[in] callback Callback function to use, or NULL to use the default log
- * 		       function.
+ *                     function.
  * @param[in] user_data User data to be passed to the callback function.
  *
  * @retval JAYLINK_OK Success.
@@ -108,7 +108,7 @@ JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
  *
  * @param[in,out] ctx libjaylink context.
  * @param[in] domain Log domain to use. To set the default log domain, use
- * 		     #JAYLINK_LOG_DOMAIN_DEFAULT.
+ *                   #JAYLINK_LOG_DOMAIN_DEFAULT.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR Other error conditions.
@@ -137,8 +137,8 @@ JAYLINK_API int jaylink_log_set_domain(struct jaylink_context *ctx,
  * @param[in] ctx libjaylink context.
  *
  * @return A string which contains the current log domain on success, or NULL
- * 	   on failure. The string is null-terminated and must not be free'd by
- * 	   the caller.
+ *         on failure. The string is null-terminated and must not be free'd by
+ *         the caller.
  */
 JAYLINK_API const char *jaylink_log_get_domain(
 		const struct jaylink_context *ctx)

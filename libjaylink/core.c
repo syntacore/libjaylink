@@ -35,7 +35,7 @@
  * This function must be called before any other libjaylink function is called.
  *
  * @param[out] ctx Newly allocated libjaylink context on success, and undefined
- * 		   on failure.
+ *                 on failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
