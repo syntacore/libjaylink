@@ -17,7 +17,7 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.64])
 
 # Package version of libjaylink. This is not the same as the libtool interface
 # version.
