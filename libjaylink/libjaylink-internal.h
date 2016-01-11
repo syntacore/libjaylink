@@ -34,7 +34,7 @@
  */
 
 /** Macro to mark private libjaylink symbol. */
-#ifndef _WIN32
+#if (!defined(_WIN32)) && (!defined(__MSYS__))
 #define JAYLINK_PRIV __attribute__ ((visibility ("hidden")))
 #else
 #define JAYLINK_PRIV
