@@ -31,8 +31,6 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
 
-AC_CANONICAL_HOST
-
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
 # Enable additional compiler warnings via -Wall and -Wextra. Use hidden
@@ -93,11 +91,6 @@ AM_CONDITIONAL([SUBPROJECT_BUILD],
 if test "x$enable_subproject_build" != "xyes"; then
 JAYLINK_LIB_LDFLAGS="-version-info $JAYLINK_VERSION_LIB"
 fi
-
-case $host_os in
-mingw*)
-	JAYLINK_LIB_LDFLAGS="$JAYLINK_LIB_LDFLAGS -no-undefined"
-esac
 
 AC_SUBST([JAYLINK_LIB_LDFLAGS])
 

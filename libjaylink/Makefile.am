@@ -46,6 +46,6 @@ libjaylink_la_SOURCES = \
 	util.c \
 	version.c
 
-libjaylink_la_LDFLAGS = $(JAYLINK_LIB_LDFLAGS)
+libjaylink_la_LDFLAGS = $(JAYLINK_LIB_LDFLAGS) -no-undefined
 
 noinst_HEADERS = libjaylink-internal.h
