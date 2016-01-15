@@ -310,10 +310,10 @@ struct jaylink_device;
 struct jaylink_device_handle;
 
 /** Macro to mark public libjaylink API symbol. */
-#ifndef _WIN32
-#define JAYLINK_API __attribute__ ((visibility ("default")))
-#else
+#ifdef _WIN32
 #define JAYLINK_API
+#else
+#define JAYLINK_API __attribute__ ((visibility ("default")))
 #endif
 
 /** Log callback function type. */

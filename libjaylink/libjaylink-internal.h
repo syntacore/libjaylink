@@ -34,10 +34,10 @@
  */
 
 /** Macro to mark private libjaylink symbol. */
-#if (!defined(_WIN32)) && (!defined(__MSYS__))
-#define JAYLINK_PRIV __attribute__ ((visibility ("hidden")))
-#else
+#if defined(_WIN32) || defined(__MSYS__) || defined(__CYGWIN__)
 #define JAYLINK_PRIV
+#else
+#define JAYLINK_PRIV __attribute__ ((visibility ("hidden")))
 #endif
 
 /** Calculate the minimum of two numeric values. */
