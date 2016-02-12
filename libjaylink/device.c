@@ -305,6 +305,24 @@ JAYLINK_API void jaylink_close(struct jaylink_device_handle *devh)
 }
 
 /**
+ * Get the device instance from a device handle.
+ *
+ * @note The reference count of the device instance is not increased.
+ *
+ * @param[in] devh Device handle.
+ *
+ * @return The device instance on success, or NULL on invalid argument.
+ */
+JAYLINK_API struct jaylink_device *jaylink_get_device(
+		struct jaylink_device_handle *devh)
+{
+	if (!devh)
+		return NULL;
+
+	return devh->dev;
+}
+
+/**
  * Retrieve the firmware version of a device.
  *
  * @param[in,out] devh Device handle.
