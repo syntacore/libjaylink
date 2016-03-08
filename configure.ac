@@ -31,6 +31,8 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
 
+AC_CANONICAL_HOST
+
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
 # Enable additional compiler warnings via -Wall and -Wextra. Use hidden
@@ -103,6 +105,12 @@ AC_SUBST(JAYLINK_VERSION_PACKAGE_MAJOR)
 AC_SUBST(JAYLINK_VERSION_PACKAGE_MINOR)
 AC_SUBST(JAYLINK_VERSION_PACKAGE_MICRO)
 AC_SUBST(JAYLINK_VERSION_PACKAGE)
+
+# Use C99 compatible stdio functions on MinGW instead of the incompatible
+# functions provided by Microsoft.
+AS_CASE([$host_os], [mingw*],
+	[AC_DEFINE([__USE_MINGW_ANSI_STDIO], [1],
+		[Define to 1 to use C99 compatible stdio functions on MinGW.])])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([libjaylink/Makefile])
