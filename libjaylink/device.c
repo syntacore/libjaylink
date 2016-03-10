@@ -155,6 +155,28 @@ JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
 }
 
 /**
+ * Get the host interface of a device.
+ *
+ * @param[in] dev Device instance.
+ * @param[out] interface Host interface of the device on success, and undefined
+ *                       on failure.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ */
+JAYLINK_API int jaylink_device_get_host_interface(
+		const struct jaylink_device *dev,
+		enum jaylink_host_interface *interface)
+{
+	if (!dev || !interface)
+		return JAYLINK_ERR_ARG;
+
+	*interface = dev->interface;
+
+	return JAYLINK_OK;
+}
+
+/**
  * Get the serial number of a device.
  *
  * @note This serial number is for enumeration purpose only and might differ

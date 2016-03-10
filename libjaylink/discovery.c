@@ -228,6 +228,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 		return NULL;
 	}
 
+	dev->interface = JAYLINK_HIF_USB;
 	dev->usb_dev = libusb_ref_device(usb_dev);
 	dev->usb_address = usb_address;
 	dev->serial_number = serial_number;

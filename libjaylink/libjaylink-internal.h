@@ -67,6 +67,8 @@ struct jaylink_device {
 	struct jaylink_context *ctx;
 	/** Number of references held on this device instance. */
 	int refcnt;
+	/** Host interface. */
+	enum jaylink_host_interface interface;
 	/** libusb device instance. */
 	struct libusb_device *usb_dev;
 	/** USB address of the device. */

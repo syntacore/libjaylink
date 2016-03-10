@@ -72,6 +72,12 @@ enum jaylink_log_level {
 /** Maximum length of a libjaylink log domain in bytes. */
 #define JAYLINK_LOG_DOMAIN_MAX_LENGTH	32
 
+/** Host interfaces. */
+enum jaylink_host_interface {
+	/** Universal Serial Bus (USB). */
+	JAYLINK_HIF_USB = (1 << 0)
+};
+
 /**
  * USB addresses.
  *
@@ -331,6 +337,9 @@ JAYLINK_API ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
 		struct jaylink_device ***devices);
 JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
 		int unref_devices);
+JAYLINK_API int jaylink_device_get_host_interface(
+		const struct jaylink_device *dev,
+		enum jaylink_host_interface *interface);
 JAYLINK_API int jaylink_device_get_serial_number(
 		const struct jaylink_device *dev, uint32_t *serial_number);
 JAYLINK_API int jaylink_device_get_usb_address(const struct jaylink_device *dev,
