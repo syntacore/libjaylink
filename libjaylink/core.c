@@ -39,6 +39,7 @@
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_MALLOC Memory allocation error.
  * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
