@@ -52,6 +52,8 @@ JAYLINK_API const char *jaylink_strerror(int error_code)
 		return "protocol violation";
 	case JAYLINK_ERR_NOT_AVAILABLE:
 		return "entity not available";
+	case JAYLINK_ERR_NOT_SUPPORTED:
+		return "operation not supported";
 	case JAYLINK_ERR_DEV:
 		return "device: unspecified error";
 	case JAYLINK_ERR_DEV_NOT_SUPPORTED:
@@ -88,6 +90,8 @@ JAYLINK_API const char *jaylink_strerror_name(int error_code)
 		return "JAYLINK_ERR_PROTO";
 	case JAYLINK_ERR_NOT_AVAILABLE:
 		return "JAYLINK_ERR_NOT_AVAILABLE";
+	case JAYLINK_ERR_NOT_SUPPORTED:
+		return "JAYLINK_ERR_NOT_SUPPORTED";
 	case JAYLINK_ERR_DEV:
 		return "JAYLINK_ERR_DEV";
 	case JAYLINK_ERR_DEV_NOT_SUPPORTED:

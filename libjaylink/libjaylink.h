@@ -46,6 +46,8 @@ enum jaylink_error {
 	JAYLINK_ERR_PROTO = -5,
 	/** Entity not available. */
 	JAYLINK_ERR_NOT_AVAILABLE = -6,
+	/** Operation not supported. */
+	JAYLINK_ERR_NOT_SUPPORTED = -7,
 	/** Device: unspecified error. */
 	JAYLINK_ERR_DEV = -1000,
 	/** Device: operation not supported. */
