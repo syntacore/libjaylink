@@ -216,6 +216,7 @@ JAYLINK_API int jaylink_device_get_serial_number(
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_NOT_SUPPORTED Operation not supported.
  *
  * @see jaylink_device_get_serial_number() to get the serial number of a device.
  */
@@ -224,6 +225,9 @@ JAYLINK_API int jaylink_device_get_usb_address(const struct jaylink_device *dev,
 {
 	if (!dev || !address)
 		return JAYLINK_ERR_ARG;
+
+	if (dev->interface != JAYLINK_HIF_USB)
+		return JAYLINK_ERR_NOT_SUPPORTED;
 
 	*address = dev->usb_address;
 
