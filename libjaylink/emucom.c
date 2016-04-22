@@ -18,6 +18,7 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
@@ -77,7 +78,7 @@ JAYLINK_API int jaylink_emucom_write(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write(devh, 10, 1);
+	ret = transport_start_write(devh, 10, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write() failed: %i.", ret);
@@ -97,7 +98,7 @@ JAYLINK_API int jaylink_emucom_write(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	ret = transport_start_write_read(devh, *length, 4, 0);
+	ret = transport_start_write_read(devh, *length, 4, false);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);

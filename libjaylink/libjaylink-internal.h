@@ -20,8 +20,9 @@
 #ifndef LIBJAYLINK_LIBJAYLINK_INTERNAL_H
 #define LIBJAYLINK_LIBJAYLINK_INTERNAL_H
 
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include <sys/types.h>
 #include <libusb.h>
 
@@ -81,7 +82,7 @@ struct jaylink_device {
 	 */
 	uint32_t serial_number;
 	/** Indicates whether the serial number is valid. */
-	int valid_serial_number;
+	bool valid_serial_number;
 };
 
 struct jaylink_device_handle {
@@ -129,7 +130,7 @@ struct list {
 	struct list *next;
 };
 
-typedef int (*list_compare_callback)(const void *a, const void *b);
+typedef bool (*list_compare_callback)(const void *a, const void *b);
 
 /*--- buffer.c --------------------------------------------------------------*/
 
@@ -176,9 +177,9 @@ JAYLINK_PRIV void log_dbg(const struct jaylink_context *ctx,
 JAYLINK_PRIV int transport_open(struct jaylink_device_handle *devh);
 JAYLINK_PRIV int transport_close(struct jaylink_device_handle *devh);
 JAYLINK_PRIV int transport_start_write_read(struct jaylink_device_handle *devh,
-		size_t write_length, size_t read_length, int has_command);
+		size_t write_length, size_t read_length, bool has_command);
 JAYLINK_PRIV int transport_start_write(struct jaylink_device_handle *devh,
-		size_t length, int has_command);
+		size_t length, bool has_command);
 JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
 		size_t length);
 JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,

@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <inttypes.h>
+#include <stdbool.h>
 #include <string.h>
 #include <sys/types.h>
 #include <libusb.h>
@@ -81,7 +82,7 @@ static struct jaylink_device **allocate_device_list(size_t length)
 	return list;
 }
 
-static int parse_serial_number(const char *str, uint32_t *serial_number)
+static bool parse_serial_number(const char *str, uint32_t *serial_number)
 {
 	size_t length;
 
@@ -96,12 +97,12 @@ static int parse_serial_number(const char *str, uint32_t *serial_number)
 		str = str + (length - MAX_SERIAL_NUMBER_DIGITS);
 
 	if (sscanf(str, "%" SCNu32, serial_number) != 1)
-		return 0;
+		return false;
 
-	return 1;
+	return true;
 }
 
-static int compare_devices(const void *a, const void *b)
+static bool compare_devices(const void *a, const void *b)
 {
 	const struct jaylink_device *dev;
 	const struct libusb_device *usb_dev;
@@ -110,9 +111,9 @@ static int compare_devices(const void *a, const void *b)
 	usb_dev = b;
 
 	if (dev->usb_dev == usb_dev)
-		return 0;
+		return false;
 
-	return 1;
+	return true;
 }
 
 static struct jaylink_device *find_device(const struct jaylink_context *ctx,
@@ -138,8 +139,8 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	char buf[USB_SERIAL_NUMBER_LENGTH + 1];
 	uint8_t usb_address;
 	uint32_t serial_number;
-	int valid_serial_number;
-	int found_device;
+	bool valid_serial_number;
+	bool found_device;
 	size_t i;
 
 	ret = libusb_get_device_descriptor(usb_dev, &desc);
@@ -154,11 +155,11 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	if (desc.idVendor != USB_VENDOR_ID)
 		return NULL;
 
-	found_device = 0;
+	found_device = false;
 
 	for (i = 0; i < sizeof(pids) / sizeof(pids[0]); i++) {
 		if (pids[i][0] == desc.idProduct) {
-			found_device = 1;
+			found_device = true;
 			usb_address = pids[i][1];
 			break;
 		}
@@ -192,7 +193,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 		return NULL;
 	}
 
-	valid_serial_number = 1;
+	valid_serial_number = true;
 
 	ret = libusb_get_string_descriptor_ascii(usb_devh, desc.iSerialNumber,
 		(unsigned char *)buf, USB_SERIAL_NUMBER_LENGTH + 1);
@@ -202,7 +203,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	if (ret < 0) {
 		log_warn(ctx, "Failed to retrieve serial number: %s.",
 			libusb_error_name(ret));
-		valid_serial_number = 0;
+		valid_serial_number = false;
 	}
 
 	if (valid_serial_number) {
@@ -266,7 +267,7 @@ JAYLINK_PRIV ssize_t discovery_get_device_list(struct jaylink_context *ctx,
 	devs = allocate_device_list(num_usb_devs);
 
 	if (!devs) {
-		libusb_free_device_list(usb_devs, 1);
+		libusb_free_device_list(usb_devs, true);
 		log_err(ctx, "Device list malloc failed.");
 		return JAYLINK_ERR_MALLOC;
 	}
@@ -284,7 +285,7 @@ JAYLINK_PRIV ssize_t discovery_get_device_list(struct jaylink_context *ctx,
 
 	devs[num_devs] = NULL;
 
-	libusb_free_device_list(usb_devs, 1);
+	libusb_free_device_list(usb_devs, true);
 	*list = devs;
 
 	log_dbg(ctx, "Found %zu device(s).", num_devs);

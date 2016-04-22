@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdbool.h>
+
 #include "libjaylink.h"
 
 /**
@@ -37,15 +39,16 @@
  * @param[in] caps Buffer with capabilities.
  * @param[in] cap Bit position of the capability to check for.
  *
- * @return 1 if the capability is supported, 0 otherwise.
+ * @retval true Capability is supported.
+ * @retval false Capability is not supported or invalid argument.
  */
-JAYLINK_API int jaylink_has_cap(const uint8_t *caps, uint32_t cap)
+JAYLINK_API bool jaylink_has_cap(const uint8_t *caps, uint32_t cap)
 {
 	if (!caps)
-		return 0;
+		return false;
 
 	if (caps[cap / 8] & (1 << (cap % 8)))
-		return 1;
+		return true;
 
-	return 0;
+	return false;
 }

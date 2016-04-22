@@ -21,6 +21,7 @@
 #define LIBJAYLINK_LIBJAYLINK_H
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdarg.h>
 #include <sys/types.h>
 
@@ -233,17 +234,17 @@ struct jaylink_hardware_status {
 	/** Target reference voltage in mV. */
 	uint16_t target_voltage;
 	/** TCK pin state. */
-	uint8_t tck;
+	bool tck;
 	/** TDI pin state. */
-	uint8_t tdi;
+	bool tdi;
 	/** TDO pin state. */
-	uint8_t tdo;
+	bool tdo;
 	/** TMS pin state. */
-	uint8_t tms;
+	bool tms;
 	/** TRES pin state. */
-	uint8_t tres;
+	bool tres;
 	/** TRST pin state. */
-	uint8_t trst;
+	bool trst;
 };
 
 /** Device connection. */
@@ -338,7 +339,7 @@ JAYLINK_API void jaylink_exit(struct jaylink_context *ctx);
 JAYLINK_API ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
 		struct jaylink_device ***devices);
 JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
-		int unref_devices);
+		bool unref_devices);
 JAYLINK_API int jaylink_device_get_host_interface(
 		const struct jaylink_device *dev,
 		enum jaylink_host_interface *interface);
@@ -456,11 +457,11 @@ JAYLINK_API int jaylink_get_selected_interface(
 JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_set_target_power(struct jaylink_device_handle *devh,
-		int enable);
+		bool enable);
 
 /*--- util.c ----------------------------------------------------------------*/
 
-JAYLINK_API int jaylink_has_cap(const uint8_t *caps, uint32_t cap);
+JAYLINK_API bool jaylink_has_cap(const uint8_t *caps, uint32_t cap);
 
 /*--- version.c -------------------------------------------------------------*/
 

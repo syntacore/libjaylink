@@ -18,6 +18,7 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
@@ -74,7 +75,7 @@ JAYLINK_API int jaylink_swd_io(struct jaylink_device_handle *devh,
 	num_bytes = (length + 7) / 8;
 
 	ret = transport_start_write_read(devh, 4 + 2 * num_bytes,
-		num_bytes + 1, 1);
+		num_bytes + 1, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);

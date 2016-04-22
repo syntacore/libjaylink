@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 
 #include "libjaylink.h"
@@ -51,9 +52,9 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 	const struct libusb_interface *interface;
 	const struct libusb_interface_descriptor *desc;
 	const struct libusb_endpoint_descriptor *epdesc;
-	int found_interface;
-	int found_endpoint_in;
-	int found_endpoint_out;
+	bool found_interface;
+	bool found_endpoint_in;
+	bool found_endpoint_out;
 	uint8_t i;
 
 	ctx = devh->dev->ctx;
@@ -71,7 +72,7 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 		return JAYLINK_ERR;
 	}
 
-	found_interface = 0;
+	found_interface = false;
 
 	for (i = 0; i < config->bNumInterfaces; i++) {
 		interface = &config->interface[i];
@@ -86,7 +87,7 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 		if (desc->bNumEndpoints < 2)
 			continue;
 
-		found_interface = 1;
+		found_interface = true;
 		devh->interface_number = i;
 		break;
 	}
@@ -97,18 +98,18 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 		return JAYLINK_ERR;
 	}
 
-	found_endpoint_in = 0;
-	found_endpoint_out = 0;
+	found_endpoint_in = false;
+	found_endpoint_out = false;
 
 	for (i = 0; i < desc->bNumEndpoints; i++) {
 		epdesc = &desc->endpoint[i];
 
 		if (epdesc->bEndpointAddress & LIBUSB_ENDPOINT_IN) {
 			devh->endpoint_in = epdesc->bEndpointAddress;
-			found_endpoint_in = 1;
+			found_endpoint_in = true;
 		} else {
 			devh->endpoint_out = epdesc->bEndpointAddress;
-			found_endpoint_out = 1;
+			found_endpoint_out = true;
 		}
 	}
 
@@ -263,7 +264,7 @@ JAYLINK_PRIV int transport_close(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
 JAYLINK_PRIV int transport_start_write(struct jaylink_device_handle *devh,
-		size_t length, int has_command)
+		size_t length, bool has_command)
 {
 	struct jaylink_context *ctx;
 
@@ -348,7 +349,7 @@ JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
 JAYLINK_PRIV int transport_start_write_read(struct jaylink_device_handle *devh,
-		size_t write_length, size_t read_length, int has_command)
+		size_t write_length, size_t read_length, bool has_command)
 {
 	struct jaylink_context *ctx;
 
@@ -473,7 +474,7 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
 	return JAYLINK_ERR_TIMEOUT;
 }
 
-static int adjust_buffer(struct jaylink_device_handle *devh, size_t size)
+static bool adjust_buffer(struct jaylink_device_handle *devh, size_t size)
 {
 	struct jaylink_context *ctx;
 	size_t num_chunks;
@@ -493,7 +494,7 @@ static int adjust_buffer(struct jaylink_device_handle *devh, size_t size)
 	if (!buffer) {
 		log_err(ctx, "Failed to adjust buffer size to %zu bytes.",
 			size);
-		return 0;
+		return false;
 	}
 
 	devh->buffer = buffer;
@@ -501,7 +502,7 @@ static int adjust_buffer(struct jaylink_device_handle *devh, size_t size)
 
 	log_dbg(ctx, "Adjusted buffer size to %zu bytes.", size);
 
-	return 1;
+	return true;
 }
 
 /**

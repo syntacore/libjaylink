@@ -19,6 +19,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 #include <libusb.h>
 
@@ -135,7 +136,7 @@ JAYLINK_API ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
  *                          unreferenced.
  */
 JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
-		int unref_devices)
+		bool unref_devices)
 {
 	size_t i;
 
@@ -379,7 +380,7 @@ JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 1, 2, 1);
+	ret = transport_start_write_read(devh, 1, 2, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -481,7 +482,7 @@ JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
 
 	length = num * sizeof(uint32_t);
 
-	ret = transport_start_write_read(devh, 5, length, 1);
+	ret = transport_start_write_read(devh, 5, length, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -539,7 +540,7 @@ JAYLINK_API int jaylink_get_hardware_version(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 1, 4, 1);
+	ret = transport_start_write_read(devh, 1, 4, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -594,7 +595,7 @@ JAYLINK_API int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 1, 8, 1);
+	ret = transport_start_write_read(devh, 1, 8, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -662,7 +663,7 @@ JAYLINK_API int jaylink_get_caps(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 1, JAYLINK_DEV_CAPS_SIZE, 1);
+	ret = transport_start_write_read(devh, 1, JAYLINK_DEV_CAPS_SIZE, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -723,7 +724,8 @@ JAYLINK_API int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 1, JAYLINK_DEV_EXT_CAPS_SIZE, 1);
+	ret = transport_start_write_read(devh, 1, JAYLINK_DEV_EXT_CAPS_SIZE,
+		true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -777,7 +779,7 @@ JAYLINK_API int jaylink_get_free_memory(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 1, 4, 1);
+	ret = transport_start_write_read(devh, 1, 4, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -833,7 +835,8 @@ JAYLINK_API int jaylink_read_raw_config(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 1, JAYLINK_DEV_CONFIG_SIZE, 1);
+	ret = transport_start_write_read(devh, 1, JAYLINK_DEV_CONFIG_SIZE,
+		true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -886,7 +889,7 @@ JAYLINK_API int jaylink_write_raw_config(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write(devh, 1 + JAYLINK_DEV_CONFIG_SIZE, 1);
+	ret = transport_start_write(devh, 1 + JAYLINK_DEV_CONFIG_SIZE, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write() failed: %i.", ret);
@@ -981,7 +984,7 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 14, REG_MIN_SIZE, 1);
+	ret = transport_start_write_read(devh, 14, REG_MIN_SIZE, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -1108,7 +1111,7 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 14, REG_MIN_SIZE, 1);
+	ret = transport_start_write_read(devh, 14, REG_MIN_SIZE, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);

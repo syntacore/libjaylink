@@ -19,6 +19,7 @@
 
 #include <string.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
@@ -97,7 +98,7 @@ JAYLINK_API int jaylink_file_read(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write(devh, 18 + filename_length, 1);
+	ret = transport_start_write(devh, 18 + filename_length, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write() failed: %i.", ret);
@@ -223,7 +224,7 @@ JAYLINK_API int jaylink_file_write(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write(devh, 18 + filename_length, 1);
+	ret = transport_start_write(devh, 18 + filename_length, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write() failed: %i.", ret);
@@ -255,7 +256,7 @@ JAYLINK_API int jaylink_file_write(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	ret = transport_start_write(devh, *length, 1);
+	ret = transport_start_write(devh, *length, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write() failed: %i.", ret);
@@ -333,7 +334,7 @@ JAYLINK_API int jaylink_file_get_size(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write(devh, 6 + length, 1);
+	ret = transport_start_write(devh, 6 + length, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write() failed: %i.", ret);
@@ -418,7 +419,7 @@ JAYLINK_API int jaylink_file_delete(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write(devh, 6 + length, 1);
+	ret = transport_start_write(devh, 6 + length, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write() failed: %i.", ret);

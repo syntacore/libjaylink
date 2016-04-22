@@ -18,6 +18,7 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
@@ -96,7 +97,7 @@ JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 
 	ctx = devh->dev->ctx;
 	ret = transport_start_write_read(devh, 4 + 2 * num_bytes,
-		read_length, 1);
+		read_length, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -174,7 +175,7 @@ JAYLINK_API int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write(devh, 1, 1);
+	ret = transport_start_write(devh, 1, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write() failed: %i.", ret);
@@ -213,7 +214,7 @@ JAYLINK_API int jaylink_jtag_set_trst(struct jaylink_device_handle *devh)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write(devh, 1, 1);
+	ret = transport_start_write(devh, 1, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write() failed: %i.", ret);

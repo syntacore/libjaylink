@@ -18,6 +18,7 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
@@ -76,7 +77,7 @@ JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 21, 4, 1);
+	ret = transport_start_write_read(devh, 21, 4, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -149,7 +150,7 @@ JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 3, 4, 1);
+	ret = transport_start_write_read(devh, 3, 4, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -216,7 +217,7 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 9, 8, 1);
+	ret = transport_start_write_read(devh, 9, 8, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
@@ -326,7 +327,7 @@ JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
-	ret = transport_start_write_read(devh, 9, 4, 1);
+	ret = transport_start_write_read(devh, 9, 4, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
