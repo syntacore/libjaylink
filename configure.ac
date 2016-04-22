@@ -118,3 +118,12 @@ AC_CONFIG_FILES([libjaylink/version.h])
 AC_CONFIG_FILES([libjaylink.pc])
 
 AC_OUTPUT
+
+echo
+echo "libjaylink configuration summary:"
+echo " - Package version ................ $JAYLINK_VERSION_PACKAGE"
+echo " - Library version ................ $JAYLINK_VERSION_LIB"
+echo " - Installation prefix ............ $prefix"
+echo " - Building on .................... $build"
+echo " - Building for ................... $host"
+echo
