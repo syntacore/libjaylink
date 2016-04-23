@@ -52,7 +52,9 @@ enum jaylink_error {
 	/** Device: unspecified error. */
 	JAYLINK_ERR_DEV = -1000,
 	/** Device: operation not supported. */
-	JAYLINK_ERR_DEV_NOT_SUPPORTED = -1001
+	JAYLINK_ERR_DEV_NOT_SUPPORTED = -1001,
+	/** Device: entity not available. */
+	JAYLINK_ERR_DEV_NOT_AVAILABLE = -1002
 };
 
 /** libjaylink log levels. */

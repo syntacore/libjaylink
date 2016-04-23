@@ -58,6 +58,8 @@ JAYLINK_API const char *jaylink_strerror(int error_code)
 		return "device: unspecified error";
 	case JAYLINK_ERR_DEV_NOT_SUPPORTED:
 		return "device: operation not supported";
+	case JAYLINK_ERR_DEV_NOT_AVAILABLE:
+		return "device: entity not available";
 	default:
 		return "unknown error";
 	}
@@ -96,6 +98,8 @@ JAYLINK_API const char *jaylink_strerror_name(int error_code)
 		return "JAYLINK_ERR_DEV";
 	case JAYLINK_ERR_DEV_NOT_SUPPORTED:
 		return "JAYLINK_ERR_DEV_NOT_SUPPORTED";
+	case JAYLINK_ERR_DEV_NOT_AVAILABLE:
+		return "JAYLINK_ERR_DEV_NOT_AVAILABLE";
 	default:
 		return "unknown error code";
 	}
