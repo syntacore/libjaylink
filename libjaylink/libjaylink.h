@@ -308,6 +308,14 @@ struct jaylink_connection {
 #define JAYLINK_EMUCOM_CHANNEL_TIME	0x0
 
 /**
+ * Offset of EMUCOM user channels.
+ *
+ * User channels are available to implement vendor and/or device specific
+ * functionalities. All channels below are reserved.
+ */
+#define JAYLINK_EMUCOM_CHANNEL_USER	0x10000
+
+/**
  * @struct jaylink_context
  *
  * Opaque structure representing a libjaylink context.
