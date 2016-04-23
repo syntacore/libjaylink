@@ -300,6 +300,14 @@ struct jaylink_connection {
 #define JAYLINK_FILE_MAX_TRANSFER_SIZE		0x100000
 
 /**
+ * EMUCOM channel with the system time of the device in milliseconds.
+ *
+ * The channel is read-only and the time is encoded in 4 bytes. The byte order
+ * is little-endian.
+ */
+#define JAYLINK_EMUCOM_CHANNEL_TIME	0x0
+
+/**
  * @struct jaylink_context
  *
  * Opaque structure representing a libjaylink context.
