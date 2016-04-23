@@ -386,6 +386,8 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 
 /*--- emucom.c --------------------------------------------------------------*/
 
+JAYLINK_API int jaylink_emucom_read(struct jaylink_device_handle *devh,
+		uint32_t channel, uint8_t *buffer, uint32_t *length);
 JAYLINK_API int jaylink_emucom_write(struct jaylink_device_handle *devh,
 		uint32_t channel, const uint8_t *buffer, uint32_t *length);
 
