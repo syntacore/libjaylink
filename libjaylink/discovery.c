@@ -180,6 +180,14 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	dev = find_device(ctx, usb_dev);
 
 	if (dev) {
+		log_dbg(ctx, "Device: USB address = %u.", dev->usb_address);
+
+		if (dev->valid_serial_number)
+			log_dbg(ctx, "Device: Serial number = %u.",
+				dev->serial_number);
+		else
+			log_dbg(ctx, "Device: Serial number = N/A.");
+
 		log_dbg(ctx, "Using existing device instance.");
 		return jaylink_ref_device(dev);
 	}

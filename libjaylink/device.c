@@ -261,13 +261,21 @@ JAYLINK_API struct jaylink_device *jaylink_ref_device(
  */
 JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev)
 {
+	struct jaylink_context *ctx;
+
 	if (!dev)
 		return;
 
 	dev->refcnt--;
 
 	if (dev->refcnt == 0) {
-		dev->ctx->devs = list_remove(dev->ctx->devs, dev);
+		ctx = dev->ctx;
+
+		log_dbg(ctx, "Device destroyed (bus:address = %03u:%03u).",
+			libusb_get_bus_number(dev->usb_dev),
+			libusb_get_device_address(dev->usb_dev));
+
+		ctx->devs = list_remove(dev->ctx->devs, dev);
 
 		if (dev->usb_dev)
 			libusb_unref_device(dev->usb_dev);

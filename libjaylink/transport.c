@@ -245,6 +245,8 @@ JAYLINK_PRIV int transport_close(struct jaylink_device_handle *devh)
 		return JAYLINK_ERR;
 	}
 
+	log_dbg(ctx, "Device closed successfully.");
+
 	return JAYLINK_OK;
 }
 
