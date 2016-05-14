@@ -105,8 +105,7 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
  *       #JAYLINK_DEV_CAP_GET_SPEEDS capability.
  *
  * @param[in,out] devh Device handle.
- * @param[out] freq Base frequency in Hz on success, and undefined on failure.
- * @param[out] div Minimum divider on success, and undefined on failure.
+ * @param[out] speed Speed information on success, and undefined on failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -120,14 +119,14 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
  * @see jaylink_set_speed() to set the target interface speed.
  */
 JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
-		uint32_t *freq, uint16_t *div)
+		struct jaylink_speed *speed)
 {
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[6];
-	uint16_t dummy;
+	uint16_t div;
 
-	if (!devh || !freq || !div)
+	if (!devh || !speed)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
@@ -154,15 +153,15 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	dummy = buffer_get_u16(buf, 4);
+	div = buffer_get_u16(buf, 4);
 
-	if (!dummy) {
+	if (!div) {
 		log_err(ctx, "Minimum frequency divider is zero.");
 		return JAYLINK_ERR_PROTO;
 	}
 
-	*freq = buffer_get_u32(buf, 0);
-	*div = dummy;
+	speed->freq = buffer_get_u32(buf, 0);
+	speed->div = div;
 
 	return JAYLINK_OK;
 }

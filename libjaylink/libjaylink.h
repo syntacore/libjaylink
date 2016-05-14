@@ -201,6 +201,14 @@ enum jaylink_swo_mode {
 	JAYLINK_SWO_MODE_UART = 0
 };
 
+/** Target interface speed information. */
+struct jaylink_speed {
+	/** Base frequency in Hz. */
+	uint32_t freq;
+	/** Minimum frequency divider. */
+	uint16_t div;
+};
+
 /** Serial Wire Output (SWO) speed information. */
 struct jaylink_swo_speed {
 	/** Base frequency in Hz. */
@@ -465,7 +473,7 @@ JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
 		uint16_t speed);
 JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
-		uint32_t *freq, uint16_t *div);
+		struct jaylink_speed *speed);
 JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 		enum jaylink_target_interface interface,
 		enum jaylink_target_interface *prev_interface);
