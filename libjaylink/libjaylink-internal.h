@@ -54,7 +54,7 @@ struct jaylink_context {
 	 */
 	struct list *devs;
 	/** Current log level. */
-	int log_level;
+	enum jaylink_log_level log_level;
 	/** Log callback function. */
 	jaylink_log_callback log_callback;
 	/** User data to be passed to the log callback function. */
@@ -161,8 +161,9 @@ JAYLINK_PRIV void list_free(struct list *list);
 
 /*--- log.c -----------------------------------------------------------------*/
 
-JAYLINK_PRIV int log_vprintf(const struct jaylink_context *ctx, int level,
-		const char *format, va_list args, void *user_data);
+JAYLINK_PRIV int log_vprintf(const struct jaylink_context *ctx,
+		enum jaylink_log_level level, const char *format, va_list args,
+		void *user_data);
 JAYLINK_PRIV void log_err(const struct jaylink_context *ctx,
 		const char *format, ...);
 JAYLINK_PRIV void log_warn(const struct jaylink_context *ctx,

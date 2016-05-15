@@ -225,12 +225,8 @@ struct jaylink_swo_speed {
 
 /** Device hardware version. */
 struct jaylink_hardware_version {
-	/**
-	 * Hardware type.
-	 *
-	 * See #jaylink_hardware_type for a description of the hardware types.
-	 */
-	uint8_t type;
+	/** Hardware type. */
+	enum jaylink_hardware_type type;
 	/** Major version. */
 	uint8_t major;
 	/** Minor version. */
@@ -353,7 +349,8 @@ struct jaylink_device_handle;
 
 /** Log callback function type. */
 typedef int (*jaylink_log_callback)(const struct jaylink_context *ctx,
-		int level, const char *format, va_list args, void *user_data);
+		enum jaylink_log_level level, const char *format, va_list args,
+		void *user_data);
 
 /*--- core.c ----------------------------------------------------------------*/
 
@@ -437,13 +434,14 @@ JAYLINK_API int jaylink_file_delete(struct jaylink_device_handle *devh,
 
 JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 		const uint8_t *tms, const uint8_t *tdi, uint8_t *tdo,
-		uint16_t length, int version);
+		uint16_t length, enum jaylink_jtag_version version);
 JAYLINK_API int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_jtag_set_trst(struct jaylink_device_handle *devh);
 
 /*--- log.c -----------------------------------------------------------------*/
 
-JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx, int level);
+JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx,
+		enum jaylink_log_level level);
 JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx);
 JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
 		jaylink_log_callback callback, void *user_data);

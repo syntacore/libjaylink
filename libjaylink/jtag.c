@@ -50,9 +50,7 @@
  *                 on failure. The buffer must be large enough to contain at
  *                 least the specified number of bits to transfer.
  * @param[in] length Number of bits to transfer.
- * @param[in] version Version of the JTAG command to use. See
- *                    #jaylink_jtag_version for further information and a
- *                    description of the different versions.
+ * @param[in] version Version of the JTAG command to use.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -66,7 +64,7 @@
  */
 JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 		const uint8_t *tms, const uint8_t *tdi, uint8_t *tdo,
-		uint16_t length, int version)
+		uint16_t length, enum jaylink_jtag_version version)
 {
 	int ret;
 	struct jaylink_context *ctx;

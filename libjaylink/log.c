@@ -37,17 +37,18 @@
  * Set the libjaylink log level.
  *
  * @param[in,out] ctx libjaylink context.
- * @param[in] level Log level to set. See #jaylink_log_level for valid values.
+ * @param[in] level Log level to set.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
-JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx, int level)
+JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx,
+		enum jaylink_log_level level)
 {
 	if (!ctx)
 		return JAYLINK_ERR_ARG;
 
-	if (level < JAYLINK_LOG_LEVEL_NONE || level > JAYLINK_LOG_LEVEL_DEBUG)
+	if (level > JAYLINK_LOG_LEVEL_DEBUG)
 		return JAYLINK_ERR_ARG;
 
 	ctx->log_level = level;
@@ -154,8 +155,9 @@ JAYLINK_API const char *jaylink_log_get_domain(
 }
 
 /** @private */
-JAYLINK_PRIV int log_vprintf(const struct jaylink_context *ctx, int level,
-		const char *format, va_list args, void *user_data)
+JAYLINK_PRIV int log_vprintf(const struct jaylink_context *ctx,
+		enum jaylink_log_level level, const char *format, va_list args,
+		void *user_data)
 {
 	(void)user_data;
 
