@@ -442,7 +442,8 @@ JAYLINK_API int jaylink_jtag_set_trst(struct jaylink_device_handle *devh);
 
 JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx,
 		enum jaylink_log_level level);
-JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx);
+JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx,
+		enum jaylink_log_level *level);
 JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
 		jaylink_log_callback callback, void *user_data);
 JAYLINK_API int jaylink_log_set_domain(struct jaylink_context *ctx,

@@ -60,17 +60,20 @@ JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx,
  * Get the libjaylink log level.
  *
  * @param[in] ctx libjaylink context.
+ * @param[out] level Log level on success, and undefined on failure.
  *
- * @return The current log level on success, or a negative error code
- *         on failure. See #jaylink_log_level for a description of each
- *         individual log level.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
  */
-JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx)
+JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx,
+		enum jaylink_log_level *level)
 {
-	if (!ctx)
+	if (!ctx || !level)
 		return JAYLINK_ERR_ARG;
 
-	return ctx->log_level;
+	*level = ctx->log_level;
+
+	return JAYLINK_OK;
 }
 
 /**
