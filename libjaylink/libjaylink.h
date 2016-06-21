@@ -398,12 +398,12 @@ JAYLINK_API int jaylink_write_raw_config(struct jaylink_device_handle *devh,
 		const uint8_t *config);
 JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 		struct jaylink_connection *connection,
-		struct jaylink_connection *connections, uint8_t *info,
-		uint16_t *info_size);
+		struct jaylink_connection *connections, size_t *count,
+		uint8_t *info, uint16_t *info_size);
 JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		const struct jaylink_connection *connection,
-		struct jaylink_connection *connections, uint8_t *info,
-		uint16_t *info_size);
+		struct jaylink_connection *connections, size_t *count,
+		uint8_t *info, uint16_t *info_size);
 
 /*--- emucom.c --------------------------------------------------------------*/
 

@@ -963,20 +963,25 @@ static void parse_conntable(struct jaylink_connection *conns,
  *                         Its content is undefined on failure. The array must
  *                         be large enough to contain at least
  *                         #JAYLINK_MAX_CONNECTIONS elements.
+ * @param[out] count Number of device connections on success, and undefined on
+ *                   failure.
  * @param[out] info Buffer to store additional information on success, or NULL.
  *                  The content of the buffer is undefined on failure.
  * @param[out] info_size Size of the additional information in bytes on success,
  *                       and undefined on failure. Can be NULL.
  *
- * @return The number of device connections on success, a negative error code on
- *         failure.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_PROTO Protocol violation.
+ * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_unregister() to unregister a connection from a device.
  */
 JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 		struct jaylink_connection *connection,
-		struct jaylink_connection *connections, uint8_t *info,
-		uint16_t *info_size)
+		struct jaylink_connection *connections, size_t *count,
+		uint8_t *info, uint16_t *info_size)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -988,7 +993,7 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 	uint32_t table_size;
 	uint16_t addinfo_size;
 
-	if (!devh || !connection || !connections)
+	if (!devh || !connection || !connections || !count)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
@@ -1078,7 +1083,9 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 	if (info_size)
 		*info_size = addinfo_size;
 
-	return num;
+	*count = num;
+
+	return JAYLINK_OK;
 }
 
 /**
@@ -1093,18 +1100,23 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
  *                         Its content is undefined on failure. The array must
  *                         be large enough to contain at least
  *                         #JAYLINK_MAX_CONNECTIONS elements.
+ * @param[out] count Number of device connections on success, and undefined on
+ *                   failure.
  * @param[out] info Buffer to store additional information on success, or NULL.
  *                  The content of the buffer is undefined on failure.
  * @param[out] info_size Size of the additional information in bytes on success,
  *                       and undefined on failure. Can be NULL.
  *
- * @return The number of device connections on success, a negative error code on
- *         failure.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_PROTO Protocol violation.
+ * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		const struct jaylink_connection *connection,
-		struct jaylink_connection *connections, uint8_t *info,
-		uint16_t *info_size)
+		struct jaylink_connection *connections, size_t *count,
+		uint8_t *info, uint16_t *info_size)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -1115,7 +1127,7 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 	uint32_t table_size;
 	uint16_t addinfo_size;
 
-	if (!devh || !connection || !connections)
+	if (!devh || !connection || !connections || !count)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
@@ -1198,5 +1210,7 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 	if (info_size)
 		*info_size = addinfo_size;
 
-	return num;
+	*count = num;
+
+	return JAYLINK_OK;
 }
