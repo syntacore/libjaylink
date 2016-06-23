@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2016 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -359,10 +359,10 @@ JAYLINK_API void jaylink_exit(struct jaylink_context *ctx);
 
 /*--- device.c --------------------------------------------------------------*/
 
-JAYLINK_API ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
-		struct jaylink_device ***devices);
-JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
-		bool unref_devices);
+JAYLINK_API int jaylink_get_devices(struct jaylink_context *ctx,
+		struct jaylink_device ***devices, size_t *count);
+JAYLINK_API void jaylink_free_devices(struct jaylink_device **devices,
+		bool unref);
 JAYLINK_API int jaylink_device_get_host_interface(
 		const struct jaylink_device *dev,
 		enum jaylink_host_interface *interface);
@@ -404,6 +404,11 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		const struct jaylink_connection *connection,
 		struct jaylink_connection *connections, size_t *count,
 		uint8_t *info, uint16_t *info_size);
+
+/*--- discovery.c -----------------------------------------------------------*/
+
+JAYLINK_API int jaylink_discovery_scan(struct jaylink_context *ctx,
+		uint32_t hostifs);
 
 /*--- emucom.c --------------------------------------------------------------*/
 

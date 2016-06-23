@@ -780,7 +780,6 @@ RECURSIVE              = NO
 
 EXCLUDE                = libjaylink/libjaylink-internal.h \
 			 libjaylink/list.c \
-			 libjaylink/discovery.c \
 			 libjaylink/transport.c \
 			 libjaylink/buffer.c
 

@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2016 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -107,43 +107,93 @@ static void free_device_handle(struct jaylink_device_handle *devh)
 	free(devh);
 }
 
+/** @private */
+static struct jaylink_device **allocate_device_list(size_t length)
+{
+	struct jaylink_device **list;
+
+	list = malloc(sizeof(struct jaylink_device *) * (length + 1));
+
+	if (!list)
+		return NULL;
+
+	list[length] = NULL;
+
+	return list;
+}
+
 /**
- * Get a list of available devices.
+ * Get available devices.
  *
  * @param[in,out] ctx libjaylink context.
  * @param[out] devices Newly allocated array which contains instances of
  *                     available devices on success, and undefined on failure.
  *                     The array is NULL-terminated and must be free'd by the
- *                     caller with jaylink_free_device_list().
+ *                     caller with jaylink_free_devices().
+ * @param[out] count Number of available devices on success, and undefined on
+ *                   failure. Can be NULL.
  *
- * @return The length of the array excluding the trailing NULL-terminator, or a
- *         negative error code on failure.
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_MALLOC Memory allocation error.
+ * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @see jaylink_discovery_scan()
  */
-JAYLINK_API ssize_t jaylink_get_device_list(struct jaylink_context *ctx,
-		struct jaylink_device ***devices)
+JAYLINK_API int jaylink_get_devices(struct jaylink_context *ctx,
+		struct jaylink_device ***devices, size_t *count)
 {
+	size_t num;
+	struct list *item;
+	struct jaylink_device **devs;
+	struct jaylink_device *dev;
+	size_t i;
+
 	if (!ctx || !devices)
 		return JAYLINK_ERR_ARG;
 
-	return discovery_get_device_list(ctx, devices);
+	num = list_length(ctx->discovered_devs);
+	devs = allocate_device_list(num);
+
+	if (!devs) {
+		log_err(ctx, "Failed to allocate device list.");
+		return JAYLINK_ERR_MALLOC;
+	}
+
+	item = ctx->discovered_devs;
+
+	for (i = 0; i < num; i++) {
+		dev = (struct jaylink_device *)item->data;
+		devs[i] = jaylink_ref_device(dev);
+		item = item->next;
+	}
+
+	if (count)
+		*count = num;
+
+	*devices = devs;
+
+	return JAYLINK_OK;
 }
 
 /**
- * Free a device list.
+ * Free devices.
  *
  * @param[in,out] devices Array of device instances. Must be NULL-terminated.
- * @param[in] unref_devices Determines whether the device instances should be
- *                          unreferenced.
+ * @param[in] unref Determines whether the device instances should be
+ *                  unreferenced.
+ *
+ * @see jaylink_get_devices()
  */
-JAYLINK_API void jaylink_free_device_list(struct jaylink_device **devices,
-		bool unref_devices)
+JAYLINK_API void jaylink_free_devices(struct jaylink_device **devices,
+		bool unref)
 {
 	size_t i;
 
 	if (!devices)
 		return;
 
-	if (unref_devices) {
+	if (unref) {
 		i = 0;
 
 		while (devices[i]) {

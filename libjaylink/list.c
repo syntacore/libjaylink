@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2016 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -86,6 +86,16 @@ JAYLINK_PRIV struct list *list_find_custom(struct list *list,
 	}
 
 	return NULL;
+}
+
+JAYLINK_PRIV size_t list_length(struct list *list)
+{
+	size_t n;
+
+	for (n = 0; list; n++)
+		list = list->next;
+
+	return n;
 }
 
 JAYLINK_PRIV void list_free(struct list *list)

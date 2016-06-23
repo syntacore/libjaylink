@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2016 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
  * Device discovery.
  */
 
+/** @cond PRIVATE */
 /** USB Vendor ID (VID) of SEGGER products. */
 #define USB_VENDOR_ID			0x1366
 
@@ -67,20 +68,7 @@ static const uint16_t pids[][2] = {
  * serial numbers are allowed with up to 10 digits.
  */
 #define MAX_SERIAL_NUMBER_DIGITS	10
-
-static struct jaylink_device **allocate_device_list(size_t length)
-{
-	struct jaylink_device **list;
-
-	list = malloc(sizeof(struct jaylink_device *) * (length + 1));
-
-	if (!list)
-		return NULL;
-
-	list[length] = NULL;
-
-	return list;
-}
+/** @endcond */
 
 static bool parse_serial_number(const char *str, uint32_t *serial_number)
 {
@@ -246,19 +234,15 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	return dev;
 }
 
-/** @private */
-JAYLINK_PRIV ssize_t discovery_get_device_list(struct jaylink_context *ctx,
-		struct jaylink_device ***list)
+static int discovery_usb_scan(struct jaylink_context *ctx)
 {
 	ssize_t ret;
-	struct libusb_device **usb_devs;
-	struct jaylink_device **devs;
+	struct libusb_device **devs;
 	struct jaylink_device *dev;
-	size_t num_usb_devs;
-	size_t num_devs;
+	size_t num;
 	size_t i;
 
-	ret = libusb_get_device_list(ctx->usb_ctx, &usb_devs);
+	ret = libusb_get_device_list(ctx->usb_ctx, &devs);
 
 	if (ret < 0) {
 		log_err(ctx, "Failed to retrieve device list: %s.",
@@ -266,37 +250,77 @@ JAYLINK_PRIV ssize_t discovery_get_device_list(struct jaylink_context *ctx,
 		return JAYLINK_ERR;
 	}
 
-	num_usb_devs = ret;
+	num = 0;
 
-	/*
-	 * Allocate a device list with the length of the number of all found
-	 * USB devices because they all are possible J-Link devices.
-	 */
-	devs = allocate_device_list(num_usb_devs);
+	for (i = 0; devs[i]; i++) {
+		dev = probe_device(ctx, devs[i]);
 
-	if (!devs) {
-		libusb_free_device_list(usb_devs, true);
-		log_err(ctx, "Device list malloc failed.");
-		return JAYLINK_ERR_MALLOC;
+		if (!dev)
+			continue;
+
+		ctx->discovered_devs = list_prepend(ctx->discovered_devs, dev);
+		num++;
 	}
 
-	num_devs = 0;
+	libusb_free_device_list(devs, true);
+	log_dbg(ctx, "Found %zu USB device(s).", num);
 
-	for (i = 0; i < num_usb_devs; i++) {
-		dev = probe_device(ctx, usb_devs[i]);
+	return JAYLINK_OK;
+}
 
-		if (dev) {
-			devs[num_devs] = dev;
-			num_devs++;
-		}
+static void clear_discovery_list(struct jaylink_context *ctx)
+{
+	struct list *item;
+	struct list *tmp;
+	struct jaylink_device *dev;
+
+	item = ctx->discovered_devs;
+
+	while (item) {
+		dev = (struct jaylink_device *)item->data;
+		jaylink_unref_device(dev);
+
+		tmp = item;
+		item = item->next;
+		free(tmp);
 	}
 
-	devs[num_devs] = NULL;
+	ctx->discovered_devs = NULL;
+}
 
-	libusb_free_device_list(usb_devs, true);
-	*list = devs;
+/**
+ * Scan for devices.
+ *
+ * @param[in,out] ctx libjaylink context.
+ * @param[in] hostifs Host interfaces to scan for devices. Use bitwise OR to
+ *                    specify multiple interfaces, or 0 to use all available
+ *                    interfaces. See #jaylink_host_interface for a description
+ *                    of the interfaces.
+ *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @see jaylink_get_devices()
+ */
+JAYLINK_API int jaylink_discovery_scan(struct jaylink_context *ctx,
+		uint32_t hostifs)
+{
+	int ret;
 
-	log_dbg(ctx, "Found %zu device(s).", num_devs);
+	if (!ctx)
+		return JAYLINK_ERR_ARG;
 
-	return num_devs;
+	(void)hostifs;
+
+	clear_discovery_list(ctx);
+
+	ret = discovery_usb_scan(ctx);
+
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "USB device discovery failed.");
+		return ret;
+	}
+
+	return JAYLINK_OK;
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2016 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,6 +61,7 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 	}
 
 	context->devs = NULL;
+	context->discovered_devs = NULL;
 
 	/* Show error and warning messages by default. */
 	context->log_level = JAYLINK_LOG_LEVEL_WARNING;
@@ -87,10 +88,21 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
  */
 JAYLINK_API void jaylink_exit(struct jaylink_context *ctx)
 {
+	struct list *item;
+
 	if (!ctx)
 		return;
 
+	item = ctx->discovered_devs;
+
+	while (item) {
+		jaylink_unref_device((struct jaylink_device *)item->data);
+		item = item->next;
+	}
+
+	list_free(ctx->discovered_devs);
 	list_free(ctx->devs);
+
 	libusb_exit(ctx->usb_ctx);
 	free(ctx);
 }

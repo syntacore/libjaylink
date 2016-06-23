@@ -1,7 +1,7 @@
 /*
  * This file is part of the libjaylink project.
  *
- * Copyright (C) 2014-2015 Marc Schink <jaylink-dev@marcschink.de>
+ * Copyright (C) 2014-2016 Marc Schink <jaylink-dev@marcschink.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +53,8 @@ struct jaylink_context {
 	 * Used to prevent multiple device instances for the same device.
 	 */
 	struct list *devs;
+	/** List of recently discovered devices. */
+	struct list *discovered_devs;
 	/** Current log level. */
 	enum jaylink_log_level log_level;
 	/** Log callback function. */
@@ -157,6 +159,7 @@ JAYLINK_PRIV struct list *list_prepend(struct list *list, void *data);
 JAYLINK_PRIV struct list *list_remove(struct list *list, const void *data);
 JAYLINK_PRIV struct list *list_find_custom(struct list *list,
 		list_compare_callback cb, const void *cb_data);
+JAYLINK_PRIV size_t list_length(struct list *list);
 JAYLINK_PRIV void list_free(struct list *list);
 
 /*--- log.c -----------------------------------------------------------------*/
