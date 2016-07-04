@@ -62,6 +62,8 @@ JAYLINK_API const char *jaylink_strerror(int error_code)
 		return "device: operation not supported";
 	case JAYLINK_ERR_DEV_NOT_AVAILABLE:
 		return "device: entity not available";
+	case JAYLINK_ERR_DEV_NO_MEMORY:
+		return "device: not enough memory to perform operation";
 	default:
 		return "unknown error";
 	}
@@ -104,6 +106,8 @@ JAYLINK_API const char *jaylink_strerror_name(int error_code)
 		return "JAYLINK_ERR_DEV_NOT_SUPPORTED";
 	case JAYLINK_ERR_DEV_NOT_AVAILABLE:
 		return "JAYLINK_ERR_DEV_NOT_AVAILABLE";
+	case JAYLINK_ERR_DEV_NO_MEMORY:
+		return "JAYLINK_ERR_DEV_NO_MEMORY";
 	default:
 		return "unknown error code";
 	}

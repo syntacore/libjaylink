@@ -56,7 +56,9 @@ enum jaylink_error {
 	/** Device: operation not supported. */
 	JAYLINK_ERR_DEV_NOT_SUPPORTED = -1001,
 	/** Device: entity not available. */
-	JAYLINK_ERR_DEV_NOT_AVAILABLE = -1002
+	JAYLINK_ERR_DEV_NOT_AVAILABLE = -1002,
+	/** Device: not enough memory to perform operation. */
+	JAYLINK_ERR_DEV_NO_MEMORY = -1003
 };
 
 /** libjaylink log levels. */
