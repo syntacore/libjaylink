@@ -49,6 +49,8 @@ enum jaylink_error {
 	JAYLINK_ERR_NOT_AVAILABLE = -6,
 	/** Operation not supported. */
 	JAYLINK_ERR_NOT_SUPPORTED = -7,
+	/** Input/output error. */
+	JAYLINK_ERR_IO = -8,
 	/** Device: unspecified error. */
 	JAYLINK_ERR_DEV = -1000,
 	/** Device: operation not supported. */
