@@ -72,7 +72,7 @@ JAYLINK_API const char *jaylink_version_package_get_string(void)
  * @return The <i>current</i> version number of the libjaylink libtool
  *         interface.
  */
-JAYLINK_API int jaylink_version_lib_get_current(void)
+JAYLINK_API int jaylink_version_library_get_current(void)
 {
 	return JAYLINK_VERSION_LIB_CURRENT;
 }
@@ -83,7 +83,7 @@ JAYLINK_API int jaylink_version_lib_get_current(void)
  * @return The <i>revision</i> version number of the libjaylink libtool
  *         interface.
  */
-JAYLINK_API int jaylink_version_lib_get_revision(void)
+JAYLINK_API int jaylink_version_library_get_revision(void)
 {
 	return JAYLINK_VERSION_LIB_REVISION;
 }
@@ -93,7 +93,7 @@ JAYLINK_API int jaylink_version_lib_get_revision(void)
  *
  * @return The <i>age</i> version number of the libjaylink libtool interface.
  */
-JAYLINK_API int jaylink_version_lib_get_age(void)
+JAYLINK_API int jaylink_version_library_get_age(void)
 {
 	return JAYLINK_VERSION_LIB_AGE;
 }
@@ -105,7 +105,7 @@ JAYLINK_API int jaylink_version_lib_get_age(void)
  *         interface. The string is null-terminated and must not be free'd by
  *         the caller.
  */
-JAYLINK_API const char *jaylink_version_lib_get_string(void)
+JAYLINK_API const char *jaylink_version_library_get_string(void)
 {
 	return JAYLINK_VERSION_LIB_STRING;
 }

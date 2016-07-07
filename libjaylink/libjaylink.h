@@ -505,10 +505,10 @@ JAYLINK_API int jaylink_version_package_get_major(void);
 JAYLINK_API int jaylink_version_package_get_minor(void);
 JAYLINK_API int jaylink_version_package_get_micro(void);
 JAYLINK_API const char *jaylink_version_package_get_string(void);
-JAYLINK_API int jaylink_version_lib_get_current(void);
-JAYLINK_API int jaylink_version_lib_get_revision(void);
-JAYLINK_API int jaylink_version_lib_get_age(void);
-JAYLINK_API const char *jaylink_version_lib_get_string(void);
+JAYLINK_API int jaylink_version_library_get_current(void);
+JAYLINK_API int jaylink_version_library_get_revision(void);
+JAYLINK_API int jaylink_version_library_get_age(void);
+JAYLINK_API const char *jaylink_version_library_get_string(void);
 
 #include "version.h"
 
