@@ -41,6 +41,8 @@
  *
  * @retval true Capability is supported.
  * @retval false Capability is not supported or invalid argument.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API bool jaylink_has_cap(const uint8_t *caps, uint32_t cap)
 {

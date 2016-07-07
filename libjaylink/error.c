@@ -34,6 +34,8 @@
  * @return A string which describes the given error code, or the string
  *         <i>unknown error</i> if the error code is not known. The string is
  *         null-terminated and must not be free'd by the caller.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API const char *jaylink_strerror(int error_code)
 {
@@ -78,6 +80,8 @@ JAYLINK_API const char *jaylink_strerror(int error_code)
  * @return A string which contains the name for the given error code, or the
  *         string <i>unknown error code</i> if the error code is not known. The
  *         string is null-terminated and must not be free'd by the caller.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API const char *jaylink_strerror_name(int error_code)
 {

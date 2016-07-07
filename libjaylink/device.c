@@ -139,6 +139,8 @@ static struct jaylink_device **allocate_device_list(size_t length)
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_discovery_scan()
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_devices(struct jaylink_context *ctx,
 		struct jaylink_device ***devices, size_t *count)
@@ -184,6 +186,8 @@ JAYLINK_API int jaylink_get_devices(struct jaylink_context *ctx,
  *                  unreferenced.
  *
  * @see jaylink_get_devices()
+ *
+ * @since 0.1.0
  */
 JAYLINK_API void jaylink_free_devices(struct jaylink_device **devices,
 		bool unref)
@@ -214,6 +218,8 @@ JAYLINK_API void jaylink_free_devices(struct jaylink_device **devices,
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_device_get_host_interface(
 		const struct jaylink_device *dev,
@@ -240,6 +246,8 @@ JAYLINK_API int jaylink_device_get_host_interface(
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_NOT_AVAILABLE Serial number is not available.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_device_get_serial_number(
 		const struct jaylink_device *dev, uint32_t *serial_number)
@@ -270,6 +278,8 @@ JAYLINK_API int jaylink_device_get_serial_number(
  * @retval JAYLINK_ERR_NOT_SUPPORTED Operation not supported.
  *
  * @see jaylink_device_get_serial_number() to get the serial number of a device.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_device_get_usb_address(const struct jaylink_device *dev,
 		enum jaylink_usb_address *address)
@@ -292,6 +302,8 @@ JAYLINK_API int jaylink_device_get_usb_address(const struct jaylink_device *dev,
  *
  * @return The given device instance on success, or NULL for invalid device
  *         instance.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API struct jaylink_device *jaylink_ref_device(
 		struct jaylink_device *dev)
@@ -308,6 +320,8 @@ JAYLINK_API struct jaylink_device *jaylink_ref_device(
  * Decrement the reference count of a device.
  *
  * @param[in,out] dev Device instance.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev)
 {
@@ -346,6 +360,8 @@ JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev)
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_MALLOC Memory allocation error.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_open(struct jaylink_device *dev,
 		struct jaylink_device_handle **devh)
@@ -379,6 +395,8 @@ JAYLINK_API int jaylink_open(struct jaylink_device *dev,
  * Close a device.
  *
  * @param[in,out] devh Device instance.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API void jaylink_close(struct jaylink_device_handle *devh)
 {
@@ -397,6 +415,8 @@ JAYLINK_API void jaylink_close(struct jaylink_device_handle *devh)
  * @param[in] devh Device handle.
  *
  * @return The device instance on success, or NULL on invalid argument.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API struct jaylink_device *jaylink_get_device(
 		struct jaylink_device_handle *devh)
@@ -424,6 +444,8 @@ JAYLINK_API struct jaylink_device *jaylink_get_device(
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_MALLOC Memory allocation error.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
 		char **version, size_t *length)
@@ -516,6 +538,8 @@ JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
 		uint32_t mask, uint32_t *info)
@@ -585,6 +609,8 @@ JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_hardware_version(struct jaylink_device_handle *devh,
 		struct jaylink_hardware_version *version)
@@ -641,6 +667,8 @@ JAYLINK_API int jaylink_get_hardware_version(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
 		struct jaylink_hardware_status *status)
@@ -709,6 +737,8 @@ JAYLINK_API int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_extended_caps() to retrieve extended device capabilities.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_caps(struct jaylink_device_handle *devh,
 		uint8_t *caps)
@@ -770,6 +800,8 @@ JAYLINK_API int jaylink_get_caps(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
 		uint8_t *caps)
@@ -825,6 +857,8 @@ JAYLINK_API int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_free_memory(struct jaylink_device_handle *devh,
 		uint32_t *size)
@@ -881,6 +915,8 @@ JAYLINK_API int jaylink_get_free_memory(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_read_raw_config(struct jaylink_device_handle *devh,
 		uint8_t *config)
@@ -935,6 +971,8 @@ JAYLINK_API int jaylink_read_raw_config(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_write_raw_config(struct jaylink_device_handle *devh,
 		const uint8_t *config)
@@ -1027,6 +1065,8 @@ static void parse_conntable(struct jaylink_connection *conns,
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_unregister() to unregister a connection from a device.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 		struct jaylink_connection *connection,
@@ -1162,6 +1202,8 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		const struct jaylink_connection *connection,

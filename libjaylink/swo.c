@@ -61,6 +61,8 @@
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_free_memory() to retrieve free memory size of a device.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
 		enum jaylink_swo_mode mode, uint32_t baudrate, uint32_t size)
@@ -138,6 +140,8 @@ JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
 {
@@ -204,6 +208,8 @@ JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 		uint8_t *buffer, uint32_t *length)
@@ -311,6 +317,8 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 		enum jaylink_swo_mode mode, struct jaylink_swo_speed *speed)

@@ -69,6 +69,8 @@
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_DEV Unspecified device error, or the file was not found.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_file_read(struct jaylink_device_handle *devh,
 		const char *filename, uint8_t *buffer, uint32_t offset,
@@ -195,6 +197,8 @@ JAYLINK_API int jaylink_file_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_DEV Unspecified device error, or the file was not found.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_file_write(struct jaylink_device_handle *devh,
 		const char *filename, const uint8_t *buffer, uint32_t offset,
@@ -312,6 +316,8 @@ JAYLINK_API int jaylink_file_write(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_DEV Unspecified device error, or the file was not found.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_file_get_size(struct jaylink_device_handle *devh,
 		const char *filename, uint32_t *size)
@@ -397,6 +403,8 @@ JAYLINK_API int jaylink_file_get_size(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_DEV Unspecified device error, or the file was not found.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_file_delete(struct jaylink_device_handle *devh,
 		const char *filename)

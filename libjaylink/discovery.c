@@ -302,6 +302,8 @@ static void clear_discovery_list(struct jaylink_context *ctx)
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_devices()
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_discovery_scan(struct jaylink_context *ctx,
 		uint32_t hostifs)

@@ -54,6 +54,8 @@
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
 		uint16_t speed)
@@ -117,6 +119,8 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
  * @see jaylink_get_selected_interface() to retrieve the currently selected
  *                                       interface.
  * @see jaylink_set_speed() to set the target interface speed.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
 		struct jaylink_speed *speed)
@@ -183,6 +187,8 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 		enum jaylink_target_interface interface,
@@ -259,6 +265,8 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
  * @see jaylink_select_interface() to select a target interface.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_available_interfaces(
 		struct jaylink_device_handle *devh, uint32_t *interfaces)
@@ -316,6 +324,8 @@ JAYLINK_API int jaylink_get_available_interfaces(
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_selected_interface(
 		struct jaylink_device_handle *devh,
@@ -375,6 +385,8 @@ JAYLINK_API int jaylink_get_selected_interface(
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh)
 {
@@ -414,6 +426,8 @@ JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh)
 {
@@ -463,6 +477,8 @@ JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_caps() to retrieve device capabilities.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_set_target_power(struct jaylink_device_handle *devh,
 		bool enable)

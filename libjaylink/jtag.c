@@ -69,6 +69,8 @@
  * @see jaylink_select_interface() to select the target interface.
  * @see jaylink_get_available_interfaces() to retrieve the available target
  *                                         interfaces.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 		const uint8_t *tms, const uint8_t *tdi, uint8_t *tdo,
@@ -172,6 +174,8 @@ JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh)
 {
@@ -211,6 +215,8 @@ JAYLINK_API int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_jtag_set_trst(struct jaylink_device_handle *devh)
 {

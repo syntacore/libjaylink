@@ -41,6 +41,8 @@
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx,
 		enum jaylink_log_level level)
@@ -64,6 +66,8 @@ JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx,
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx,
 		enum jaylink_log_level *level)
@@ -86,6 +90,8 @@ JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx,
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
 		jaylink_log_callback callback, void *user_data)
@@ -121,6 +127,8 @@ JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR Other error conditions.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_log_set_domain(struct jaylink_context *ctx,
 		char *domain)
@@ -147,6 +155,8 @@ JAYLINK_API int jaylink_log_set_domain(struct jaylink_context *ctx,
  * @return A string which contains the current log domain on success, or NULL
  *         on failure. The string is null-terminated and must not be free'd by
  *         the caller.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API const char *jaylink_log_get_domain(
 		const struct jaylink_context *ctx)

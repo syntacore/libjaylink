@@ -86,6 +86,8 @@
  *                                       updated with the number of bytes
  *                                       available on this channel.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_emucom_read(struct jaylink_device_handle *devh,
 		uint32_t channel, uint8_t *buffer, uint32_t *length)
@@ -192,6 +194,8 @@ JAYLINK_API int jaylink_emucom_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR_DEV_NOT_SUPPORTED Channel is not supported by the device.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_emucom_write(struct jaylink_device_handle *devh,
 		uint32_t channel, const uint8_t *buffer, uint32_t *length)

@@ -41,6 +41,8 @@
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_MALLOC Memory allocation error.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 {
@@ -85,6 +87,8 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
  * Shutdown libjaylink.
  *
  * @param[in,out] ctx libjaylink context.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API void jaylink_exit(struct jaylink_context *ctx)
 {

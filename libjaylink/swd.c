@@ -65,6 +65,8 @@
  * @see jaylink_select_interface() to select the target interface.
  * @see jaylink_get_available_interfaces() to retrieve the available target
  *                                         interfaces.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_swd_io(struct jaylink_device_handle *devh,
 		const uint8_t *direction, const uint8_t *out, uint8_t *in,

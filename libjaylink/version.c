@@ -29,6 +29,8 @@
  * Get the major version number of the libjaylink package.
  *
  * @return The major version number of the libjaylink package.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_version_package_get_major(void)
 {
@@ -39,6 +41,8 @@ JAYLINK_API int jaylink_version_package_get_major(void)
  * Get the minor version number of the libjaylink package.
  *
  * @return The minor version number of the libjaylink package.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_version_package_get_minor(void)
 {
@@ -49,6 +53,8 @@ JAYLINK_API int jaylink_version_package_get_minor(void)
  * Get the micro version number of the libjaylink package.
  *
  * @return The micro version number of the libjaylink package.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_version_package_get_micro(void)
 {
@@ -60,6 +66,8 @@ JAYLINK_API int jaylink_version_package_get_micro(void)
  *
  * @return A string which contains the version number of the libjaylink package.
  *         The string is null-terminated and must not be free'd by the caller.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API const char *jaylink_version_package_get_string(void)
 {
@@ -71,6 +79,8 @@ JAYLINK_API const char *jaylink_version_package_get_string(void)
  *
  * @return The <i>current</i> version number of the libjaylink libtool
  *         interface.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_version_library_get_current(void)
 {
@@ -82,6 +92,8 @@ JAYLINK_API int jaylink_version_library_get_current(void)
  *
  * @return The <i>revision</i> version number of the libjaylink libtool
  *         interface.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_version_library_get_revision(void)
 {
@@ -92,6 +104,8 @@ JAYLINK_API int jaylink_version_library_get_revision(void)
  * Get the <i>age</i> version number of the libjaylink libtool interface.
  *
  * @return The <i>age</i> version number of the libjaylink libtool interface.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API int jaylink_version_library_get_age(void)
 {
@@ -104,6 +118,8 @@ JAYLINK_API int jaylink_version_library_get_age(void)
  * @return A string which contains the version number of the libjaylink libtool
  *         interface. The string is null-terminated and must not be free'd by
  *         the caller.
+ *
+ * @since 0.1.0
  */
 JAYLINK_API const char *jaylink_version_library_get_string(void)
 {
