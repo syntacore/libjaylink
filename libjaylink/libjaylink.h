@@ -351,7 +351,18 @@ struct jaylink_device_handle;
 #define JAYLINK_API __attribute__ ((visibility ("default")))
 #endif
 
-/** Log callback function type. */
+/**
+ * Log callback function type.
+ *
+ * @param[in] ctx libjaylink context.
+ * @param[in] level Log level.
+ * @param[in] format Message format in printf()-style.
+ * @param[in] args Message arguments.
+ * @param[in,out] user_data User data passed to the callback function.
+ *
+ * @return Number of characters printed on success, or a negative error code on
+ *         failure.
+ */
 typedef int (*jaylink_log_callback)(const struct jaylink_context *ctx,
 		enum jaylink_log_level level, const char *format, va_list args,
 		void *user_data);
