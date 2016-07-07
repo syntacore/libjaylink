@@ -31,6 +31,12 @@
 
 /** @cond PRIVATE */
 #define CMD_SWD_IO 0xcf
+
+/**
+ * Error code indicating that there is not enough free memory on the device to
+ * perform the SWD I/O operation.
+ */
+#define SWD_IO_ERR_NO_MEMORY	0x06
 /** @endcond */
 
 /**
@@ -52,6 +58,8 @@
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
+ * @retval JAYLINK_ERR_DEV_NO_MEMORY Not enough memory on the device to perform
+ *                                   the operation.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_select_interface() to select the target interface.
@@ -122,7 +130,9 @@ JAYLINK_API int jaylink_swd_io(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	if (status > 0) {
+	if (status == SWD_IO_ERR_NO_MEMORY) {
+		return JAYLINK_ERR_DEV_NO_MEMORY;
+	} else if (status > 0) {
 		log_err(ctx, "SWD I/O operation failed: %02x.", status);
 		return JAYLINK_ERR_DEV;
 	}

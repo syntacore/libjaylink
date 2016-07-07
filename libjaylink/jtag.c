@@ -34,6 +34,12 @@
 #define CMD_JTAG_IO_V3		0xcf
 #define CMD_JTAG_CLEAR_TRST	0xde
 #define CMD_JTAG_SET_TRST	0xdf
+
+/**
+ * Error code indicating that there is not enough free memory on the device to
+ * perform the JTAG I/O operation.
+ */
+#define JTAG_IO_ERR_NO_MEMORY	0x06
 /** @endcond */
 
 /**
@@ -56,6 +62,8 @@
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
+ * @retval JAYLINK_ERR_DEV_NO_MEMORY Not enough memory on the device to perform
+ *                                   the operation.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_select_interface() to select the target interface.
@@ -135,19 +143,21 @@ JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	if (version == JAYLINK_JTAG_V3) {
-		ret = transport_read(devh, &status, 1);
+	if (version == JAYLINK_JTAG_V2)
+		return JAYLINK_OK;
 
-		if (ret != JAYLINK_OK) {
-			log_err(ctx, "transport_read() failed: %i.", ret);
-			return ret;
-		}
+	ret = transport_read(devh, &status, 1);
 
-		if (status > 0) {
-			log_err(ctx, "JTAG I/O operation failed: %02x.",
-				status);
-			return JAYLINK_ERR_DEV;
-		}
+	if (ret != JAYLINK_OK) {
+		log_err(ctx, "transport_read() failed: %i.", ret);
+		return ret;
+	}
+
+	if (status == JTAG_IO_ERR_NO_MEMORY) {
+		return JAYLINK_ERR_DEV_NO_MEMORY;
+	} else if (status > 0) {
+		log_err(ctx, "JTAG I/O operation failed: %02x.", status);
+		return JAYLINK_ERR_DEV;
 	}
 
 	return JAYLINK_OK;
