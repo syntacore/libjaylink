@@ -39,6 +39,7 @@ libjaylink_la_SOURCES = \
 	jtag.c \
 	list.c \
 	log.c \
+	strutil.c \
 	swd.c \
 	swo.c \
 	target.c \

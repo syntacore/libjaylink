@@ -471,6 +471,11 @@ JAYLINK_API int jaylink_log_set_domain(struct jaylink_context *ctx,
 JAYLINK_API const char *jaylink_log_get_domain(
 		const struct jaylink_context *ctx);
 
+/*--- strutil.c -------------------------------------------------------------*/
+
+JAYLINK_API int jaylink_parse_serial_number(const char *str,
+		uint32_t *serial_number);
+
 /*--- swd.c -----------------------------------------------------------------*/
 
 JAYLINK_API int jaylink_swd_io(struct jaylink_device_handle *devh,
