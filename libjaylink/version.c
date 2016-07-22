@@ -84,7 +84,7 @@ JAYLINK_API const char *jaylink_version_package_get_string(void)
  */
 JAYLINK_API int jaylink_version_library_get_current(void)
 {
-	return JAYLINK_VERSION_LIB_CURRENT;
+	return JAYLINK_VERSION_LIBRARY_CURRENT;
 }
 
 /**
@@ -97,7 +97,7 @@ JAYLINK_API int jaylink_version_library_get_current(void)
  */
 JAYLINK_API int jaylink_version_library_get_revision(void)
 {
-	return JAYLINK_VERSION_LIB_REVISION;
+	return JAYLINK_VERSION_LIBRARY_REVISION;
 }
 
 /**
@@ -109,7 +109,7 @@ JAYLINK_API int jaylink_version_library_get_revision(void)
  */
 JAYLINK_API int jaylink_version_library_get_age(void)
 {
-	return JAYLINK_VERSION_LIB_AGE;
+	return JAYLINK_VERSION_LIBRARY_AGE;
 }
 
 /**
@@ -123,5 +123,5 @@ JAYLINK_API int jaylink_version_library_get_age(void)
  */
 JAYLINK_API const char *jaylink_version_library_get_string(void)
 {
-	return JAYLINK_VERSION_LIB_STRING;
+	return JAYLINK_VERSION_LIBRARY_STRING;
 }

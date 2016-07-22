@@ -27,27 +27,27 @@
  */
 
 /** Major version number of the libjaylink package. */
-#define JAYLINK_VERSION_PACKAGE_MAJOR	@JAYLINK_VERSION_PACKAGE_MAJOR@
+#define JAYLINK_VERSION_PACKAGE_MAJOR		@JAYLINK_VERSION_PACKAGE_MAJOR@
 
 /** Minor version number of the libjaylink package. */
-#define JAYLINK_VERSION_PACKAGE_MINOR	@JAYLINK_VERSION_PACKAGE_MINOR@
+#define JAYLINK_VERSION_PACKAGE_MINOR		@JAYLINK_VERSION_PACKAGE_MINOR@
 
 /** Micro version number of the libjaylink package. */
-#define JAYLINK_VERSION_PACKAGE_MICRO	@JAYLINK_VERSION_PACKAGE_MICRO@
+#define JAYLINK_VERSION_PACKAGE_MICRO		@JAYLINK_VERSION_PACKAGE_MICRO@
 
 /** Version number string of the libjaylink package. */
-#define JAYLINK_VERSION_PACKAGE_STRING	"@JAYLINK_VERSION_PACKAGE@"
+#define JAYLINK_VERSION_PACKAGE_STRING		"@JAYLINK_VERSION_PACKAGE@"
 
 /** <i>Current</i> version number of the libjaylink libtool interface. */
-#define JAYLINK_VERSION_LIB_CURRENT	@JAYLINK_VERSION_LIB_CURRENT@
+#define JAYLINK_VERSION_LIBRARY_CURRENT		@JAYLINK_VERSION_LIB_CURRENT@
 
 /** <i>Revision</i> version number of the libjaylink libtool interface. */
-#define JAYLINK_VERSION_LIB_REVISION	@JAYLINK_VERSION_LIB_REVISION@
+#define JAYLINK_VERSION_LIBRARY_REVISION	@JAYLINK_VERSION_LIB_REVISION@
 
 /** <i>Age</i> version number of the libjaylink libtool interface. */
-#define JAYLINK_VERSION_LIB_AGE		@JAYLINK_VERSION_LIB_AGE@
+#define JAYLINK_VERSION_LIBRARY_AGE		@JAYLINK_VERSION_LIB_AGE@
 
 /** Version number string of the libjaylink libtool interface. */
-#define JAYLINK_VERSION_LIB_STRING	"@JAYLINK_VERSION_LIB@"
+#define JAYLINK_VERSION_LIBRARY_STRING		"@JAYLINK_VERSION_LIB@"
 
 #endif /* LIBJAYLINK_VERSION_H */
