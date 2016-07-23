@@ -43,6 +43,20 @@ libjaylink:
     $ make install
 
 
+Portability
+-----------
+
+libjaylink supports the following operating systems:
+
+ - GNU/Linux
+ - FreeBSD
+ - OpenBSD
+ - NetBSD
+ - Microsoft Windows
+   - Cygwin, MinGW and MSYS2
+ - OS X
+
+
 Copyright and license
 ---------------------
 
