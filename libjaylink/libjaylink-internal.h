@@ -69,7 +69,7 @@ struct jaylink_device {
 	/** libjaylink context. */
 	struct jaylink_context *ctx;
 	/** Number of references held on this device instance. */
-	int refcnt;
+	size_t ref_count;
 	/** Host interface. */
 	enum jaylink_host_interface interface;
 	/** libusb device instance. */

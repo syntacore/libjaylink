@@ -38,7 +38,8 @@
  * @param value Value to write into the buffer in host byte order.
  * @param offset Offset of the value within the buffer in bytes.
  */
-JAYLINK_PRIV void buffer_set_u16(uint8_t *buffer, uint16_t value, size_t offset)
+JAYLINK_PRIV void buffer_set_u16(uint8_t *buffer, uint16_t value,
+		size_t offset)
 {
 	/*
 	 * Store the value in the buffer and swap byte order depending on the
@@ -89,7 +90,8 @@ JAYLINK_PRIV uint16_t buffer_get_u16(const uint8_t *buffer, size_t offset)
  * @param value Value to write into the buffer in host byte order.
  * @param offset Offset of the value within the buffer in bytes.
  */
-JAYLINK_PRIV void buffer_set_u32(uint8_t *buffer, uint32_t value, size_t offset)
+JAYLINK_PRIV void buffer_set_u32(uint8_t *buffer, uint32_t value,
+		size_t offset)
 {
 	/*
 	 * Store the value in the buffer and swap byte order depending on the

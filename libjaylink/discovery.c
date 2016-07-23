@@ -133,13 +133,12 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 
 	ret = libusb_get_device_descriptor(usb_dev, &desc);
 
-	if (ret < 0) {
+	if (ret != LIBUSB_SUCCESS) {
 		log_warn(ctx, "Failed to get device descriptor: %s.",
 			libusb_error_name(ret));
 		return NULL;
 	}
 
-	/* Check for USB Vendor ID (VID) of SEGGER. */
 	if (desc.idVendor != USB_VENDOR_ID)
 		return NULL;
 
@@ -183,7 +182,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	/* Open the device to be able to retrieve its serial number. */
 	ret = libusb_open(usb_dev, &usb_devh);
 
-	if (ret < 0) {
+	if (ret != LIBUSB_SUCCESS) {
 		log_warn(ctx, "Failed to open device: %s.",
 			libusb_error_name(ret));
 		return NULL;

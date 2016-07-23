@@ -20,6 +20,7 @@
 #ifndef LIBJAYLINK_LIBJAYLINK_H
 #define LIBJAYLINK_LIBJAYLINK_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdarg.h>
@@ -383,7 +384,8 @@ JAYLINK_API int jaylink_device_get_host_interface(
 		enum jaylink_host_interface *interface);
 JAYLINK_API int jaylink_device_get_serial_number(
 		const struct jaylink_device *dev, uint32_t *serial_number);
-JAYLINK_API int jaylink_device_get_usb_address(const struct jaylink_device *dev,
+JAYLINK_API int jaylink_device_get_usb_address(
+		const struct jaylink_device *dev,
 		enum jaylink_usb_address *address);
 JAYLINK_API struct jaylink_device *jaylink_ref_device(
 		struct jaylink_device *dev);
@@ -393,11 +395,13 @@ JAYLINK_API int jaylink_open(struct jaylink_device *dev,
 JAYLINK_API void jaylink_close(struct jaylink_device_handle *devh);
 JAYLINK_API struct jaylink_device *jaylink_get_device(
 		struct jaylink_device_handle *devh);
-JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
-		char **version, size_t *length);
+JAYLINK_API int jaylink_get_firmware_version(
+		struct jaylink_device_handle *devh, char **version,
+		size_t *length);
 JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
 		uint32_t mask, uint32_t *info);
-JAYLINK_API int jaylink_get_hardware_version(struct jaylink_device_handle *devh,
+JAYLINK_API int jaylink_get_hardware_version(
+		struct jaylink_device_handle *devh,
 		struct jaylink_hardware_version *version);
 JAYLINK_API int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
 		struct jaylink_hardware_status *status);

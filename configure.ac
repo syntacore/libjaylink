@@ -67,7 +67,7 @@ AC_C_BIGENDIAN
 # Checks for library functions.
 
 # Disable progress and informational output of libtool.
-AC_SUBST(AM_LIBTOOLFLAGS, '--silent')
+AC_SUBST([AM_LIBTOOLFLAGS], '--silent')
 
 # Libtool interface version of libjaylink. This is not the same as the package
 # version. For information about the versioning system of libtool, see:
@@ -77,10 +77,10 @@ JAYLINK_VERSION_LIB_REVISION=0
 JAYLINK_VERSION_LIB_AGE=0
 JAYLINK_VERSION_LIB="$JAYLINK_VERSION_LIB_CURRENT:$JAYLINK_VERSION_LIB_REVISION:$JAYLINK_VERSION_LIB_AGE"
 
-AC_SUBST(JAYLINK_VERSION_LIB_CURRENT)
-AC_SUBST(JAYLINK_VERSION_LIB_REVISION)
-AC_SUBST(JAYLINK_VERSION_LIB_AGE)
-AC_SUBST(JAYLINK_VERSION_LIB)
+AC_SUBST([JAYLINK_VERSION_LIB_CURRENT])
+AC_SUBST([JAYLINK_VERSION_LIB_REVISION])
+AC_SUBST([JAYLINK_VERSION_LIB_AGE])
+AC_SUBST([JAYLINK_VERSION_LIB])
 
 AC_ARG_ENABLE([subproject-build], AS_HELP_STRING([--enable-subproject-build],
 	[enable sub-project build [default=no]]))
@@ -90,9 +90,8 @@ AM_CONDITIONAL([SUBPROJECT_BUILD],
 
 # Libtool interface version is not used for sub-project build as libjaylink is
 # built as libtool convenience library.
-if test "x$enable_subproject_build" != "xyes"; then
-JAYLINK_LIB_LDFLAGS="-version-info $JAYLINK_VERSION_LIB"
-fi
+AS_IF([test "x$enable_subproject_build" != "xyes"],
+	[JAYLINK_LIB_LDFLAGS="-version-info $JAYLINK_VERSION_LIB"])
 
 AC_SUBST([JAYLINK_LIB_LDFLAGS])
 
@@ -101,10 +100,10 @@ JAYLINK_VERSION_PACKAGE_MINOR=jaylink_version_package_minor
 JAYLINK_VERSION_PACKAGE_MICRO=jaylink_version_package_micro
 JAYLINK_VERSION_PACKAGE=jaylink_version_package
 
-AC_SUBST(JAYLINK_VERSION_PACKAGE_MAJOR)
-AC_SUBST(JAYLINK_VERSION_PACKAGE_MINOR)
-AC_SUBST(JAYLINK_VERSION_PACKAGE_MICRO)
-AC_SUBST(JAYLINK_VERSION_PACKAGE)
+AC_SUBST([JAYLINK_VERSION_PACKAGE_MAJOR])
+AC_SUBST([JAYLINK_VERSION_PACKAGE_MINOR])
+AC_SUBST([JAYLINK_VERSION_PACKAGE_MICRO])
+AC_SUBST([JAYLINK_VERSION_PACKAGE])
 
 # Use C99 compatible stdio functions on MinGW instead of the incompatible
 # functions provided by Microsoft.

@@ -93,7 +93,6 @@ JAYLINK_API int jaylink_swd_io(struct jaylink_device_handle *devh,
 	}
 
 	buf[0] = CMD_SWD_IO;
-	/* Dummy byte. */
 	buf[1] = 0x00;
 	buffer_set_u16(buf, length, 2);
 

@@ -57,7 +57,7 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 	if (!context)
 		return JAYLINK_ERR_MALLOC;
 
-	if (libusb_init(&context->usb_ctx) < 0) {
+	if (libusb_init(&context->usb_ctx) != LIBUSB_SUCCESS) {
 		free(context);
 		return JAYLINK_ERR;
 	}

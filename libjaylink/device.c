@@ -58,7 +58,8 @@
 /** @endcond */
 
 /** @private */
-JAYLINK_PRIV struct jaylink_device *device_allocate(struct jaylink_context *ctx)
+JAYLINK_PRIV struct jaylink_device *device_allocate(
+		struct jaylink_context *ctx)
 {
 	struct jaylink_device *dev;
 	struct list *list;
@@ -78,36 +79,12 @@ JAYLINK_PRIV struct jaylink_device *device_allocate(struct jaylink_context *ctx)
 	ctx->devs = list;
 
 	dev->ctx = ctx;
-	dev->refcnt = 1;
+	dev->ref_count = 1;
 	dev->usb_dev = NULL;
 
 	return dev;
 }
 
-/** @private */
-static struct jaylink_device_handle *allocate_device_handle(
-		struct jaylink_device *dev)
-{
-	struct jaylink_device_handle *devh;
-
-	devh = malloc(sizeof(struct jaylink_device_handle));
-
-	if (!devh)
-		return NULL;
-
-	devh->dev = jaylink_ref_device(dev);
-
-	return devh;
-}
-
-/** @private */
-static void free_device_handle(struct jaylink_device_handle *devh)
-{
-	jaylink_unref_device(devh->dev);
-	free(devh);
-}
-
-/** @private */
 static struct jaylink_device **allocate_device_list(size_t length)
 {
 	struct jaylink_device **list;
@@ -198,12 +175,8 @@ JAYLINK_API void jaylink_free_devices(struct jaylink_device **devices,
 		return;
 
 	if (unref) {
-		i = 0;
-
-		while (devices[i]) {
+		for (i = 0; devices[i]; i++)
 			jaylink_unref_device(devices[i]);
-			i++;
-		}
 	}
 
 	free(devices);
@@ -281,7 +254,8 @@ JAYLINK_API int jaylink_device_get_serial_number(
  *
  * @since 0.1.0
  */
-JAYLINK_API int jaylink_device_get_usb_address(const struct jaylink_device *dev,
+JAYLINK_API int jaylink_device_get_usb_address(
+		const struct jaylink_device *dev,
 		enum jaylink_usb_address *address)
 {
 	if (!dev || !address)
@@ -311,7 +285,7 @@ JAYLINK_API struct jaylink_device *jaylink_ref_device(
 	if (!dev)
 		return NULL;
 
-	dev->refcnt++;
+	dev->ref_count++;
 
 	return dev;
 }
@@ -330,9 +304,9 @@ JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev)
 	if (!dev)
 		return;
 
-	dev->refcnt--;
+	dev->ref_count--;
 
-	if (dev->refcnt == 0) {
+	if (!dev->ref_count) {
 		ctx = dev->ctx;
 
 		log_dbg(ctx, "Device destroyed (bus:address = %03u:%03u).",
@@ -346,6 +320,27 @@ JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev)
 
 		free(dev);
 	}
+}
+
+static struct jaylink_device_handle *allocate_device_handle(
+		struct jaylink_device *dev)
+{
+	struct jaylink_device_handle *devh;
+
+	devh = malloc(sizeof(struct jaylink_device_handle));
+
+	if (!devh)
+		return NULL;
+
+	devh->dev = jaylink_ref_device(dev);
+
+	return devh;
+}
+
+static void free_device_handle(struct jaylink_device_handle *devh)
+{
+	jaylink_unref_device(devh->dev);
+	free(devh);
 }
 
 /**
@@ -381,7 +376,7 @@ JAYLINK_API int jaylink_open(struct jaylink_device *dev,
 
 	ret = transport_open(handle);
 
-	if (ret < 0) {
+	if (ret != JAYLINK_OK) {
 		free_device_handle(handle);
 		return ret;
 	}
@@ -447,8 +442,9 @@ JAYLINK_API struct jaylink_device *jaylink_get_device(
  *
  * @since 0.1.0
  */
-JAYLINK_API int jaylink_get_firmware_version(struct jaylink_device_handle *devh,
-		char **version, size_t *length)
+JAYLINK_API int jaylink_get_firmware_version(
+		struct jaylink_device_handle *devh, char **version,
+		size_t *length)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -589,7 +585,8 @@ JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
 	}
 
 	for (i = 0; i < num; i++)
-		info[i] = buffer_get_u32((uint8_t *)info, i * sizeof(uint32_t));
+		info[i] = buffer_get_u32((uint8_t *)info,
+			i * sizeof(uint32_t));
 
 	return JAYLINK_OK;
 }
@@ -612,7 +609,8 @@ JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
  *
  * @since 0.1.0
  */
-JAYLINK_API int jaylink_get_hardware_version(struct jaylink_device_handle *devh,
+JAYLINK_API int jaylink_get_hardware_version(
+		struct jaylink_device_handle *devh,
 		struct jaylink_hardware_version *version)
 {
 	int ret;
@@ -1146,7 +1144,8 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 		ret = transport_start_read(devh, size - REG_MIN_SIZE);
 
 		if (ret != JAYLINK_OK) {
-			log_err(ctx, "transport_start_read() failed: %i.", ret);
+			log_err(ctx, "transport_start_read() failed: %i.",
+				ret);
 			return JAYLINK_ERR;
 		}
 
@@ -1281,7 +1280,8 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		ret = transport_start_read(devh, size - REG_MIN_SIZE);
 
 		if (ret != JAYLINK_OK) {
-			log_err(ctx, "transport_start_read() failed: %i.", ret);
+			log_err(ctx, "transport_start_read() failed: %i.",
+				ret);
 			return JAYLINK_ERR;
 		}
 

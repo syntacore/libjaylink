@@ -274,7 +274,8 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 		ret = transport_start_read(devh, tmp);
 
 		if (ret != JAYLINK_OK) {
-			log_err(ctx, "transport_start_read() failed: %i.", ret);
+			log_err(ctx, "transport_start_read() failed: %i.",
+				ret);
 			return ret;
 		}
 

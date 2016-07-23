@@ -130,11 +130,8 @@ JAYLINK_API int jaylink_emucom_read(struct jaylink_device_handle *devh,
 
 	tmp = buffer_get_u32(buf, 0);
 
-	if (tmp == EMUCOM_ERR_NOT_SUPPORTED) {
-		log_err(ctx, "Channel 0x%x is not supported by the device.",
-			channel);
+	if (tmp == EMUCOM_ERR_NOT_SUPPORTED)
 		return JAYLINK_ERR_DEV_NOT_SUPPORTED;
-	}
 
 	if ((tmp & ~EMUCOM_AVAILABLE_BYTES_MASK) == EMUCOM_ERR_NOT_AVAILABLE) {
 		*length = tmp & EMUCOM_AVAILABLE_BYTES_MASK;
@@ -204,7 +201,6 @@ JAYLINK_API int jaylink_emucom_write(struct jaylink_device_handle *devh,
 	struct jaylink_context *ctx;
 	uint8_t buf[10];
 	uint32_t tmp;
-	int32_t dummy;
 
 	if (!devh || !buffer || !length)
 		return JAYLINK_ERR_ARG;
@@ -256,15 +252,10 @@ JAYLINK_API int jaylink_emucom_write(struct jaylink_device_handle *devh,
 
 	tmp = buffer_get_u32(buf, 0);
 
-	if (tmp == EMUCOM_ERR_NOT_SUPPORTED) {
-		log_err(ctx, "Channel 0x%x is not supported by the device.",
-			channel);
+	if (tmp == EMUCOM_ERR_NOT_SUPPORTED)
 		return JAYLINK_ERR_DEV_NOT_SUPPORTED;
-	}
 
-	dummy = tmp;
-
-	if (dummy < 0) {
+	if (tmp & EMUCOM_ERR) {
 		log_err(ctx, "Failed to write to channel 0x%x.", channel);
 		return JAYLINK_ERR_DEV;
 	}

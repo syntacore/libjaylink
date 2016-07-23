@@ -18,7 +18,6 @@
  */
 
 #include <stdlib.h>
-#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
@@ -180,7 +179,7 @@ JAYLINK_PRIV int transport_open(struct jaylink_device_handle *devh)
 	ret = initialize_handle(devh);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "Initialize device handle failed.");
+		log_err(ctx, "Failed to initialize device handle.");
 		return ret;
 	}
 
@@ -390,47 +389,35 @@ JAYLINK_PRIV int transport_start_write_read(struct jaylink_device_handle *devh,
 	return JAYLINK_OK;
 }
 
-static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
-		size_t *length)
+static bool adjust_buffer(struct jaylink_device_handle *devh, size_t size)
 {
-	int ret;
 	struct jaylink_context *ctx;
-	unsigned int tries;
-	int transferred;
+	size_t num_chunks;
+	uint8_t *buffer;
 
 	ctx = devh->dev->ctx;
-	tries = NUM_TIMEOUTS;
-	transferred = 0;
 
-	while (tries > 0 && !transferred) {
-		/* Always request CHUNK_SIZE bytes from the device. */
-		ret = libusb_bulk_transfer(devh->usb_devh, devh->endpoint_in,
-			(unsigned char *)buffer, CHUNK_SIZE, &transferred,
-			USB_TIMEOUT);
+	/* Adjust buffer size to a multiple of CHUNK_SIZE bytes. */
+	num_chunks = size / CHUNK_SIZE;
 
-		if (ret == LIBUSB_ERROR_TIMEOUT) {
-			log_warn(ctx, "Failed to receive data from "
-				"device: %s.", libusb_error_name(ret));
-			tries--;
-			continue;
-		} else if (ret != LIBUSB_SUCCESS) {
-			log_err(ctx, "Failed to receive data from "
-				"device: %s.", libusb_error_name(ret));
-			return JAYLINK_ERR;
-		}
+	if (size % CHUNK_SIZE > 0)
+		num_chunks++;
 
-		log_dbg(ctx, "Received %i bytes from device.", transferred);
+	size = num_chunks * CHUNK_SIZE;
+	buffer = realloc(devh->buffer, size);
+
+	if (!buffer) {
+		log_err(ctx, "Failed to adjust buffer size to %zu bytes.",
+			size);
+		return false;
 	}
 
-	/* Ignore a possible timeout if at least one byte was received. */
-	if (transferred > 0) {
-		*length = transferred;
-		return JAYLINK_OK;
-	}
+	devh->buffer = buffer;
+	devh->buffer_size = size;
 
-	log_err(ctx, "Receiving data from device timed out.");
+	log_dbg(ctx, "Adjusted buffer size to %zu bytes.", size);
 
-	return JAYLINK_ERR_TIMEOUT;
+	return true;
 }
 
 static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
@@ -474,37 +461,6 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
 	log_err(ctx, "Sending data to device timed out.");
 
 	return JAYLINK_ERR_TIMEOUT;
-}
-
-static bool adjust_buffer(struct jaylink_device_handle *devh, size_t size)
-{
-	struct jaylink_context *ctx;
-	size_t num_chunks;
-	uint8_t *buffer;
-
-	ctx = devh->dev->ctx;
-
-	/* Adjust buffer size to a multiple of CHUNK_SIZE bytes. */
-	num_chunks = size / CHUNK_SIZE;
-
-	if (size % CHUNK_SIZE > 0)
-		num_chunks++;
-
-	size = num_chunks * CHUNK_SIZE;
-	buffer = realloc(devh->buffer, size);
-
-	if (!buffer) {
-		log_err(ctx, "Failed to adjust buffer size to %zu bytes.",
-			size);
-		return false;
-	}
-
-	devh->buffer = buffer;
-	devh->buffer_size = size;
-
-	log_dbg(ctx, "Adjusted buffer size to %zu bytes.", size);
-
-	return true;
 }
 
 /**
@@ -614,6 +570,49 @@ JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
 	return usb_send(devh, buffer, length);
 }
 
+static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
+		size_t *length)
+{
+	int ret;
+	struct jaylink_context *ctx;
+	unsigned int tries;
+	int transferred;
+
+	ctx = devh->dev->ctx;
+	tries = NUM_TIMEOUTS;
+	transferred = 0;
+
+	while (tries > 0 && !transferred) {
+		/* Always request CHUNK_SIZE bytes from the device. */
+		ret = libusb_bulk_transfer(devh->usb_devh, devh->endpoint_in,
+			(unsigned char *)buffer, CHUNK_SIZE, &transferred,
+			USB_TIMEOUT);
+
+		if (ret == LIBUSB_ERROR_TIMEOUT) {
+			log_warn(ctx, "Failed to receive data from device: "
+				"%s.", libusb_error_name(ret));
+			tries--;
+			continue;
+		} else if (ret != LIBUSB_SUCCESS) {
+			log_err(ctx, "Failed to receive data from device: %s.",
+				libusb_error_name(ret));
+			return JAYLINK_ERR;
+		}
+
+		log_dbg(ctx, "Received %i bytes from device.", transferred);
+	}
+
+	/* Ignore a possible timeout if at least one byte was received. */
+	if (transferred > 0) {
+		*length = transferred;
+		return JAYLINK_OK;
+	}
+
+	log_err(ctx, "Receiving data from device timed out.");
+
+	return JAYLINK_ERR_TIMEOUT;
+}
+
 /**
  * Read data from a device.
  *
@@ -660,7 +659,7 @@ JAYLINK_PRIV int transport_read(struct jaylink_device_handle *devh,
 		return JAYLINK_OK;
 	}
 
-	if (devh->bytes_available) {
+	if (devh->bytes_available > 0) {
 		memcpy(buffer, devh->buffer + devh->read_pos,
 			devh->bytes_available);
 
