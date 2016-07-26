@@ -86,7 +86,7 @@ AC_ARG_ENABLE([subproject-build], AS_HELP_STRING([--enable-subproject-build],
 	[enable sub-project build [default=no]]))
 
 AM_CONDITIONAL([SUBPROJECT_BUILD],
-	[test "x$enable_subproject_build" == "xyes"])
+	[test "x$enable_subproject_build" = "xyes"])
 
 # Libtool interface version is not used for sub-project build as libjaylink is
 # built as libtool convenience library.
