@@ -158,8 +158,8 @@ enum jaylink_hardware_info {
 
 /** Device hardware types. */
 enum jaylink_hardware_type {
-	/** J-Link BASE. */
-	JAYLINK_HW_TYPE_BASE = 0
+	/** J-Link. */
+	JAYLINK_HW_TYPE_JLINK = 0
 };
 
 /** Target interfaces. */
