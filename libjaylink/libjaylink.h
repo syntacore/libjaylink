@@ -381,7 +381,7 @@ JAYLINK_API void jaylink_free_devices(struct jaylink_device **devices,
 		bool unref);
 JAYLINK_API int jaylink_device_get_host_interface(
 		const struct jaylink_device *dev,
-		enum jaylink_host_interface *interface);
+		enum jaylink_host_interface *iface);
 JAYLINK_API int jaylink_device_get_serial_number(
 		const struct jaylink_device *dev, uint32_t *serial_number);
 JAYLINK_API int jaylink_device_get_usb_address(
@@ -503,13 +503,13 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
 JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
 		struct jaylink_speed *speed);
 JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
-		enum jaylink_target_interface interface,
-		enum jaylink_target_interface *prev_interface);
+		enum jaylink_target_interface iface,
+		enum jaylink_target_interface *prev_iface);
 JAYLINK_API int jaylink_get_available_interfaces(
 		struct jaylink_device_handle *devh, uint32_t *interfaces);
 JAYLINK_API int jaylink_get_selected_interface(
 		struct jaylink_device_handle *devh,
-		enum jaylink_target_interface *interface);
+		enum jaylink_target_interface *iface);
 JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh);
 JAYLINK_API int jaylink_set_target_power(struct jaylink_device_handle *devh,

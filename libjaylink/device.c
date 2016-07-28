@@ -186,8 +186,8 @@ JAYLINK_API void jaylink_free_devices(struct jaylink_device **devices,
  * Get the host interface of a device.
  *
  * @param[in] dev Device instance.
- * @param[out] interface Host interface of the device on success, and undefined
- *                       on failure.
+ * @param[out] iface Host interface of the device on success, and undefined on
+ *                   failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -196,12 +196,12 @@ JAYLINK_API void jaylink_free_devices(struct jaylink_device **devices,
  */
 JAYLINK_API int jaylink_device_get_host_interface(
 		const struct jaylink_device *dev,
-		enum jaylink_host_interface *interface)
+		enum jaylink_host_interface *iface)
 {
-	if (!dev || !interface)
+	if (!dev || !iface)
 		return JAYLINK_ERR_ARG;
 
-	*interface = dev->interface;
+	*iface = dev->interface;
 
 	return JAYLINK_OK;
 }

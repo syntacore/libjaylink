@@ -177,9 +177,9 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
  *       #JAYLINK_DEV_CAP_SELECT_TIF capability.
  *
  * @param[in,out] devh Device handle.
- * @param[in] interface Target interface to select.
- * @param[out] prev_interface Previously selected target interface on success,
- *                            and undefined on failure. Can be NULL.
+ * @param[in] iface Target interface to select.
+ * @param[out] prev_iface Previously selected target interface on success, and
+ *                        undefined on failure. Can be NULL.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -191,8 +191,8 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
  * @since 0.1.0
  */
 JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
-		enum jaylink_target_interface interface,
-		enum jaylink_target_interface *prev_interface)
+		enum jaylink_target_interface iface,
+		enum jaylink_target_interface *prev_iface)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -202,7 +202,7 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 	if (!devh)
 		return JAYLINK_ERR_ARG;
 
-	if (interface > JAYLINK_TIF_MAX)
+	if (iface > JAYLINK_TIF_MAX)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
@@ -214,7 +214,7 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 	}
 
 	buf[0] = CMD_SELECT_TIF;
-	buf[1] = interface;
+	buf[1] = iface;
 
 	ret = transport_write(devh, buf, 2);
 
@@ -237,8 +237,8 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR;
 	}
 
-	if (prev_interface)
-		*prev_interface = tmp;
+	if (prev_iface)
+		*prev_iface = tmp;
 
 	return JAYLINK_OK;
 }
@@ -315,8 +315,8 @@ JAYLINK_API int jaylink_get_available_interfaces(
  *       #JAYLINK_DEV_CAP_SELECT_TIF capability.
  *
  * @param[in,out] devh Device handle.
- * @param[out] interface Selected target interface on success, and undefined on
- *                       failure.
+ * @param[out] iface Selected target interface on success, and undefined on
+ *                   failure.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -329,14 +329,14 @@ JAYLINK_API int jaylink_get_available_interfaces(
  */
 JAYLINK_API int jaylink_get_selected_interface(
 		struct jaylink_device_handle *devh,
-		enum jaylink_target_interface *interface)
+		enum jaylink_target_interface *iface)
 {
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[4];
 	uint32_t tmp;
 
-	if (!devh || !interface)
+	if (!devh || !iface)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
@@ -371,7 +371,7 @@ JAYLINK_API int jaylink_get_selected_interface(
 		return JAYLINK_ERR;
 	}
 
-	*interface = tmp;
+	*iface = tmp;
 
 	return JAYLINK_OK;
 }
