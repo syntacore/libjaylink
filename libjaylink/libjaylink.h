@@ -371,7 +371,7 @@ typedef int (*jaylink_log_callback)(const struct jaylink_context *ctx,
 /*--- core.c ----------------------------------------------------------------*/
 
 JAYLINK_API int jaylink_init(struct jaylink_context **ctx);
-JAYLINK_API void jaylink_exit(struct jaylink_context *ctx);
+JAYLINK_API int jaylink_exit(struct jaylink_context *ctx);
 
 /*--- device.c --------------------------------------------------------------*/
 

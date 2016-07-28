@@ -88,14 +88,17 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
  *
  * @param[in,out] ctx libjaylink context.
  *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ *
  * @since 0.1.0
  */
-JAYLINK_API void jaylink_exit(struct jaylink_context *ctx)
+JAYLINK_API int jaylink_exit(struct jaylink_context *ctx)
 {
 	struct list *item;
 
 	if (!ctx)
-		return;
+		return JAYLINK_ERR_ARG;
 
 	item = ctx->discovered_devs;
 
@@ -109,4 +112,6 @@ JAYLINK_API void jaylink_exit(struct jaylink_context *ctx)
 
 	libusb_exit(ctx->usb_ctx);
 	free(ctx);
+
+	return JAYLINK_OK;
 }
