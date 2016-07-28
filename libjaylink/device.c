@@ -391,15 +391,23 @@ JAYLINK_API int jaylink_open(struct jaylink_device *dev,
  *
  * @param[in,out] devh Device instance.
  *
+ * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR Other error conditions.
+ *
  * @since 0.1.0
  */
-JAYLINK_API void jaylink_close(struct jaylink_device_handle *devh)
+JAYLINK_API int jaylink_close(struct jaylink_device_handle *devh)
 {
-	if (!devh)
-		return;
+	int ret;
 
-	transport_close(devh);
+	if (!devh)
+		return JAYLINK_ERR_ARG;
+
+	ret = transport_close(devh);
 	free_device_handle(devh);
+
+	return ret;
 }
 
 /**
