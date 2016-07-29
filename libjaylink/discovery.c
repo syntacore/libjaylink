@@ -23,10 +23,15 @@
 #include <stdbool.h>
 #include <string.h>
 #include <sys/types.h>
-#include <libusb.h>
 
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
+
+/*
+ * libusb.h includes windows.h and therefore must be included after anything
+ * that includes winsock2.h.
+ */
+#include <libusb.h>
 
 /**
  * @file

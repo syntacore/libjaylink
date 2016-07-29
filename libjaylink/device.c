@@ -21,6 +21,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#ifdef _WIN32
+#include <winsock2.h>
+#else
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#endif
 #include <libusb.h>
 
 #include "libjaylink.h"
@@ -1022,18 +1028,54 @@ static void parse_conntable(struct jaylink_connection *conns,
 {
 	unsigned int i;
 	size_t offset;
+	struct in_addr in;
 
 	offset = 0;
 
 	for (i = 0; i < num; i++) {
 		conns[i].pid = buffer_get_u32(buffer, offset);
-		conns[i].hid = buffer_get_u32(buffer, offset + 4);
+
+		in.s_addr = buffer_get_u32(buffer, offset + 4);
+		/*
+		 * Use inet_ntoa() instead of inet_ntop() because the latter
+		 * requires at least Windows Vista.
+		 */
+		strcpy(conns[i].hid, inet_ntoa(in));
+
 		conns[i].iid = buffer[offset + 8];
 		conns[i].cid = buffer[offset + 9];
 		conns[i].handle = buffer_get_u16(buffer, offset + 10);
 		conns[i].timestamp = buffer_get_u32(buffer, offset + 12);
 		offset = offset + entry_size;
 	}
+}
+
+static bool _inet_pton(const char *str, struct in_addr *in)
+{
+#ifdef _WIN32
+	int ret;
+	struct sockaddr_in sock_in;
+	int length;
+
+	length = sizeof(sock_in);
+
+	/*
+	 * Use WSAStringToAddress() instead of inet_pton() because the latter
+	 * requires at least Windows Vista.
+	 */
+	ret = WSAStringToAddress((LPTSTR)str, AF_INET, NULL,
+		(LPSOCKADDR)&sock_in, &length);
+
+	if (ret != 0)
+		return false;
+
+	*in = sock_in.sin_addr;
+#else
+	if (inet_pton(AF_INET, str, in) != 1)
+		return false;
+#endif
+
+	return true;
 }
 
 /**
@@ -1088,25 +1130,32 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 	uint32_t size;
 	uint32_t table_size;
 	uint16_t addinfo_size;
+	struct in_addr in;
 
 	if (!devh || !connection || !connections || !count)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
+
+	buf[0] = CMD_REGISTER;
+	buf[1] = REG_CMD_REGISTER;
+	buffer_set_u32(buf, connection->pid, 2);
+
+	if (!_inet_pton(connection->hid, &in))
+		return JAYLINK_ERR_ARG;
+
+	buffer_set_u32(buf, in.s_addr, 6);
+
+	buf[10] = connection->iid;
+	buf[11] = connection->cid;
+	buffer_set_u16(buf, connection->handle, 12);
+
 	ret = transport_start_write_read(devh, 14, REG_MIN_SIZE, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
 		return ret;
 	}
-
-	buf[0] = CMD_REGISTER;
-	buf[1] = REG_CMD_REGISTER;
-	buffer_set_u32(buf, connection->pid, 2);
-	buffer_set_u32(buf, connection->hid, 6);
-	buf[10] = connection->iid;
-	buf[11] = connection->cid;
-	buffer_set_u16(buf, connection->handle, 12);
 
 	ret = transport_write(devh, buf, 14);
 
@@ -1225,25 +1274,32 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 	uint32_t size;
 	uint32_t table_size;
 	uint16_t addinfo_size;
+	struct in_addr in;
 
 	if (!devh || !connection || !connections || !count)
 		return JAYLINK_ERR_ARG;
 
 	ctx = devh->dev->ctx;
+
+	buf[0] = CMD_REGISTER;
+	buf[1] = REG_CMD_UNREGISTER;
+	buffer_set_u32(buf, connection->pid, 2);
+
+	if (!_inet_pton(connection->hid, &in))
+		return JAYLINK_ERR_ARG;
+
+	buffer_set_u32(buf, in.s_addr, 6);
+
+	buf[10] = connection->iid;
+	buf[11] = connection->cid;
+	buffer_set_u16(buf, connection->handle, 12);
+
 	ret = transport_start_write_read(devh, 14, REG_MIN_SIZE, true);
 
 	if (ret != JAYLINK_OK) {
 		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
 		return ret;
 	}
-
-	buf[0] = CMD_REGISTER;
-	buf[1] = REG_CMD_UNREGISTER;
-	buffer_set_u32(buf, connection->pid, 2);
-	buffer_set_u32(buf, connection->hid, 6);
-	buf[10] = connection->iid;
-	buf[11] = connection->cid;
-	buffer_set_u16(buf, connection->handle, 12);
 
 	ret = transport_write(devh, buf, 14);
 

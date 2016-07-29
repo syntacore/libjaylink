@@ -18,6 +18,9 @@
  */
 
 #include <stdlib.h>
+#ifdef _WIN32
+#include <winsock2.h>
+#endif
 #include <libusb.h>
 
 #include "libjaylink.h"
@@ -48,6 +51,9 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 {
 	int ret;
 	struct jaylink_context *context;
+#ifdef _WIN32
+	WSADATA wsa_data;
+#endif
 
 	if (!ctx)
 		return JAYLINK_ERR_ARG;
@@ -62,6 +68,22 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 		return JAYLINK_ERR;
 	}
 
+#ifdef _WIN32
+	ret = WSAStartup(MAKEWORD(2, 2), &wsa_data);
+
+	if (ret != 0) {
+		libusb_exit(context->usb_ctx);
+		free(context);
+		return JAYLINK_ERR;
+	}
+
+	if (LOBYTE(wsa_data.wVersion) != 2 || HIBYTE(wsa_data.wVersion) != 2) {
+		libusb_exit(context->usb_ctx);
+		free(context);
+		return JAYLINK_ERR;
+	}
+#endif
+
 	context->devs = NULL;
 	context->discovered_devs = NULL;
 
@@ -74,6 +96,9 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 	ret = jaylink_log_set_domain(context, JAYLINK_LOG_DOMAIN_DEFAULT);
 
 	if (ret != JAYLINK_OK) {
+#ifdef _WIN32
+		WSACleanup();
+#endif
 		free(context);
 		return ret;
 	}
@@ -111,6 +136,10 @@ JAYLINK_API int jaylink_exit(struct jaylink_context *ctx)
 	list_free(ctx->devs);
 
 	libusb_exit(ctx->usb_ctx);
+#ifdef _WIN32
+	WSACleanup();
+#endif
+
 	free(ctx);
 
 	return JAYLINK_OK;

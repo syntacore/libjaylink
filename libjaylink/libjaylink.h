@@ -25,6 +25,11 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <sys/types.h>
+#ifdef _WIN32
+#include <ws2tcpip.h>
+#else
+#include <arpa/inet.h>
+#endif
 
 /**
  * @file
@@ -272,9 +277,11 @@ struct jaylink_connection {
 	/**
 	 * Host ID (HID).
 	 *
-	 * IP address of the client in network byte order.
+	 * IPv4 address string of the client in quad-dotted decimal format
+	 * (e.g. 192.0.2.235). The address 0.0.0.0 should be used for the
+	 * registration of an USB connection.
 	 */
-	uint32_t hid;
+	char hid[INET_ADDRSTRLEN];
 	/** IID. */
 	uint8_t iid;
 	/** CID. */

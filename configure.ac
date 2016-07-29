@@ -111,6 +111,10 @@ AS_CASE([$host_os], [mingw*],
 	[AC_DEFINE([__USE_MINGW_ANSI_STDIO], [1],
 		[Define to 1 to use C99 compatible stdio functions on MinGW.])])
 
+# Add the Winsock2 library on MinGW for socket and other network-related
+# functions.
+AS_CASE([$host_os], [mingw*], [LIBS="$LIBS -lws2_32"])
+
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([libjaylink/Makefile])
 AC_CONFIG_FILES([libjaylink/version.h])
