@@ -1101,10 +1101,6 @@ static bool _inet_pton(const char *str, struct in_addr *in)
  *                         #JAYLINK_MAX_CONNECTIONS elements.
  * @param[out] count Number of device connections on success, and undefined on
  *                   failure.
- * @param[out] info Buffer to store additional information on success, or NULL.
- *                  The content of the buffer is undefined on failure.
- * @param[out] info_size Size of the additional information in bytes on success,
- *                       and undefined on failure. Can be NULL.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -1118,8 +1114,7 @@ static bool _inet_pton(const char *str, struct in_addr *in)
  */
 JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 		struct jaylink_connection *connection,
-		struct jaylink_connection *connections, size_t *count,
-		uint8_t *info, uint16_t *info_size)
+		struct jaylink_connection *connections, size_t *count)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -1223,12 +1218,6 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 	connection->handle = handle;
 	parse_conntable(connections, buf + REG_HEADER_SIZE, num, entry_size);
 
-	if (info)
-		memcpy(info, buf + REG_HEADER_SIZE + table_size, addinfo_size);
-
-	if (info_size)
-		*info_size = addinfo_size;
-
 	*count = num;
 
 	return JAYLINK_OK;
@@ -1248,10 +1237,6 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
  *                         #JAYLINK_MAX_CONNECTIONS elements.
  * @param[out] count Number of device connections on success, and undefined on
  *                   failure.
- * @param[out] info Buffer to store additional information on success, or NULL.
- *                  The content of the buffer is undefined on failure.
- * @param[out] info_size Size of the additional information in bytes on success,
- *                       and undefined on failure. Can be NULL.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -1263,8 +1248,7 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
  */
 JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		const struct jaylink_connection *connection,
-		struct jaylink_connection *connections, size_t *count,
-		uint8_t *info, uint16_t *info_size)
+		struct jaylink_connection *connections, size_t *count)
 {
 	int ret;
 	struct jaylink_context *ctx;
@@ -1359,12 +1343,6 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 	}
 
 	parse_conntable(connections, buf + REG_HEADER_SIZE, num, entry_size);
-
-	if (info)
-		memcpy(info, buf + REG_HEADER_SIZE + table_size, addinfo_size);
-
-	if (info_size)
-		*info_size = addinfo_size;
 
 	*count = num;
 
