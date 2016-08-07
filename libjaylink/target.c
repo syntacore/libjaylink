@@ -175,6 +175,9 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
  * @note This function must only be used if the device has the
  *       #JAYLINK_DEV_CAP_SELECT_TIF capability.
  *
+ * @warning This function may return a value for @p prev_iface which is not
+ *          covered by #jaylink_target_interface.
+ *
  * @param[in,out] devh Device handle.
  * @param[in] iface Target interface to select.
  * @param[out] prev_iface Previously selected target interface on success, and
@@ -196,7 +199,6 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[4];
-	uint32_t tmp;
 
 	if (!devh)
 		return JAYLINK_ERR_ARG;
@@ -229,15 +231,8 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	tmp = buffer_get_u32(buf, 0);
-
-	if (tmp > JAYLINK_TIF_MAX) {
-		log_err(ctx, "Invalid target interface: %u.", tmp);
-		return JAYLINK_ERR;
-	}
-
 	if (prev_iface)
-		*prev_iface = tmp;
+		*prev_iface = buffer_get_u32(buf, 0);
 
 	return JAYLINK_OK;
 }
@@ -312,6 +307,9 @@ JAYLINK_API int jaylink_get_available_interfaces(
  * @note This function must only be used if the device has the
  *       #JAYLINK_DEV_CAP_SELECT_TIF capability.
  *
+ * @warning This function may return a value for @p iface which is not covered
+ *          by #jaylink_target_interface.
+ *
  * @param[in,out] devh Device handle.
  * @param[out] iface Selected target interface on success, and undefined on
  *                   failure.
@@ -332,7 +330,6 @@ JAYLINK_API int jaylink_get_selected_interface(
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[4];
-	uint32_t tmp;
 
 	if (!devh || !iface)
 		return JAYLINK_ERR_ARG;
@@ -362,14 +359,7 @@ JAYLINK_API int jaylink_get_selected_interface(
 		return ret;
 	}
 
-	tmp = buffer_get_u32(buf, 0);
-
-	if (tmp > JAYLINK_TIF_MAX) {
-		log_err(ctx, "Invalid target interface: %u.", tmp);
-		return JAYLINK_ERR;
-	}
-
-	*iface = tmp;
+	*iface = buffer_get_u32(buf, 0);
 
 	return JAYLINK_OK;
 }

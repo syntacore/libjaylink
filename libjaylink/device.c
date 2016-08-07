@@ -610,6 +610,10 @@ JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
  * @note This function must only be used if the device has the
  *       #JAYLINK_DEV_CAP_GET_HW_VERSION capability.
  *
+ * @warning This function may return a value for @p version where
+ *          #jaylink_hardware_version::type is not covered by
+ *          #jaylink_hardware_type.
+ *
  * @param[in,out] devh Device handle.
  * @param[out] version Hardware version on success, and undefined on failure.
  *
