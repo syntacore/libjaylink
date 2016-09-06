@@ -116,17 +116,17 @@ JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
  * The log domain is a string which is used as prefix for all log messages to
  * differentiate them from messages of other libraries.
  *
- * The maximum length of the log domain is #JAYLINK_LOG_DOMAIN_MAX_LENGTH bytes,
- * excluding the trailing null-terminator. A log domain which exceeds this
- * length will be silently truncated.
+ * The maximum length of the log domain is #JAYLINK_LOG_DOMAIN_MAX_LENGTH
+ * bytes, excluding the trailing null-terminator. A log domain which exceeds
+ * this length will be silently truncated.
  *
  * @param[in,out] ctx libjaylink context.
  * @param[in] domain Log domain to use. To set the default log domain, use
  *                   #JAYLINK_LOG_DOMAIN_DEFAULT.
  *
  * @retval JAYLINK_OK Success.
- * @retval JAYLINK_ERR Other error conditions.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
  */

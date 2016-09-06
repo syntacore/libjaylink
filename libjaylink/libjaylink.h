@@ -41,7 +41,7 @@
 enum jaylink_error {
 	/** No error. */
 	JAYLINK_OK = 0,
-	/** Unspecific error. */
+	/** Unspecified error. */
 	JAYLINK_ERR = -1,
 	/** Memory allocation error. */
 	JAYLINK_ERR_MALLOC = -2,
@@ -152,7 +152,7 @@ enum jaylink_hardware_info {
 	 * This indicates whether the target power supply on pin 19 of the
 	 * 20-pin JTAG / SWD connector is enabled or disabled.
 	 *
-	 * @see jaylink_set_target_power() to set the target power supply.
+	 * @see jaylink_set_target_power()
 	 */
 	JAYLINK_HW_INFO_TARGET_POWER = (1 << 0),
 	/** Current consumption of the target in mA. */
@@ -207,7 +207,7 @@ enum jaylink_jtag_version {
 
 /** Serial Wire Output (SWO) capture modes. */
 enum jaylink_swo_mode {
-	/** UART capture mode. */
+	/** Universal Asynchronous Receiver Transmitter (UART). */
 	JAYLINK_SWO_MODE_UART = 0
 };
 

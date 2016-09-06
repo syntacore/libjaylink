@@ -59,7 +59,8 @@
  * @param[in,out] devh Device handle.
  * @param[in] filename Name of the file to read from. The length of the name
  *                     must not exceed #JAYLINK_FILE_NAME_MAX_LENGTH bytes.
- * @param[out] buffer Buffer to store read data.
+ * @param[out] buffer Buffer to store read data on success. Its content is
+ *                    undefined on failure
  * @param[in] offset Offset in bytes relative to the beginning of the file from
  *                   where to start reading.
  * @param[in,out] length Number of bytes to read. On success, the value gets

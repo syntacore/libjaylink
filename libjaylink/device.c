@@ -256,7 +256,7 @@ JAYLINK_API int jaylink_device_get_serial_number(
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_NOT_SUPPORTED Operation not supported.
  *
- * @see jaylink_device_get_serial_number() to get the serial number of a device.
+ * @see jaylink_device_get_serial_number()
  *
  * @since 0.1.0
  */
@@ -280,8 +280,7 @@ JAYLINK_API int jaylink_device_get_usb_address(
  *
  * @param[in,out] dev Device instance.
  *
- * @return The given device instance on success, or NULL for invalid device
- *         instance.
+ * @return The given device instance on success, or NULL on invalid argument.
  *
  * @since 0.1.0
  */
@@ -619,8 +618,6 @@ JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_get_caps() to retrieve device capabilities.
- *
  * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_hardware_version(
@@ -740,15 +737,16 @@ JAYLINK_API int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
  *
  * @param[in,out] devh Device handle.
  * @param[out] caps Buffer to store capabilities on success. Its content is
- *                  undefined on failure. The size of the buffer must be large
- *                  enough to contain at least #JAYLINK_DEV_CAPS_SIZE bytes.
+ *                  undefined on failure. The buffer must be large enough to
+ *                  contain at least #JAYLINK_DEV_CAPS_SIZE bytes.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_get_extended_caps() to retrieve extended device capabilities.
+ * @see jaylink_get_extended_caps()
+ * @see jaylink_has_cap()
  *
  * @since 0.1.0
  */
@@ -803,15 +801,15 @@ JAYLINK_API int jaylink_get_caps(struct jaylink_device_handle *devh,
  *
  * @param[in,out] devh Device handle.
  * @param[out] caps Buffer to store capabilities on success. Its content is
- *                  undefined on failure. The size of the buffer must be large
- *                  enough to contain at least #JAYLINK_DEV_EXT_CAPS_SIZE bytes.
+ *                  undefined on failure. The buffer must be large enough to
+ *                  contain at least #JAYLINK_DEV_EXT_CAPS_SIZE bytes.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_get_caps() to retrieve device capabilities.
+ * @see jaylink_get_caps()
  *
  * @since 0.1.0
  */
@@ -868,8 +866,6 @@ JAYLINK_API int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_get_caps() to retrieve device capabilities.
- *
  * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_free_memory(struct jaylink_device_handle *devh,
@@ -919,8 +915,8 @@ JAYLINK_API int jaylink_get_free_memory(struct jaylink_device_handle *devh,
  *
  * @param[in,out] devh Device handle.
  * @param[out] config Buffer to store configuration data on success. Its
- *                    content is undefined on failure. The size of the buffer
- *                    must be large enough to contain at least
+ *                    content is undefined on failure. The buffer must be large
+ *                    enough to contain at least
  *                    #JAYLINK_DEV_CONFIG_SIZE bytes.
  *
  * @retval JAYLINK_OK Success.
@@ -1108,7 +1104,7 @@ static bool _inet_pton(const char *str, struct in_addr *in)
  * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_unregister() to unregister a connection from a device.
+ * @see jaylink_unregister()
  *
  * @since 0.1.0
  */
@@ -1243,6 +1239,8 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @see jaylink_register()
  *
  * @since 0.1.0
  */

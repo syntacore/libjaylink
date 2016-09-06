@@ -52,9 +52,9 @@
  * @param[in,out] devh Device handle.
  * @param[in] tms Buffer to read TMS data from.
  * @param[in] tdi Buffer to read TDI data from.
- * @param[out] tdo Buffer to store TDO data on success. Its content is undefined
- *                 on failure. The buffer must be large enough to contain at
- *                 least the specified number of bits to transfer.
+ * @param[out] tdo Buffer to store TDO data on success. Its content is
+ *                 undefined on failure. The buffer must be large enough to
+ *                 contain at least the specified number of bits to transfer.
  * @param[in] length Number of bits to transfer.
  * @param[in] version Version of the JTAG command to use.
  *
@@ -66,9 +66,8 @@
  *                                   the operation.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_select_interface() to select the target interface.
- * @see jaylink_get_available_interfaces() to retrieve the available target
- *                                         interfaces.
+ * @see jaylink_select_interface()
+ * @see jaylink_set_speed()
  *
  * @since 0.1.0
  */

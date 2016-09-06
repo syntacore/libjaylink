@@ -157,7 +157,7 @@ static void cleanup_handle(struct jaylink_device_handle *devh)
  * This function must be called before any other function of the transport
  * abstraction layer for the given device handle is called.
  *
- * @param devh Device handle.
+ * @param[in,out] devh Device handle.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR Other error conditions.
@@ -215,7 +215,7 @@ JAYLINK_PRIV int transport_open(struct jaylink_device_handle *devh)
  * After this function has been called no other function of the transport
  * abstraction layer for the given device handle must be called.
  *
- * @param devh Device handle.
+ * @param[in,out] devh Device handle.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR Other error conditions.
@@ -256,10 +256,10 @@ JAYLINK_PRIV int transport_close(struct jaylink_device_handle *devh)
  * transport_write(). It is required that all data of a write operation is
  * written before an other write and/or read operation is started.
  *
- * @param devh Device handle.
- * @param length Number of bytes of the write operation.
- * @param has_command Determines whether the data of the write operation
- *                    contains the protocol command.
+ * @param[in,out] devh Device handle.
+ * @param[in] length Number of bytes of the write operation.
+ * @param[in] has_command Determines whether the data of the write operation
+ *                        contains the protocol command.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -298,8 +298,8 @@ JAYLINK_PRIV int transport_start_write(struct jaylink_device_handle *devh,
  * transport_read(). It is required that all data of a read operation is read
  * before an other write and/or read operation is started.
  *
- * @param devh Device handle.
- * @param length Number of bytes of the read operation.
+ * @param[in,out] devh Device handle.
+ * @param[in] length Number of bytes of the read operation.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -340,11 +340,11 @@ JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
  * @note The write operation must be completed first before the read operation
  *       must be processed.
  *
- * @param devh Device handle.
- * @param write_length Number of bytes of the write operation.
- * @param read_length Number of bytes of the read operation.
- * @param has_command Determines whether the data of the write operation
- *                    contains the protocol command.
+ * @param[in,out] devh Device handle.
+ * @param[in] write_length Number of bytes of the write operation.
+ * @param[in] read_length Number of bytes of the read operation.
+ * @param[in] has_command Determines whether the data of the write operation
+ *                        contains the protocol command.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -476,9 +476,9 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
  *       the write operation. Before that the data will be written into a
  *       buffer.
  *
- * @param devh Device handle.
- * @param buffer Buffer to write data from.
- * @param length Number of bytes to write.
+ * @param[in,out] devh Device handle.
+ * @param[in] buffer Buffer to write data from.
+ * @param[in] length Number of bytes to write.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -621,10 +621,10 @@ static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
  * total number of read bytes must not exceed the number of bytes of the read
  * operation.
  *
- * @param devh Device handle.
- * @param buffer Buffer to read data into on success. Its content is undefined
- *               on failure.
- * @param length Number of bytes to read.
+ * @param[in,out] devh Device handle.
+ * @param[out] buffer Buffer to read data into on success. Its content is
+ *                    undefined on failure.
+ * @param[in] length Number of bytes to read.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.

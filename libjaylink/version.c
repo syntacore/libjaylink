@@ -64,8 +64,9 @@ JAYLINK_API int jaylink_version_package_get_micro(void)
 /**
  * Get the version number string of the libjaylink package.
  *
- * @return A string which contains the version number of the libjaylink package.
- *         The string is null-terminated and must not be free'd by the caller.
+ * @return A string which contains the version number of the libjaylink
+ *         package. The string is null-terminated and must not be free'd by the
+ *         caller.
  *
  * @since 0.1.0
  */

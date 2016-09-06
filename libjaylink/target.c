@@ -55,6 +55,8 @@
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  *
+ * @see jaylink_get_speeds()
+ *
  * @since 0.1.0
  */
 JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
@@ -92,7 +94,7 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
  * Retrieve target interface speeds.
  *
  * The speeds are applicable for the currently selected target interface only
- * and calulcated as follows:
+ * and calculated as follows:
  *
  * @par
  * <tt>speeds = @a freq / n</tt> with <tt>n >= @a div</tt>, where @p n is an
@@ -115,10 +117,7 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_select_interface() to select the target interface.
- * @see jaylink_get_selected_interface() to retrieve the currently selected
- *                                       interface.
- * @see jaylink_set_speed() to set the target interface speed.
+ * @see jaylink_select_interface()
  *
  * @since 0.1.0
  */
@@ -186,7 +185,7 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_get_caps() to retrieve device capabilities.
+ * @see jaylink_get_available_interfaces()
  *
  * @since 0.1.0
  */
@@ -263,8 +262,7 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_get_caps() to retrieve device capabilities.
- * @see jaylink_select_interface() to select a target interface.
+ * @see jaylink_select_interface()
  *
  * @since 0.1.0
  */
@@ -323,7 +321,7 @@ JAYLINK_API int jaylink_get_available_interfaces(
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_get_caps() to retrieve device capabilities.
+ * @see jaylink_select_interface()
  *
  * @since 0.1.0
  */
@@ -459,7 +457,7 @@ JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh)
 }
 
 /**
- * Enable or disable the target power supply.
+ * Set the target power supply.
  *
  * If enabled, the target is supplied with 5 V from pin 19 of the 20-pin
  * JTAG / SWD connector.
@@ -467,16 +465,14 @@ JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh)
  * @note This function must only be used if the device has the
  *       #JAYLINK_DEV_CAP_SET_TARGET_POWER capability.
  *
- * @param devh Device handle.
- * @param enable Determines whether to enable or disable the target power
- *               supply.
+ * @param[in,out] devh Device handle.
+ * @param[in] enable Determines whether to enable or disable the target power
+ *                   supply.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR Other error conditions.
- *
- * @see jaylink_get_caps() to retrieve device capabilities.
  *
  * @since 0.1.0
  */

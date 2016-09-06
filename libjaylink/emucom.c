@@ -67,8 +67,8 @@
  *
  * @param[in,out] devh Device handle.
  * @param[in] channel Channel to read data from.
- * @param[in] buffer Buffer to store read data on success. Its content is
- *                   undefined on failure.
+ * @param[out] buffer Buffer to store read data on success. Its content is
+ *                    undefined on failure.
  * @param[in,out] length Number of bytes to read. On success, the value gets
  *                       updated with the actual number of bytes read. Unless
  *                       otherwise specified, the value is undefined on
@@ -189,7 +189,8 @@ JAYLINK_API int jaylink_emucom_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
- * @retval JAYLINK_ERR_DEV_NOT_SUPPORTED Channel is not supported by the device.
+ * @retval JAYLINK_ERR_DEV_NOT_SUPPORTED Channel is not supported by the
+ *                                       device.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0

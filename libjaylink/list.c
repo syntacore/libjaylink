@@ -27,6 +27,7 @@
  * Singly-linked list functions.
  */
 
+/** @private */
 JAYLINK_PRIV struct list *list_prepend(struct list *list, void *data)
 {
 	struct list *item;
@@ -42,6 +43,7 @@ JAYLINK_PRIV struct list *list_prepend(struct list *list, void *data)
 	return item;
 }
 
+/** @private */
 JAYLINK_PRIV struct list *list_remove(struct list *list, const void *data)
 {
 	struct list *item;
@@ -72,6 +74,7 @@ JAYLINK_PRIV struct list *list_remove(struct list *list, const void *data)
 	return list;
 }
 
+/** @private */
 JAYLINK_PRIV struct list *list_find_custom(struct list *list,
 		list_compare_callback cb, const void *cb_data)
 {
@@ -88,6 +91,7 @@ JAYLINK_PRIV struct list *list_find_custom(struct list *list,
 	return NULL;
 }
 
+/** @private */
 JAYLINK_PRIV size_t list_length(struct list *list)
 {
 	size_t n;
@@ -98,6 +102,7 @@ JAYLINK_PRIV size_t list_length(struct list *list)
 	return n;
 }
 
+/** @private */
 JAYLINK_PRIV void list_free(struct list *list)
 {
 	struct list *tmp;

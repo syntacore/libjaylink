@@ -60,7 +60,8 @@
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
  *
- * @see jaylink_get_free_memory() to retrieve free memory size of a device.
+ * @see jaylink_swo_get_speeds()
+ * @see jaylink_get_free_memory()
  *
  * @since 0.1.0
  */
@@ -141,6 +142,8 @@ JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
  *
+ * @see jaylink_swo_start()
+ *
  * @since 0.1.0
  */
 JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
@@ -208,6 +211,8 @@ JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_PROTO Protocol violation.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
+ *
+ * @see jaylink_swo_start()
  *
  * @since 0.1.0
  */
