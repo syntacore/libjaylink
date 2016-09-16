@@ -440,8 +440,8 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
 		if (ret == LIBUSB_SUCCESS) {
 			tries = NUM_TIMEOUTS;
 		} else if (ret == LIBUSB_ERROR_TIMEOUT) {
-			log_warn(ctx, "Failed to send data to device: %s.",
-				libusb_error_name(ret));
+			log_warn(ctx, "Sending data to device timed out, "
+				"retrying.");
 			tries--;
 		} else {
 			log_err(ctx, "Failed to send data to device: %s.",
@@ -589,8 +589,8 @@ static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
 			USB_TIMEOUT);
 
 		if (ret == LIBUSB_ERROR_TIMEOUT) {
-			log_warn(ctx, "Failed to receive data from device: "
-				"%s.", libusb_error_name(ret));
+			log_warn(ctx, "Receiving data from device timed out, "
+				"retrying.");
 			tries--;
 			continue;
 		} else if (ret != LIBUSB_SUCCESS) {
