@@ -1122,6 +1122,51 @@ static bool _inet_pton(const char *str, struct in_addr *in)
  * @note This function must only be used if the device has the
  *       #JAYLINK_DEV_CAP_REGISTER capability.
  *
+ * Example code:
+ * @code{.c}
+ * static bool register_connection(struct jaylink_device_handle *devh,
+ *                 struct jaylink_connection *conn)
+ * {
+ *         int ret;
+ *         struct jaylink_connection conns[JAYLINK_MAX_CONNECTIONS];
+ *         bool found_handle;
+ *         size_t count;
+ *         size_t i;
+ *
+ *         conn->handle = 0;
+ *         conn->pid = 0;
+ *         strcpy(conn->hid, "0.0.0.0");
+ *         conn->iid = 0;
+ *         conn->cid = 0;
+ *
+ *         ret = jaylink_register(devh, conn, conns, &count);
+ *
+ *         if (ret != JAYLINK_OK) {
+ *                 printf("jaylink_register() failed: %s.\n",
+ *                         jaylink_strerror(ret));
+ *                 return false;
+ *         }
+ *
+ *         found_handle = false;
+ *
+ *         for (i = 0; i < count; i++) {
+ *                 if (conns[i].handle == conn->handle) {
+ *                         found_handle = true;
+ *                         break;
+ *                 }
+ *         }
+ *
+ *         if (!found_handle) {
+ *                 printf("Maximum number of connections reached.\n");
+ *                 return false;
+ *         }
+ *
+ *         printf("Connection successfully registered.\n");
+ *
+ *         return true;
+ * }
+ * @endcode
+ *
  * @param[in,out] devh Device handle.
  * @param[in,out] connection Connection to register on the device.
  * @param[out] connections Array to store device connections on success.
