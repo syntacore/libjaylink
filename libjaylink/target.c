@@ -73,7 +73,8 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
 	ret = transport_start_write(devh, 3, true);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_write() failed: %i.", ret);
+		log_err(ctx, "transport_start_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -83,7 +84,8 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
 	ret = transport_write(devh, buf, 3);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_write() failed: %i.", ret);
+		log_err(ctx, "transport_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -136,7 +138,8 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
 	ret = transport_start_write_read(devh, 1, 6, true);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		log_err(ctx, "transport_start_write_read() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -145,14 +148,16 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
 	ret = transport_write(devh, buf, 1);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_write() failed: %i.", ret);
+		log_err(ctx, "transport_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
 	ret = transport_read(devh, buf, 6);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_read() failed: %i.", ret);
+		log_err(ctx, "transport_read() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -210,7 +215,8 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 	ret = transport_start_write_read(devh, 2, 4, true);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		log_err(ctx, "transport_start_write_read() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -220,14 +226,16 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 	ret = transport_write(devh, buf, 2);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_write() failed: %i.", ret);
+		log_err(ctx, "transport_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
 	ret = transport_read(devh, buf, 4);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_read() failed: %i.", ret);
+		log_err(ctx, "transport_read() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -275,7 +283,8 @@ JAYLINK_API int jaylink_get_available_interfaces(
 	ret = transport_start_write_read(devh, 2, 4, true);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		log_err(ctx, "transport_start_write_read() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -285,14 +294,16 @@ JAYLINK_API int jaylink_get_available_interfaces(
 	ret = transport_write(devh, buf, 2);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_write() failed: %i.", ret);
+		log_err(ctx, "transport_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
 	ret = transport_read(devh, buf, 4);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_read() failed: %i.", ret);
+		log_err(ctx, "transport_read() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -338,7 +349,8 @@ JAYLINK_API int jaylink_get_selected_interface(
 	ret = transport_start_write_read(devh, 2, 4, true);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_write_read() failed: %i.", ret);
+		log_err(ctx, "transport_start_write_read() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -348,14 +360,16 @@ JAYLINK_API int jaylink_get_selected_interface(
 	ret = transport_write(devh, buf, 2);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_write() failed: %i.", ret);
+		log_err(ctx, "transport_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
 	ret = transport_read(devh, buf, 4);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_read() failed: %i.", ret);
+		log_err(ctx, "transport_read() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -389,7 +403,8 @@ JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh)
 	ret = transport_start_write(devh, 1, true);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_write() failed: %i.", ret);
+		log_err(ctx, "transport_start_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -398,7 +413,8 @@ JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh)
 	ret = transport_write(devh, buf, 1);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_write() failed: %i.", ret);
+		log_err(ctx, "transport_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -430,7 +446,8 @@ JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh)
 	ret = transport_start_write(devh, 1, true);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_write() failed: %i.", ret);
+		log_err(ctx, "transport_start_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -439,7 +456,8 @@ JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh)
 	ret = transport_write(devh, buf, 1);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_write() failed: %i.", ret);
+		log_err(ctx, "transport_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -480,7 +498,8 @@ JAYLINK_API int jaylink_set_target_power(struct jaylink_device_handle *devh,
 	ret = transport_start_write(devh, 2, true);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_start_wrte() failed: %i.", ret);
+		log_err(ctx, "transport_start_wrte() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
@@ -490,7 +509,8 @@ JAYLINK_API int jaylink_set_target_power(struct jaylink_device_handle *devh,
 	ret = transport_write(devh, buf, 2);
 
 	if (ret != JAYLINK_OK) {
-		log_err(ctx, "transport_write() failed: %i.", ret);
+		log_err(ctx, "transport_write() failed: %s.",
+			jaylink_strerror(ret));
 		return ret;
 	}
 
