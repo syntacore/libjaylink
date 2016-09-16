@@ -228,6 +228,7 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[32];
+	uint32_t status;
 	uint32_t tmp;
 
 	if (!devh || !buffer || !length)
@@ -267,13 +268,7 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	tmp = buffer_get_u32(buf, 0);
-
-	if (tmp > 0) {
-		log_err(ctx, "Failed to read data: %u.", tmp);
-		return JAYLINK_ERR_DEV;
-	}
-
+	status = buffer_get_u32(buf, 0);
 	tmp = buffer_get_u32(buf, 4);
 
 	if (tmp > *length) {
@@ -300,6 +295,11 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 				jaylink_strerror(ret));
 			return ret;
 		}
+	}
+
+	if (status > 0) {
+		log_err(ctx, "Failed to read data: %u.", status);
+		return JAYLINK_ERR_DEV;
 	}
 
 	return JAYLINK_OK;
