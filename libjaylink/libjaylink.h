@@ -164,7 +164,11 @@ enum jaylink_hardware_info {
 /** Device hardware types. */
 enum jaylink_hardware_type {
 	/** J-Link. */
-	JAYLINK_HW_TYPE_JLINK = 0
+	JAYLINK_HW_TYPE_JLINK = 0,
+	/** Flasher. */
+	JAYLINK_HW_TYPE_FLASHER = 2,
+	/** J-Link Pro. */
+	JAYLINK_HW_TYPE_JLINK_PRO = 3
 };
 
 /** Target interfaces. */
