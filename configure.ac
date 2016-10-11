@@ -19,14 +19,7 @@
 
 AC_PREREQ([2.64])
 
-# Package version of libjaylink. This is not the same as the libtool interface
-# version.
-m4_define([jaylink_version_package_major], [0])
-m4_define([jaylink_version_package_minor], [1])
-m4_define([jaylink_version_package_micro], [0])
-m4_define([jaylink_version_package], [jaylink_version_package_major.jaylink_version_package_minor.jaylink_version_package_micro])
-
-AC_INIT([libjaylink], [jaylink_version_package], [BUG-REPORT-ADDRESS])
+AC_INIT([libjaylink], [0.1.0], [BUG-REPORT-ADDRESS])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -69,6 +62,8 @@ AC_C_BIGENDIAN
 # Disable progress and informational output of libtool.
 AC_SUBST([AM_LIBTOOLFLAGS], '--silent')
 
+JAYLINK_SET_PACKAGE_VERSION([JAYLINK_VERSION_PACKAGE], [AC_PACKAGE_VERSION])
+
 # Libtool interface version of libjaylink. This is not the same as the package
 # version. For information about the versioning system of libtool, see:
 # http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning
@@ -94,16 +89,6 @@ AS_IF([test "x$enable_subproject_build" != "xyes"],
 	[JAYLINK_LIB_LDFLAGS="-version-info $JAYLINK_VERSION_LIB"])
 
 AC_SUBST([JAYLINK_LIB_LDFLAGS])
-
-JAYLINK_VERSION_PACKAGE_MAJOR=jaylink_version_package_major
-JAYLINK_VERSION_PACKAGE_MINOR=jaylink_version_package_minor
-JAYLINK_VERSION_PACKAGE_MICRO=jaylink_version_package_micro
-JAYLINK_VERSION_PACKAGE=jaylink_version_package
-
-AC_SUBST([JAYLINK_VERSION_PACKAGE_MAJOR])
-AC_SUBST([JAYLINK_VERSION_PACKAGE_MINOR])
-AC_SUBST([JAYLINK_VERSION_PACKAGE_MICRO])
-AC_SUBST([JAYLINK_VERSION_PACKAGE])
 
 # Use C99 compatible stdio functions on MinGW instead of the incompatible
 # functions provided by Microsoft.
