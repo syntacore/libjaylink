@@ -67,15 +67,7 @@ JAYLINK_SET_PACKAGE_VERSION([JAYLINK_VERSION_PACKAGE], [AC_PACKAGE_VERSION])
 # Libtool interface version of libjaylink. This is not the same as the package
 # version. For information about the versioning system of libtool, see:
 # http://www.gnu.org/software/libtool/manual/libtool.html#Libtool-versioning
-JAYLINK_VERSION_LIB_CURRENT=0
-JAYLINK_VERSION_LIB_REVISION=0
-JAYLINK_VERSION_LIB_AGE=0
-JAYLINK_VERSION_LIB="$JAYLINK_VERSION_LIB_CURRENT:$JAYLINK_VERSION_LIB_REVISION:$JAYLINK_VERSION_LIB_AGE"
-
-AC_SUBST([JAYLINK_VERSION_LIB_CURRENT])
-AC_SUBST([JAYLINK_VERSION_LIB_REVISION])
-AC_SUBST([JAYLINK_VERSION_LIB_AGE])
-AC_SUBST([JAYLINK_VERSION_LIB])
+JAYLINK_SET_LIBRARY_VERSION([JAYLINK_VERSION_LIBRARY], [0:0:0])
 
 AC_ARG_ENABLE([subproject-build], AS_HELP_STRING([--enable-subproject-build],
 	[enable sub-project build [default=no]]))
@@ -86,7 +78,7 @@ AM_CONDITIONAL([SUBPROJECT_BUILD],
 # Libtool interface version is not used for sub-project build as libjaylink is
 # built as libtool convenience library.
 AS_IF([test "x$enable_subproject_build" != "xyes"],
-	[JAYLINK_LIB_LDFLAGS="-version-info $JAYLINK_VERSION_LIB"])
+	[JAYLINK_LIB_LDFLAGS="-version-info $JAYLINK_VERSION_LIBRARY"])
 
 AC_SUBST([JAYLINK_LIB_LDFLAGS])
 
@@ -110,7 +102,7 @@ AC_OUTPUT
 echo
 echo "libjaylink configuration summary:"
 echo " - Package version ................ $JAYLINK_VERSION_PACKAGE"
-echo " - Library version ................ $JAYLINK_VERSION_LIB"
+echo " - Library version ................ $JAYLINK_VERSION_LIBRARY"
 echo " - Installation prefix ............ $prefix"
 echo " - Building on .................... $build"
 echo " - Building for ................... $host"

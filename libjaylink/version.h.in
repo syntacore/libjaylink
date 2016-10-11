@@ -39,15 +39,15 @@
 #define JAYLINK_VERSION_PACKAGE_STRING		"@JAYLINK_VERSION_PACKAGE@"
 
 /** <i>Current</i> version number of the libjaylink libtool interface. */
-#define JAYLINK_VERSION_LIBRARY_CURRENT		@JAYLINK_VERSION_LIB_CURRENT@
+#define JAYLINK_VERSION_LIBRARY_CURRENT		@JAYLINK_VERSION_LIBRARY_CURRENT@
 
 /** <i>Revision</i> version number of the libjaylink libtool interface. */
-#define JAYLINK_VERSION_LIBRARY_REVISION	@JAYLINK_VERSION_LIB_REVISION@
+#define JAYLINK_VERSION_LIBRARY_REVISION	@JAYLINK_VERSION_LIBRARY_REVISION@
 
 /** <i>Age</i> version number of the libjaylink libtool interface. */
-#define JAYLINK_VERSION_LIBRARY_AGE		@JAYLINK_VERSION_LIB_AGE@
+#define JAYLINK_VERSION_LIBRARY_AGE		@JAYLINK_VERSION_LIBRARY_AGE@
 
 /** Version number string of the libjaylink libtool interface. */
-#define JAYLINK_VERSION_LIBRARY_STRING		"@JAYLINK_VERSION_LIB@"
+#define JAYLINK_VERSION_LIBRARY_STRING		"@JAYLINK_VERSION_LIBRARY@"
 
 #endif /* LIBJAYLINK_VERSION_H */
