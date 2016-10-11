@@ -208,8 +208,16 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 	if (!devh)
 		return JAYLINK_ERR_ARG;
 
-	if (iface > JAYLINK_TIF_MAX)
+	switch (iface) {
+	case JAYLINK_TIF_JTAG:
+	case JAYLINK_TIF_SWD:
+	case JAYLINK_TIF_BDM3:
+	case JAYLINK_TIF_FINE:
+	case JAYLINK_TIF_2W_JTAG_PIC32:
+		break;
+	default:
 		return JAYLINK_ERR_ARG;
+	}
 
 	ctx = devh->dev->ctx;
 	ret = transport_start_write_read(devh, 2, 4, true);

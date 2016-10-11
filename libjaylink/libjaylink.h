@@ -183,13 +183,7 @@ enum jaylink_target_interface {
 	JAYLINK_TIF_FINE = 3,
 	/** 2-wire JTAG for PIC32 compliant devices. */
 	JAYLINK_TIF_2W_JTAG_PIC32 = 4,
-
-	/** <i>Helper which must be always the last element</i>. */
-	__JAYLINK_TIF_MAX
 };
-
-/** Maximum valid target interface number. */
-#define JAYLINK_TIF_MAX (__JAYLINK_TIF_MAX - 1)
 
 /**
  * JTAG command versions.
