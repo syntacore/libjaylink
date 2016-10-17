@@ -69,6 +69,7 @@
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR_DEV Unspecified device error, or the file was not found.
  * @retval JAYLINK_ERR Other error conditions.
  *
@@ -203,6 +204,7 @@ JAYLINK_API int jaylink_file_read(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR_DEV Unspecified device error, or the file was not found.
  * @retval JAYLINK_ERR Other error conditions.
  *
@@ -328,6 +330,7 @@ JAYLINK_API int jaylink_file_write(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR_DEV Unspecified device error, or the file was not found.
  * @retval JAYLINK_ERR Other error conditions.
  *
@@ -419,6 +422,7 @@ JAYLINK_API int jaylink_file_get_size(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR_DEV Unspecified device error, or the file was not found.
  * @retval JAYLINK_ERR Other error conditions.
  *

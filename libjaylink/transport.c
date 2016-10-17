@@ -65,7 +65,11 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 	 */
 	ret = libusb_get_active_config_descriptor(devh->dev->usb_dev, &config);
 
-	if (ret != LIBUSB_SUCCESS) {
+	if (ret == LIBUSB_ERROR_IO) {
+		log_err(ctx, "Failed to get configuration descriptor: "
+			"input/output error.");
+		return JAYLINK_ERR_IO;
+	} else if (ret != LIBUSB_SUCCESS) {
 		log_err(ctx, "Failed to get configuration descriptor: %s.",
 			libusb_error_name(ret));
 		return JAYLINK_ERR;
@@ -160,6 +164,7 @@ static void cleanup_handle(struct jaylink_device_handle *devh)
  * @param[in,out] devh Device handle.
  *
  * @retval JAYLINK_OK Success.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_PRIV int transport_open(struct jaylink_device_handle *devh)
@@ -185,7 +190,11 @@ JAYLINK_PRIV int transport_open(struct jaylink_device_handle *devh)
 
 	ret = libusb_open(dev->usb_dev, &usb_devh);
 
-	if (ret != LIBUSB_SUCCESS) {
+	if (ret == LIBUSB_ERROR_IO) {
+		log_err(ctx, "Failed to open device: input/output error.");
+		cleanup_handle(devh);
+		return JAYLINK_ERR_IO;
+	} else if (ret != LIBUSB_SUCCESS) {
 		log_err(ctx, "Failed to open device: %s.",
 			libusb_error_name(ret));
 		cleanup_handle(devh);
@@ -194,7 +203,10 @@ JAYLINK_PRIV int transport_open(struct jaylink_device_handle *devh)
 
 	ret = libusb_claim_interface(usb_devh, devh->interface_number);
 
-	if (ret != LIBUSB_SUCCESS) {
+	if (ret == LIBUSB_ERROR_IO) {
+		log_err(ctx, "Failed to claim interface: input/output error.");
+		return JAYLINK_ERR_IO;
+	} else if (ret != LIBUSB_SUCCESS) {
 		log_err(ctx, "Failed to claim interface: %s.",
 			libusb_error_name(ret));
 		cleanup_handle(devh);
@@ -443,6 +455,10 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
 			log_warn(ctx, "Sending data to device timed out, "
 				"retrying.");
 			tries--;
+		} else if (ret == LIBUSB_ERROR_IO) {
+			log_err(ctx, "Failed to send data to device: "
+				"input/output error.");
+			return JAYLINK_ERR_IO;
 		} else {
 			log_err(ctx, "Failed to send data to device: %s.",
 				libusb_error_name(ret));
@@ -483,6 +499,7 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
@@ -593,6 +610,10 @@ static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
 				"retrying.");
 			tries--;
 			continue;
+		} else if (ret == LIBUSB_ERROR_IO) {
+			log_err(ctx, "Failed to receive data from device: "
+				"input/output error.");
+			return JAYLINK_ERR_IO;
 		} else if (ret != LIBUSB_SUCCESS) {
 			log_err(ctx, "Failed to receive data from device: %s.",
 				libusb_error_name(ret));
@@ -629,6 +650,7 @@ static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  */
 JAYLINK_PRIV int transport_read(struct jaylink_device_handle *devh,

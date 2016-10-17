@@ -57,6 +57,7 @@
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR_DEV_NO_MEMORY Not enough memory on the device to perform
  *                                   the operation.

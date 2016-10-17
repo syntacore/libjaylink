@@ -53,6 +53,7 @@
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_speeds()
@@ -117,6 +118,7 @@ JAYLINK_API int jaylink_set_speed(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_PROTO Protocol violation.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_select_interface()
@@ -191,6 +193,7 @@ JAYLINK_API int jaylink_get_speeds(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_available_interfaces()
@@ -271,6 +274,7 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_select_interface()
@@ -336,6 +340,7 @@ JAYLINK_API int jaylink_get_available_interfaces(
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_select_interface()
@@ -394,6 +399,7 @@ JAYLINK_API int jaylink_get_selected_interface(
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -437,6 +443,7 @@ JAYLINK_API int jaylink_clear_reset(struct jaylink_device_handle *devh)
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -488,6 +495,7 @@ JAYLINK_API int jaylink_set_reset(struct jaylink_device_handle *devh)
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0

@@ -359,6 +359,7 @@ static void free_device_handle(struct jaylink_device_handle *devh)
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_MALLOC Memory allocation error.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -451,6 +452,7 @@ JAYLINK_API struct jaylink_device *jaylink_get_device(
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_MALLOC Memory allocation error.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -551,6 +553,7 @@ JAYLINK_API int jaylink_get_firmware_version(
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -628,6 +631,7 @@ JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -690,6 +694,7 @@ JAYLINK_API int jaylink_get_hardware_version(
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -761,6 +766,7 @@ JAYLINK_API int jaylink_get_hardware_status(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_extended_caps()
@@ -828,6 +834,7 @@ JAYLINK_API int jaylink_get_caps(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_caps()
@@ -888,6 +895,7 @@ JAYLINK_API int jaylink_get_extended_caps(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -949,6 +957,7 @@ JAYLINK_API int jaylink_get_free_memory(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -1008,6 +1017,7 @@ JAYLINK_API int jaylink_read_raw_config(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -1180,6 +1190,7 @@ static bool _inet_pton(const char *str, struct in_addr *in)
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_PROTO Protocol violation.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_unregister()
@@ -1320,6 +1331,7 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_PROTO Protocol violation.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_register()

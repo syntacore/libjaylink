@@ -248,7 +248,11 @@ static int discovery_usb_scan(struct jaylink_context *ctx)
 
 	ret = libusb_get_device_list(ctx->usb_ctx, &devs);
 
-	if (ret < 0) {
+	if (ret == LIBUSB_ERROR_IO) {
+		log_err(ctx, "Failed to retrieve device list: input/output "
+			"error.");
+		return JAYLINK_ERR_IO;
+	} else if (ret < 0) {
 		log_err(ctx, "Failed to retrieve device list: %s.",
 			libusb_error_name(ret));
 		return JAYLINK_ERR;
@@ -303,6 +307,7 @@ static void clear_discovery_list(struct jaylink_context *ctx)
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_get_devices()

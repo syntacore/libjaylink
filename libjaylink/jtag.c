@@ -61,6 +61,7 @@
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR_DEV_NO_MEMORY Not enough memory on the device to perform
  *                                   the operation.
@@ -177,6 +178,7 @@ JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
@@ -220,6 +222,7 @@ JAYLINK_API int jaylink_jtag_clear_trst(struct jaylink_device_handle *devh)
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
+ * @retval JAYLINK_ERR_IO Input/output error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @since 0.1.0
