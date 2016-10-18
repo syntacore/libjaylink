@@ -144,3 +144,23 @@ JAYLINK_API int jaylink_exit(struct jaylink_context *ctx)
 
 	return JAYLINK_OK;
 }
+
+/**
+ * Check for a capability of libjaylink.
+ *
+ * @param[in] cap Capability to check for.
+ *
+ * @retval true Capability is supported.
+ * @retval false Capability is not supported or invalid argument.
+ *
+ * @since 0.1.0
+ */
+JAYLINK_API bool jaylink_library_has_cap(enum jaylink_capability cap)
+{
+	switch (cap) {
+	case JAYLINK_CAP_HIF_USB:
+		return true;
+	default:
+		return false;
+	}
+}

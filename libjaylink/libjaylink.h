@@ -87,6 +87,12 @@ enum jaylink_log_level {
 /** Maximum length of a libjaylink log domain in bytes. */
 #define JAYLINK_LOG_DOMAIN_MAX_LENGTH	32
 
+/** libjaylink capabilities. */
+enum jaylink_capability {
+	/** Library supports USB as host interface. */
+	JAYLINK_CAP_HIF_USB = 0
+};
+
 /** Host interfaces. */
 enum jaylink_host_interface {
 	/** Universal Serial Bus (USB). */
@@ -377,6 +383,7 @@ typedef int (*jaylink_log_callback)(const struct jaylink_context *ctx,
 
 JAYLINK_API int jaylink_init(struct jaylink_context **ctx);
 JAYLINK_API int jaylink_exit(struct jaylink_context *ctx);
+JAYLINK_API bool jaylink_library_has_cap(enum jaylink_capability cap);
 
 /*--- device.c --------------------------------------------------------------*/
 
