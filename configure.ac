@@ -30,7 +30,7 @@ AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
 # Enable additional compiler warnings via -Wall and -Wextra. Use hidden
 # visibility for all non-static symbols by default with -fvisibility=hidden.
-CFLAGS="$CFLAGS -Wall -Wextra -Werror -fvisibility=hidden"
+JAYLINK_CFLAGS="-Wall -Wextra -Werror -fvisibility=hidden"
 
 # Checks for programs.
 AC_PROG_CC
@@ -49,8 +49,7 @@ PKG_PROG_PKG_CONFIG
 # Checks for libraries.
 
 # Check for libusb-1.0 which is always needed.
-PKG_CHECK_MODULES([libusb], [libusb-1.0 >= 1.0.9],
-	[CFLAGS="$CFLAGS $libusb_CFLAGS"; LIBS="$LIBS $libusb_LIBS"])
+PKG_CHECK_MODULES([libusb], [libusb-1.0 >= 1.0.9])
 
 # Checks for header files.
 
@@ -78,9 +77,7 @@ AM_CONDITIONAL([SUBPROJECT_BUILD],
 # Libtool interface version is not used for sub-project build as libjaylink is
 # built as libtool convenience library.
 AS_IF([test "x$enable_subproject_build" != "xyes"],
-	[JAYLINK_LIB_LDFLAGS="-version-info $JAYLINK_VERSION_LIBRARY"])
-
-AC_SUBST([JAYLINK_LIB_LDFLAGS])
+	[JAYLINK_LDFLAGS="-version-info $JAYLINK_VERSION_LIBRARY"])
 
 # Use C99 compatible stdio functions on MinGW instead of the incompatible
 # functions provided by Microsoft.
@@ -90,7 +87,11 @@ AS_CASE([$host_os], [mingw*],
 
 # Add the Winsock2 library on MinGW for socket and other network-related
 # functions.
-AS_CASE([$host_os], [mingw*], [LIBS="$LIBS -lws2_32"])
+AS_CASE([$host_os], [mingw*], [JAYLINK_LIBS="$JAYLINK_LIBS -lws2_32"])
+
+AC_SUBST([JAYLINK_CFLAGS])
+AC_SUBST([JAYLINK_LDFLAGS])
+AC_SUBST([JAYLINK_LIBS])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([libjaylink/Makefile])
