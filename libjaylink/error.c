@@ -44,10 +44,10 @@ JAYLINK_API const char *jaylink_strerror(int error_code)
 		return "no error";
 	case JAYLINK_ERR:
 		return "unspecified error";
-	case JAYLINK_ERR_MALLOC:
-		return "memory allocation error";
 	case JAYLINK_ERR_ARG:
 		return "invalid argument";
+	case JAYLINK_ERR_MALLOC:
+		return "memory allocation error";
 	case JAYLINK_ERR_TIMEOUT:
 		return "timeout occurred";
 	case JAYLINK_ERR_PROTO:
@@ -90,10 +90,10 @@ JAYLINK_API const char *jaylink_strerror_name(int error_code)
 		return "JAYLINK_OK";
 	case JAYLINK_ERR:
 		return "JAYLINK_ERR";
-	case JAYLINK_ERR_MALLOC:
-		return "JAYLINK_ERR_MALLOC";
 	case JAYLINK_ERR_ARG:
 		return "JAYLINK_ERR_ARG";
+	case JAYLINK_ERR_MALLOC:
+		return "JAYLINK_ERR_MALLOC";
 	case JAYLINK_ERR_TIMEOUT:
 		return "JAYLINK_ERR_TIMEOUT";
 	case JAYLINK_ERR_PROTO:

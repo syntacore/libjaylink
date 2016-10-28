@@ -43,10 +43,10 @@ enum jaylink_error {
 	JAYLINK_OK = 0,
 	/** Unspecified error. */
 	JAYLINK_ERR = -1,
-	/** Memory allocation error. */
-	JAYLINK_ERR_MALLOC = -2,
 	/** Invalid argument. */
-	JAYLINK_ERR_ARG = -3,
+	JAYLINK_ERR_ARG = -2,
+	/** Memory allocation error. */
+	JAYLINK_ERR_MALLOC = -3,
 	/** Timeout occurred. */
 	JAYLINK_ERR_TIMEOUT = -4,
 	/** Protocol violation. */
