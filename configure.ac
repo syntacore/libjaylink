@@ -97,6 +97,7 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([libjaylink/Makefile])
 AC_CONFIG_FILES([libjaylink/version.h])
 AC_CONFIG_FILES([libjaylink.pc])
+AC_CONFIG_FILES([Doxyfile])
 
 AC_OUTPUT
 
