@@ -27,6 +27,36 @@
 #include "libjaylink-internal.h"
 
 /**
+ * @mainpage
+ *
+ * @section sec_intro Introduction
+ *
+ * This document describes the API of libjaylink.
+ *
+ * libjaylink is a shared library written in C to access SEGGER J-Link and
+ * compatible devices.
+ *
+ * @section sec_error Error handling
+ *
+ * The libjaylink functions which can fail use the return value to indicate an
+ * error. The functions typically return an error code of #jaylink_error.
+ * For each function, all possible error codes and their detailed descriptions
+ * are documented. As the possible error codes returned by a function may
+ * change it is recommended to also always cover unexpected values when
+ * checking for error codes to be compatible with later versions of libjaylink.
+ *
+ * There are a few exceptions where a function directly returns the result
+ * instead of an error code because it is more convenient from an API
+ * perspective and because there is only a single reason for failure which is
+ * clearly distinguishable from the result.
+ *
+ * @section sec_license License
+ *
+ * libjaylink is licensed under the terms of the GNU General Public
+ * License (GPL), version 2 or later.
+ */
+
+/**
  * @file
  *
  * Core library functions.
