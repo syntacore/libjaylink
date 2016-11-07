@@ -25,4 +25,4 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libjaylink.pc
 endif
 
-EXTRA_DIST = README HACKING contrib/99-libjaylink.rules
+EXTRA_DIST = HACKING contrib/99-libjaylink.rules
