@@ -26,7 +26,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 
 AC_CANONICAL_HOST
 
-AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_INIT_AUTOMAKE([-Wall -Werror check-news])
 
 # Enable additional compiler warnings via -Wall and -Wextra. Use hidden
 # visibility for all non-static symbols by default with -fvisibility=hidden.
