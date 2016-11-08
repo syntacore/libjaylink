@@ -7,6 +7,7 @@ config.status
 configure
 configure.gnu
 .deps
+INSTALL
 *.la
 libjaylink.pc
 .libs
