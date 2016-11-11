@@ -41,6 +41,8 @@
 #define SWO_PARAM_BAUDRATE	0x02
 #define SWO_PARAM_READ_SIZE	0x03
 #define SWO_PARAM_BUFFER_SIZE	0x04
+
+#define SWO_ERR			0x80000000
 /** @endcond */
 
 /**
@@ -346,6 +348,7 @@ JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[24];
+	uint32_t tmp;
 	uint32_t length;
 
 	if (!devh || !speed)
@@ -388,12 +391,14 @@ JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	length = buffer_get_u32(buf, 0);
+	tmp = buffer_get_u32(buf, 0);
 
-	if (length == 0xffffffff) {
+	if (tmp & SWO_ERR) {
 		log_err(ctx, "Failed to retrieve speed information.");
 		return JAYLINK_ERR_DEV;
 	}
+
+	length = tmp;
 
 	if (length != 28) {
 		log_err(ctx, "Unexpected number of bytes received: %u.",
