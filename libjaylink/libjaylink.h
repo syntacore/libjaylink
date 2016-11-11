@@ -202,11 +202,11 @@ enum jaylink_jtag_version {
 	 * JTAG command version 2.
 	 *
 	 * This version is obsolete for major hardware version 5 and above. Use
-	 * #JAYLINK_JTAG_V3 for these versions instead.
+	 * #JAYLINK_JTAG_VERSION_3 for these versions instead.
 	 */
-	JAYLINK_JTAG_V2 = 1,
+	JAYLINK_JTAG_VERSION_2 = 1,
 	/** JTAG command version 3. */
-	JAYLINK_JTAG_V3 = 2
+	JAYLINK_JTAG_VERSION_3 = 2
 };
 
 /** Serial Wire Output (SWO) capture modes. */

@@ -91,10 +91,10 @@ JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 	read_length = num_bytes;
 
 	switch (version) {
-	case JAYLINK_JTAG_V2:
+	case JAYLINK_JTAG_VERSION_2:
 		cmd = CMD_JTAG_IO_V2;
 		break;
-	case JAYLINK_JTAG_V3:
+	case JAYLINK_JTAG_VERSION_3:
 		cmd = CMD_JTAG_IO_V3;
 		/* In this version, the response includes a status byte. */
 		read_length++;
@@ -149,7 +149,7 @@ JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	if (version == JAYLINK_JTAG_V2)
+	if (version == JAYLINK_JTAG_VERSION_2)
 		return JAYLINK_OK;
 
 	ret = transport_read(devh, &status, 1);
