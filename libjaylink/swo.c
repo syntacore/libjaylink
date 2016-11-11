@@ -394,7 +394,8 @@ JAYLINK_API int jaylink_swo_get_speeds(struct jaylink_device_handle *devh,
 	tmp = buffer_get_u32(buf, 0);
 
 	if (tmp & SWO_ERR) {
-		log_err(ctx, "Failed to retrieve speed information.");
+		log_err(ctx, "Failed to retrieve speed information: 0x%x.",
+			tmp);
 		return JAYLINK_ERR_DEV;
 	}
 

@@ -143,7 +143,8 @@ JAYLINK_API int jaylink_emucom_read(struct jaylink_device_handle *devh,
 	}
 
 	if (tmp & EMUCOM_ERR) {
-		log_err(ctx, "Failed to read from channel 0x%x.", channel);
+		log_err(ctx, "Failed to read from channel 0x%x: 0x%x.",
+			channel, tmp);
 		return JAYLINK_ERR_DEV;
 	}
 
@@ -269,7 +270,8 @@ JAYLINK_API int jaylink_emucom_write(struct jaylink_device_handle *devh,
 		return JAYLINK_ERR_DEV_NOT_SUPPORTED;
 
 	if (tmp & EMUCOM_ERR) {
-		log_err(ctx, "Failed to write to channel 0x%x.", channel);
+		log_err(ctx, "Failed to write to channel 0x%x: 0x%x.",
+			channel, tmp);
 		return JAYLINK_ERR_DEV;
 	}
 
