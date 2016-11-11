@@ -54,6 +54,10 @@
  *
  * libjaylink is licensed under the terms of the GNU General Public
  * License (GPL), version 2 or later.
+ *
+ * @section sec_website Website
+ *
+ * <a href="http://git.zapb.de/libjaylink.git">git.zapb.de/libjaylink.git</a>
  */
 
 /**
