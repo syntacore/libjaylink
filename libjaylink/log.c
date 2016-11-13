@@ -131,7 +131,7 @@ JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
  * @since 0.1.0
  */
 JAYLINK_API int jaylink_log_set_domain(struct jaylink_context *ctx,
-		char *domain)
+		const char *domain)
 {
 	int ret;
 

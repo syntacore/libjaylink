@@ -109,10 +109,10 @@ static struct jaylink_device **allocate_device_list(size_t length)
  * Get available devices.
  *
  * @param[in,out] ctx libjaylink context.
- * @param[out] devices Newly allocated array which contains instances of
- *                     available devices on success, and undefined on failure.
- *                     The array is NULL-terminated and must be free'd by the
- *                     caller with jaylink_free_devices().
+ * @param[out] devs Newly allocated array which contains instances of available
+ *                  devices on success, and undefined on failure. The array is
+ *                  NULL-terminated and must be free'd by the caller with
+ *                  jaylink_free_devices().
  * @param[out] count Number of available devices on success, and undefined on
  *                   failure. Can be NULL.
  *
@@ -126,21 +126,21 @@ static struct jaylink_device **allocate_device_list(size_t length)
  * @since 0.1.0
  */
 JAYLINK_API int jaylink_get_devices(struct jaylink_context *ctx,
-		struct jaylink_device ***devices, size_t *count)
+		struct jaylink_device ***devs, size_t *count)
 {
 	size_t num;
 	struct list *item;
-	struct jaylink_device **devs;
+	struct jaylink_device **tmp;
 	struct jaylink_device *dev;
 	size_t i;
 
-	if (!ctx || !devices)
+	if (!ctx || !devs)
 		return JAYLINK_ERR_ARG;
 
 	num = list_length(ctx->discovered_devs);
-	devs = allocate_device_list(num);
+	tmp = allocate_device_list(num);
 
-	if (!devs) {
+	if (!tmp) {
 		log_err(ctx, "Failed to allocate device list.");
 		return JAYLINK_ERR_MALLOC;
 	}
@@ -149,14 +149,14 @@ JAYLINK_API int jaylink_get_devices(struct jaylink_context *ctx,
 
 	for (i = 0; i < num; i++) {
 		dev = (struct jaylink_device *)item->data;
-		devs[i] = jaylink_ref_device(dev);
+		tmp[i] = jaylink_ref_device(dev);
 		item = item->next;
 	}
 
 	if (count)
 		*count = num;
 
-	*devices = devs;
+	*devs = tmp;
 
 	return JAYLINK_OK;
 }
@@ -164,7 +164,7 @@ JAYLINK_API int jaylink_get_devices(struct jaylink_context *ctx,
 /**
  * Free devices.
  *
- * @param[in,out] devices Array of device instances. Must be NULL-terminated.
+ * @param[in,out] devs Array of device instances. Must be NULL-terminated.
  * @param[in] unref Determines whether the device instances should be
  *                  unreferenced.
  *
@@ -172,20 +172,19 @@ JAYLINK_API int jaylink_get_devices(struct jaylink_context *ctx,
  *
  * @since 0.1.0
  */
-JAYLINK_API void jaylink_free_devices(struct jaylink_device **devices,
-		bool unref)
+JAYLINK_API void jaylink_free_devices(struct jaylink_device **devs, bool unref)
 {
 	size_t i;
 
-	if (!devices)
+	if (!devs)
 		return;
 
 	if (unref) {
-		for (i = 0; devices[i]; i++)
-			jaylink_unref_device(devices[i]);
+		for (i = 0; devs[i]; i++)
+			jaylink_unref_device(devs[i]);
 	}
 
-	free(devices);
+	free(devs);
 }
 
 /**
@@ -1062,7 +1061,7 @@ JAYLINK_API int jaylink_write_raw_config(struct jaylink_device_handle *devh,
 	return JAYLINK_OK;
 }
 
-static void parse_conntable(struct jaylink_connection *conns,
+static void parse_conn_table(struct jaylink_connection *conns,
 		const uint8_t *buffer, uint16_t num, uint16_t entry_size)
 {
 	unsigned int i;
@@ -1209,7 +1208,7 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 	uint16_t entry_size;
 	uint32_t size;
 	uint32_t table_size;
-	uint16_t addinfo_size;
+	uint16_t info_size;
 	struct in_addr in;
 
 	if (!devh || !connection || !connections || !count)
@@ -1257,7 +1256,7 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 	handle = buffer_get_u16(buf, 0);
 	num = buffer_get_u16(buf, 2);
 	entry_size = buffer_get_u16(buf, 4);
-	addinfo_size = buffer_get_u16(buf, 6);
+	info_size = buffer_get_u16(buf, 6);
 
 	if (num > JAYLINK_MAX_CONNECTIONS) {
 		log_err(ctx, "Maximum number of device connections exceeded: "
@@ -1272,7 +1271,7 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 	}
 
 	table_size = num * entry_size;
-	size = REG_HEADER_SIZE + table_size + addinfo_size;
+	size = REG_HEADER_SIZE + table_size + info_size;
 
 	if (size > REG_MAX_SIZE) {
 		log_err(ctx, "Maximum registration information size exceeded: "
@@ -1305,7 +1304,7 @@ JAYLINK_API int jaylink_register(struct jaylink_device_handle *devh,
 	}
 
 	connection->handle = handle;
-	parse_conntable(connections, buf + REG_HEADER_SIZE, num, entry_size);
+	parse_conn_table(connections, buf + REG_HEADER_SIZE, num, entry_size);
 
 	*count = num;
 
@@ -1349,7 +1348,7 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 	uint16_t entry_size;
 	uint32_t size;
 	uint32_t table_size;
-	uint16_t addinfo_size;
+	uint16_t info_size;
 	struct in_addr in;
 
 	if (!devh || !connection || !connections || !count)
@@ -1396,7 +1395,7 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 
 	num = buffer_get_u16(buf, 2);
 	entry_size = buffer_get_u16(buf, 4);
-	addinfo_size = buffer_get_u16(buf, 6);
+	info_size = buffer_get_u16(buf, 6);
 
 	if (num > JAYLINK_MAX_CONNECTIONS) {
 		log_err(ctx, "Maximum number of device connections exceeded: "
@@ -1411,7 +1410,7 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 	}
 
 	table_size = num * entry_size;
-	size = REG_HEADER_SIZE + table_size + addinfo_size;
+	size = REG_HEADER_SIZE + table_size + info_size;
 
 	if (size > REG_MAX_SIZE) {
 		log_err(ctx, "Maximum registration information size exceeded: "
@@ -1438,7 +1437,7 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 		}
 	}
 
-	parse_conntable(connections, buf + REG_HEADER_SIZE, num, entry_size);
+	parse_conn_table(connections, buf + REG_HEADER_SIZE, num, entry_size);
 
 	*count = num;
 

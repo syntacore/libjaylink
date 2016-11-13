@@ -62,9 +62,9 @@
  * @retval JAYLINK_ERR_ARG Invalid arguments.
  * @retval JAYLINK_ERR_TIMEOUT A timeout occurred.
  * @retval JAYLINK_ERR_IO Input/output error.
- * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR_DEV_NO_MEMORY Not enough memory on the device to perform
  *                                   the operation.
+ * @retval JAYLINK_ERR_DEV Unspecified device error.
  * @retval JAYLINK_ERR Other error conditions.
  *
  * @see jaylink_select_interface()
@@ -163,7 +163,7 @@ JAYLINK_API int jaylink_jtag_io(struct jaylink_device_handle *devh,
 	if (status == JTAG_IO_ERR_NO_MEMORY) {
 		return JAYLINK_ERR_DEV_NO_MEMORY;
 	} else if (status > 0) {
-		log_err(ctx, "JTAG I/O operation failed: %02x.", status);
+		log_err(ctx, "JTAG I/O operation failed: 0x%x.", status);
 		return JAYLINK_ERR_DEV;
 	}
 

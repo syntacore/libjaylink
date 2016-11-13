@@ -48,16 +48,16 @@
 JAYLINK_API int jaylink_parse_serial_number(const char *str,
 		uint32_t *serial_number)
 {
-	char *endptr;
+	char *end_ptr;
 	unsigned long long tmp;
 
 	if (!str || !serial_number)
 		return JAYLINK_ERR_ARG;
 
 	errno = 0;
-	tmp = strtoull(str, &endptr, 10);
+	tmp = strtoull(str, &end_ptr, 10);
 
-	if (*endptr != '\0' || errno != 0 || tmp > UINT32_MAX)
+	if (*end_ptr != '\0' || errno != 0 || tmp > UINT32_MAX)
 		return JAYLINK_ERR;
 
 	*serial_number = tmp;

@@ -74,7 +74,7 @@ JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[32];
-	uint32_t tmp;
+	uint32_t status;
 
 	if (!devh || !baudrate || !size)
 		return JAYLINK_ERR_ARG;
@@ -124,10 +124,10 @@ JAYLINK_API int jaylink_swo_start(struct jaylink_device_handle *devh,
 		return ret;
 	}
 
-	tmp = buffer_get_u32(buf, 0);
+	status = buffer_get_u32(buf, 0);
 
-	if (tmp > 0) {
-		log_err(ctx, "Failed to start capture: %u.", tmp);
+	if (status > 0) {
+		log_err(ctx, "Failed to start capture: 0x%x.", status);
 		return JAYLINK_ERR_DEV;
 	}
 
@@ -158,7 +158,7 @@ JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
 	int ret;
 	struct jaylink_context *ctx;
 	uint8_t buf[4];
-	uint32_t tmp;
+	uint32_t status;
 
 	if (!devh)
 		return JAYLINK_ERR_ARG;
@@ -192,10 +192,10 @@ JAYLINK_API int jaylink_swo_stop(struct jaylink_device_handle *devh)
 		return ret;
 	}
 
-	tmp = buffer_get_u32(buf, 0);
+	status = buffer_get_u32(buf, 0);
 
-	if (tmp > 0) {
-		log_err(ctx, "Failed to stop capture: %u.", tmp);
+	if (status > 0) {
+		log_err(ctx, "Failed to stop capture: 0x%x.", status);
 		return JAYLINK_ERR_DEV;
 	}
 
@@ -303,7 +303,7 @@ JAYLINK_API int jaylink_swo_read(struct jaylink_device_handle *devh,
 	}
 
 	if (status > 0) {
-		log_err(ctx, "Failed to read data: %u.", status);
+		log_err(ctx, "Failed to read data: 0x%x.", status);
 		return JAYLINK_ERR_DEV;
 	}
 

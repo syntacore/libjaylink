@@ -18,8 +18,7 @@
  */
 
 #include <stdlib.h>
-#include <stdio.h>
-#include <inttypes.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <sys/types.h>
@@ -89,24 +88,24 @@ static bool parse_serial_number(const char *str, uint32_t *serial_number)
 	if (length > MAX_SERIAL_NUMBER_DIGITS)
 		str = str + (length - MAX_SERIAL_NUMBER_DIGITS);
 
-	if (sscanf(str, "%" SCNu32, serial_number) != 1)
+	if (jaylink_parse_serial_number(str, serial_number) != JAYLINK_OK)
 		return false;
 
 	return true;
 }
 
-static bool compare_devices(const void *a, const void *b)
+static bool compare_devices(const void *data, const void *user_data)
 {
 	const struct jaylink_device *dev;
 	const struct libusb_device *usb_dev;
 
-	dev = a;
-	usb_dev = b;
+	dev = data;
+	usb_dev = user_data;
 
 	if (dev->usb_dev == usb_dev)
-		return false;
+		return true;
 
-	return true;
+	return false;
 }
 
 static struct jaylink_device *find_device(const struct jaylink_context *ctx,
@@ -300,10 +299,10 @@ static void clear_discovery_list(struct jaylink_context *ctx)
  * Scan for devices.
  *
  * @param[in,out] ctx libjaylink context.
- * @param[in] hostifs Host interfaces to scan for devices. Use bitwise OR to
- *                    specify multiple interfaces, or 0 to use all available
- *                    interfaces. See #jaylink_host_interface for a description
- *                    of the interfaces.
+ * @param[in] ifaces Host interfaces to scan for devices. Use bitwise OR to
+ *                   specify multiple interfaces, or 0 to use all available
+ *                   interfaces. See #jaylink_host_interface for a description
+ *                   of the interfaces.
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
@@ -315,14 +314,14 @@ static void clear_discovery_list(struct jaylink_context *ctx)
  * @since 0.1.0
  */
 JAYLINK_API int jaylink_discovery_scan(struct jaylink_context *ctx,
-		uint32_t hostifs)
+		uint32_t ifaces)
 {
 	int ret;
 
 	if (!ctx)
 		return JAYLINK_ERR_ARG;
 
-	(void)hostifs;
+	(void)ifaces;
 
 	clear_discovery_list(ctx);
 

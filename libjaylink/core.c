@@ -18,6 +18,7 @@
  */
 
 #include <stdlib.h>
+#include <stdbool.h>
 #ifdef _WIN32
 #include <winsock2.h>
 #endif
@@ -50,7 +51,7 @@
  * perspective and because there is only a single reason for failure which is
  * clearly distinguishable from the result.
  *
- * @section sec_license License
+ * @section sec_license Copyright and license
  *
  * libjaylink is licensed under the terms of the GNU General Public
  * License (GPL), version 2 or later.

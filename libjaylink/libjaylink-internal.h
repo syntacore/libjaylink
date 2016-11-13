@@ -23,7 +23,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <sys/types.h>
+#include <stdarg.h>
 
 #include "libjaylink.h"
 
@@ -137,7 +137,7 @@ struct list {
 	struct list *next;
 };
 
-typedef bool (*list_compare_callback)(const void *a, const void *b);
+typedef bool (*list_compare_callback)(const void *data, const void *user_data);
 
 /*--- buffer.c --------------------------------------------------------------*/
 
@@ -153,17 +153,12 @@ JAYLINK_PRIV uint32_t buffer_get_u32(const uint8_t *buffer, size_t offset);
 JAYLINK_PRIV struct jaylink_device *device_allocate(
 		struct jaylink_context *ctx);
 
-/*--- discovery.c -----------------------------------------------------------*/
-
-JAYLINK_PRIV ssize_t discovery_get_device_list(struct jaylink_context *ctx,
-		struct jaylink_device ***list);
-
 /*--- list.c ----------------------------------------------------------------*/
 
 JAYLINK_PRIV struct list *list_prepend(struct list *list, void *data);
 JAYLINK_PRIV struct list *list_remove(struct list *list, const void *data);
 JAYLINK_PRIV struct list *list_find_custom(struct list *list,
-		list_compare_callback cb, const void *cb_data);
+		list_compare_callback callback, const void *user_data);
 JAYLINK_PRIV size_t list_length(struct list *list);
 JAYLINK_PRIV void list_free(struct list *list);
 

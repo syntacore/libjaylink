@@ -76,13 +76,13 @@ JAYLINK_PRIV struct list *list_remove(struct list *list, const void *data)
 
 /** @private */
 JAYLINK_PRIV struct list *list_find_custom(struct list *list,
-		list_compare_callback cb, const void *cb_data)
+		list_compare_callback callback, const void *user_data)
 {
-	if (!cb)
+	if (!callback)
 		return NULL;
 
 	while (list) {
-		if (!cb(list->data, cb_data))
+		if (callback(list->data, user_data))
 			return list;
 
 		list = list->next;
@@ -94,12 +94,12 @@ JAYLINK_PRIV struct list *list_find_custom(struct list *list,
 /** @private */
 JAYLINK_PRIV size_t list_length(struct list *list)
 {
-	size_t n;
+	size_t length;
 
-	for (n = 0; list; n++)
+	for (length = 0; list; length++)
 		list = list->next;
 
-	return n;
+	return length;
 }
 
 /** @private */

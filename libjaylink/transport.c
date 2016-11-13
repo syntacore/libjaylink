@@ -25,6 +25,12 @@
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
 
+/*
+ * libusb.h includes windows.h and therefore must be included after anything
+ * that includes winsock2.h.
+ */
+#include <libusb.h>
+
 /**
  * @file
  *
@@ -50,7 +56,7 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 	struct libusb_config_descriptor *config;
 	const struct libusb_interface *interface;
 	const struct libusb_interface_descriptor *desc;
-	const struct libusb_endpoint_descriptor *epdesc;
+	const struct libusb_endpoint_descriptor *ep_desc;
 	bool found_interface;
 	bool found_endpoint_in;
 	bool found_endpoint_out;
@@ -105,13 +111,13 @@ static int initialize_handle(struct jaylink_device_handle *devh)
 	found_endpoint_out = false;
 
 	for (i = 0; i < desc->bNumEndpoints; i++) {
-		epdesc = &desc->endpoint[i];
+		ep_desc = &desc->endpoint[i];
 
-		if (epdesc->bEndpointAddress & LIBUSB_ENDPOINT_IN) {
-			devh->endpoint_in = epdesc->bEndpointAddress;
+		if (ep_desc->bEndpointAddress & LIBUSB_ENDPOINT_IN) {
+			devh->endpoint_in = ep_desc->bEndpointAddress;
 			found_endpoint_in = true;
 		} else {
-			devh->endpoint_out = epdesc->bEndpointAddress;
+			devh->endpoint_out = ep_desc->bEndpointAddress;
 			found_endpoint_out = true;
 		}
 	}

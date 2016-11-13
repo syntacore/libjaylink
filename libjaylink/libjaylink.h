@@ -24,7 +24,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdarg.h>
-#include <sys/types.h>
 #ifdef _WIN32
 #include <ws2tcpip.h>
 #else
@@ -388,8 +387,8 @@ JAYLINK_API bool jaylink_library_has_cap(enum jaylink_capability cap);
 /*--- device.c --------------------------------------------------------------*/
 
 JAYLINK_API int jaylink_get_devices(struct jaylink_context *ctx,
-		struct jaylink_device ***devices, size_t *count);
-JAYLINK_API void jaylink_free_devices(struct jaylink_device **devices,
+		struct jaylink_device ***devs, size_t *count);
+JAYLINK_API void jaylink_free_devices(struct jaylink_device **devs,
 		bool unref);
 JAYLINK_API int jaylink_device_get_host_interface(
 		const struct jaylink_device *dev,
@@ -437,7 +436,7 @@ JAYLINK_API int jaylink_unregister(struct jaylink_device_handle *devh,
 /*--- discovery.c -----------------------------------------------------------*/
 
 JAYLINK_API int jaylink_discovery_scan(struct jaylink_context *ctx,
-		uint32_t hostifs);
+		uint32_t ifaces);
 
 /*--- emucom.c --------------------------------------------------------------*/
 
@@ -481,7 +480,7 @@ JAYLINK_API int jaylink_log_get_level(const struct jaylink_context *ctx,
 JAYLINK_API int jaylink_log_set_callback(struct jaylink_context *ctx,
 		jaylink_log_callback callback, void *user_data);
 JAYLINK_API int jaylink_log_set_domain(struct jaylink_context *ctx,
-		char *domain);
+		const char *domain);
 JAYLINK_API const char *jaylink_log_get_domain(
 		const struct jaylink_context *ctx);
 
@@ -516,7 +515,7 @@ JAYLINK_API int jaylink_select_interface(struct jaylink_device_handle *devh,
 		enum jaylink_target_interface iface,
 		enum jaylink_target_interface *prev_iface);
 JAYLINK_API int jaylink_get_available_interfaces(
-		struct jaylink_device_handle *devh, uint32_t *interfaces);
+		struct jaylink_device_handle *devh, uint32_t *ifaces);
 JAYLINK_API int jaylink_get_selected_interface(
 		struct jaylink_device_handle *devh,
 		enum jaylink_target_interface *iface);
