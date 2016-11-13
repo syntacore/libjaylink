@@ -23,9 +23,8 @@ else
 lib_LTLIBRARIES = libjaylink.la
 
 library_includedir = $(includedir)/libjaylink
-library_include_HEADERS = \
-	libjaylink.h \
-	version.h
+library_include_HEADERS = libjaylink.h
+nodist_library_include_HEADERS = version.h
 endif
 
 libjaylink_la_SOURCES = \
