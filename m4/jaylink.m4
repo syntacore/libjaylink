@@ -25,11 +25,13 @@ m4_define([_JAYLINK_SET_PACKAGE_VERSION], [
 	m4_assert([$# == 5])
 
 	# Get the short Git revision hash of the current commit.
-	git_version=`git rev-parse --short HEAD 2> /dev/null`
+	git_version=`git --git-dir="$srcdir/.git" rev-parse \
+		--short HEAD 2> /dev/null`
 
 	# Try to get the release tag for the package version from the current
 	# commit.
-	tag=`git describe --match "$2" --exact-match 2> /dev/null`
+	tag=`git --git-dir="$srcdir/.git" describe --match "$2" \
+		--exact-match 2> /dev/null`
 
 	version=$2
 
