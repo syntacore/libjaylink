@@ -10,19 +10,19 @@ Requirements
 
 libjaylink requires the following packages:
 
- - gcc (>= 4.0) or clang
- - make
+ - GCC (>= 4.0) or Clang
+ - Make
  - pkg-config >= 0.23
  - libusb >= 1.0.9
- - doxygen (optional, only required for API documentation)
+ - Doxygen (optional, only required for API documentation)
 
 If you're building libjaylink from Git, the following packages are additionally
 required:
 
- - git
- - libtool
- - autoconf >= 2.64
- - automake >= 1.9
+ - Git
+ - Libtool
+ - Autoconf >= 2.64
+ - Automake >= 1.9
 
 
 Building and installing
