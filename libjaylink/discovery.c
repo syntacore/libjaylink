@@ -192,6 +192,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 		return NULL;
 	}
 
+	serial_number = 0;
 	valid_serial_number = true;
 
 	ret = libusb_get_string_descriptor_ascii(usb_devh, desc.iSerialNumber,
