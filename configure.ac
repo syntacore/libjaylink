@@ -19,7 +19,7 @@
 
 AC_PREREQ([2.64])
 
-AC_INIT([libjaylink], [0.1.0], [jaylink-dev@marcschink.de], [libjaylink],
+AC_INIT([libjaylink], [0.2.0], [jaylink-dev@marcschink.de], [libjaylink],
 	[http://git.zapb.de/libjaylink.git])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
