@@ -50,7 +50,17 @@ PKG_PROG_PKG_CONFIG
 # Checks for libraries.
 
 # Check for libusb-1.0 which is always needed.
-PKG_CHECK_MODULES([libusb], [libusb-1.0 >= 1.0.9])
+PKG_CHECK_MODULES([libusb], [libusb-1.0 >= 1.0.9],
+	[HAVE_LIBUSB=yes], [HAVE_LIBUSB=no])
+
+AS_IF([test "x$HAVE_LIBUSB" = "xyes"],
+	[AC_DEFINE([HAVE_LIBUSB], [1], [Define to 1 if libusb is available.])])
+
+AS_IF([test "x$HAVE_LIBUSB" = "xyes"],
+	[JAYLINK_PKG_LIBS="libusb-1.0"])
+
+AM_CONDITIONAL([HAVE_LIBUSB],
+	[test "x$HAVE_LIBUSB" = "xyes"])
 
 # Checks for header files.
 
@@ -93,6 +103,7 @@ AS_CASE([$host_os], [mingw*], [JAYLINK_LIBS="$JAYLINK_LIBS -lws2_32"])
 AC_SUBST([JAYLINK_CFLAGS])
 AC_SUBST([JAYLINK_LDFLAGS])
 AC_SUBST([JAYLINK_LIBS])
+AC_SUBST([JAYLINK_PKG_LIBS])
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([libjaylink/Makefile])

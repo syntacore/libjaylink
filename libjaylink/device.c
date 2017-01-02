@@ -17,6 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -27,7 +31,9 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #endif
+#ifdef HAVE_LIBUSB
 #include <libusb.h>
+#endif
 
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
@@ -206,7 +212,7 @@ JAYLINK_API int jaylink_device_get_host_interface(
 	if (!dev || !iface)
 		return JAYLINK_ERR_ARG;
 
-	*iface = dev->interface;
+	*iface = dev->iface;
 
 	return JAYLINK_OK;
 }
@@ -267,12 +273,16 @@ JAYLINK_API int jaylink_device_get_usb_address(
 	if (!dev || !address)
 		return JAYLINK_ERR_ARG;
 
-	if (dev->interface != JAYLINK_HIF_USB)
+	if (dev->iface != JAYLINK_HIF_USB)
 		return JAYLINK_ERR_NOT_SUPPORTED;
 
+#ifdef HAVE_LIBUSB
 	*address = dev->usb_address;
 
 	return JAYLINK_OK;
+#else
+	return JAYLINK_ERR_NOT_SUPPORTED;
+#endif
 }
 
 /**
@@ -295,7 +305,7 @@ JAYLINK_API int jaylink_device_get_ipv4_address(
 	if (!dev || !address)
 		return JAYLINK_ERR_ARG;
 
-	if (dev->interface != JAYLINK_HIF_TCP)
+	if (dev->iface != JAYLINK_HIF_TCP)
 		return JAYLINK_ERR_NOT_SUPPORTED;
 
 	memcpy(address, dev->ipv4_address, sizeof(dev->ipv4_address));
@@ -325,7 +335,7 @@ JAYLINK_API int jaylink_device_get_mac_address(
 	if (!dev || !address)
 		return JAYLINK_ERR_ARG;
 
-	if (dev->interface != JAYLINK_HIF_TCP)
+	if (dev->iface != JAYLINK_HIF_TCP)
 		return JAYLINK_ERR_NOT_SUPPORTED;
 
 	if (!dev->has_mac_address)
@@ -361,7 +371,7 @@ JAYLINK_API int jaylink_device_get_hardware_version(
 	if (!dev || !version)
 		return JAYLINK_ERR_ARG;
 
-	if (dev->interface != JAYLINK_HIF_TCP)
+	if (dev->iface != JAYLINK_HIF_TCP)
 		return JAYLINK_ERR_NOT_SUPPORTED;
 
 	if (!dev->has_hw_version)
@@ -394,7 +404,7 @@ JAYLINK_API int jaylink_device_get_product_name(
 	if (!dev || !name)
 		return JAYLINK_ERR_ARG;
 
-	if (dev->interface != JAYLINK_HIF_TCP)
+	if (dev->iface != JAYLINK_HIF_TCP)
 		return JAYLINK_ERR_NOT_SUPPORTED;
 
 	if (!dev->has_product_name)
@@ -427,7 +437,7 @@ JAYLINK_API int jaylink_device_get_nickname(const struct jaylink_device *dev,
 	if (!dev || !nickname)
 		return JAYLINK_ERR_ARG;
 
-	if (dev->interface != JAYLINK_HIF_TCP)
+	if (dev->iface != JAYLINK_HIF_TCP)
 		return JAYLINK_ERR_NOT_SUPPORTED;
 
 	if (!dev->has_nickname)
@@ -478,19 +488,21 @@ JAYLINK_API void jaylink_unref_device(struct jaylink_device *dev)
 		ctx = dev->ctx;
 		ctx->devs = list_remove(dev->ctx->devs, dev);
 
-		if (dev->interface == JAYLINK_HIF_USB) {
+		if (dev->iface == JAYLINK_HIF_USB) {
+#ifdef HAVE_LIBUSB
 			log_dbg(ctx, "Device destroyed (bus:address = "
 				"%03u:%03u).",
 				libusb_get_bus_number(dev->usb_dev),
 				libusb_get_device_address(dev->usb_dev));
 
 			libusb_unref_device(dev->usb_dev);
-		} else if (dev->interface == JAYLINK_HIF_TCP) {
+#endif
+		} else if (dev->iface == JAYLINK_HIF_TCP) {
 			log_dbg(ctx, "Device destroyed (IPv4 address = %s).",
 				dev->ipv4_address);
 		} else {
 			log_err(ctx, "BUG: Invalid host interface: %u.",
-				dev->interface);
+				dev->iface);
 		}
 
 		free(dev);

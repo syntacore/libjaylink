@@ -22,6 +22,9 @@
 #include <stdbool.h>
 #include <string.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
 
@@ -47,16 +50,18 @@ JAYLINK_PRIV int transport_open(struct jaylink_device_handle *devh)
 {
 	int ret;
 
-	switch (devh->dev->interface) {
+	switch (devh->dev->iface) {
+#ifdef HAVE_LIBUSB
 	case JAYLINK_HIF_USB:
 		ret = transport_usb_open(devh);
 		break;
+#endif
 	case JAYLINK_HIF_TCP:
 		ret = transport_tcp_open(devh);
 		break;
 	default:
 		log_err(devh->dev->ctx, "BUG: Invalid host interface: %u.",
-			devh->dev->interface);
+			devh->dev->iface);
 		return JAYLINK_ERR;
 	}
 
@@ -78,16 +83,18 @@ JAYLINK_PRIV int transport_close(struct jaylink_device_handle *devh)
 {
 	int ret;
 
-	switch (devh->dev->interface) {
+	switch (devh->dev->iface) {
+#ifdef HAVE_LIBUSB
 	case JAYLINK_HIF_USB:
 		ret = transport_usb_close(devh);
 		break;
+#endif
 	case JAYLINK_HIF_TCP:
 		ret = transport_tcp_close(devh);
 		break;
 	default:
 		log_err(devh->dev->ctx, "BUG: Invalid host interface: %u.",
-			devh->dev->interface);
+			devh->dev->iface);
 		return JAYLINK_ERR;
 	}
 
@@ -114,16 +121,18 @@ JAYLINK_PRIV int transport_start_write(struct jaylink_device_handle *devh,
 {
 	int ret;
 
-	switch (devh->dev->interface) {
+	switch (devh->dev->iface) {
+#ifdef HAVE_LIBUSB
 	case JAYLINK_HIF_USB:
 		ret = transport_usb_start_write(devh, length, has_command);
 		break;
+#endif
 	case JAYLINK_HIF_TCP:
 		ret = transport_tcp_start_write(devh, length, has_command);
 		break;
 	default:
 		log_err(devh->dev->ctx, "BUG: Invalid host interface: %u.",
-			devh->dev->interface);
+			devh->dev->iface);
 		return JAYLINK_ERR;
 	}
 
@@ -148,16 +157,18 @@ JAYLINK_PRIV int transport_start_read(struct jaylink_device_handle *devh,
 {
 	int ret;
 
-	switch (devh->dev->interface) {
+	switch (devh->dev->iface) {
+#ifdef HAVE_LIBUSB
 	case JAYLINK_HIF_USB:
 		ret = transport_usb_start_read(devh, length);
 		break;
+#endif
 	case JAYLINK_HIF_TCP:
 		ret = transport_tcp_start_read(devh, length);
 		break;
 	default:
 		log_err(devh->dev->ctx, "BUG: Invalid host interface: %u.",
-			devh->dev->interface);
+			devh->dev->iface);
 		return JAYLINK_ERR;
 	}
 
@@ -189,18 +200,20 @@ JAYLINK_PRIV int transport_start_write_read(struct jaylink_device_handle *devh,
 {
 	int ret;
 
-	switch (devh->dev->interface) {
+	switch (devh->dev->iface) {
+#ifdef HAVE_LIBUSB
 	case JAYLINK_HIF_USB:
 		ret = transport_usb_start_write_read(devh, write_length,
 			read_length, has_command);
 		break;
+#endif
 	case JAYLINK_HIF_TCP:
 		ret = transport_tcp_start_write_read(devh, write_length,
 			read_length, has_command);
 		break;
 	default:
 		log_err(devh->dev->ctx, "BUG: Invalid host interface: %u.",
-			devh->dev->interface);
+			devh->dev->iface);
 		return JAYLINK_ERR;
 	}
 
@@ -235,16 +248,18 @@ JAYLINK_PRIV int transport_write(struct jaylink_device_handle *devh,
 {
 	int ret;
 
-	switch (devh->dev->interface) {
+	switch (devh->dev->iface) {
+#ifdef HAVE_LIBUSB
 	case JAYLINK_HIF_USB:
 		ret = transport_usb_write(devh, buffer, length);
 		break;
+#endif
 	case JAYLINK_HIF_TCP:
 		ret = transport_tcp_write(devh, buffer, length);
 		break;
 	default:
 		log_err(devh->dev->ctx, "BUG: Invalid host interface: %u.",
-			devh->dev->interface);
+			devh->dev->iface);
 		return JAYLINK_ERR;
 	}
 
@@ -275,16 +290,18 @@ JAYLINK_PRIV int transport_read(struct jaylink_device_handle *devh,
 {
 	int ret;
 
-	switch (devh->dev->interface) {
+	switch (devh->dev->iface) {
+#ifdef HAVE_LIBUSB
 	case JAYLINK_HIF_USB:
 		ret = transport_usb_read(devh, buffer, length);
 		break;
+#endif
 	case JAYLINK_HIF_TCP:
 		ret = transport_tcp_read(devh, buffer, length);
 		break;
 	default:
 		log_err(devh->dev->ctx, "BUG: Invalid host interface: %u.",
-			devh->dev->interface);
+			devh->dev->iface);
 		return JAYLINK_ERR;
 	}
 

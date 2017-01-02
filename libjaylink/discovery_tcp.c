@@ -61,7 +61,7 @@ static bool compare_devices(const void *a, const void *b)
 	dev = a;
 	new_dev = b;
 
-	if (dev->interface != JAYLINK_HIF_TCP)
+	if (dev->iface != JAYLINK_HIF_TCP)
 		return false;
 
 	if (memcmp(dev->ipv4_address, new_dev->ipv4_address,
@@ -195,7 +195,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 		return NULL;
 	}
 
-	dev->interface = JAYLINK_HIF_TCP;
+	dev->iface = JAYLINK_HIF_TCP;
 
 	dev->serial_number = tmp.serial_number;
 	dev->valid_serial_number = tmp.valid_serial_number;

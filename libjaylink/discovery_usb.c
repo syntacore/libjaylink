@@ -102,7 +102,7 @@ static bool compare_devices(const void *a, const void *b)
 	dev = a;
 	usb_dev = b;
 
-	if (dev->interface != JAYLINK_HIF_USB)
+	if (dev->iface != JAYLINK_HIF_USB)
 		return false;
 
 	if (dev->usb_dev == usb_dev)
@@ -232,7 +232,7 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 		return NULL;
 	}
 
-	dev->interface = JAYLINK_HIF_USB;
+	dev->iface = JAYLINK_HIF_USB;
 	dev->usb_dev = libusb_ref_device(usb_dev);
 	dev->usb_address = usb_address;
 	dev->serial_number = serial_number;

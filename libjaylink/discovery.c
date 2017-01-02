@@ -19,6 +19,9 @@
 
 #include <stdlib.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
 
@@ -79,6 +82,7 @@ JAYLINK_API int jaylink_discovery_scan(struct jaylink_context *ctx,
 
 	clear_discovery_list(ctx);
 
+#ifdef HAVE_LIBUSB
 	if (ifaces & JAYLINK_HIF_USB) {
 		ret = discovery_usb_scan(ctx);
 
@@ -87,6 +91,7 @@ JAYLINK_API int jaylink_discovery_scan(struct jaylink_context *ctx,
 			return ret;
 		}
 	}
+#endif
 
 	if (ifaces & JAYLINK_HIF_TCP) {
 		ret = discovery_tcp_scan(ctx);

@@ -17,12 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdlib.h>
 #include <stdbool.h>
 #ifdef _WIN32
 #include <winsock2.h>
 #endif
+#ifdef HAVE_LIBUSB
 #include <libusb.h>
+#endif
 
 #include "libjaylink.h"
 #include "libjaylink-internal.h"
@@ -98,22 +104,28 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 	if (!context)
 		return JAYLINK_ERR_MALLOC;
 
+#ifdef HAVE_LIBUSB
 	if (libusb_init(&context->usb_ctx) != LIBUSB_SUCCESS) {
 		free(context);
 		return JAYLINK_ERR;
 	}
+#endif
 
 #ifdef _WIN32
 	ret = WSAStartup(MAKEWORD(2, 2), &wsa_data);
 
 	if (ret != 0) {
+#ifdef HAVE_LIBUSB
 		libusb_exit(context->usb_ctx);
+#endif
 		free(context);
 		return JAYLINK_ERR;
 	}
 
 	if (LOBYTE(wsa_data.wVersion) != 2 || HIBYTE(wsa_data.wVersion) != 2) {
+#ifdef HAVE_LIBUSB
 		libusb_exit(context->usb_ctx);
+#endif
 		free(context);
 		return JAYLINK_ERR;
 	}
@@ -170,11 +182,12 @@ JAYLINK_API int jaylink_exit(struct jaylink_context *ctx)
 	list_free(ctx->discovered_devs);
 	list_free(ctx->devs);
 
+#ifdef HAVE_LIBUSB
 	libusb_exit(ctx->usb_ctx);
+#endif
 #ifdef _WIN32
 	WSACleanup();
 #endif
-
 	free(ctx);
 
 	return JAYLINK_OK;
@@ -193,8 +206,10 @@ JAYLINK_API int jaylink_exit(struct jaylink_context *ctx)
 JAYLINK_API bool jaylink_library_has_cap(enum jaylink_capability cap)
 {
 	switch (cap) {
+#ifdef HAVE_LIBUSB
 	case JAYLINK_CAP_HIF_USB:
 		return true;
+#endif
 	default:
 		return false;
 	}

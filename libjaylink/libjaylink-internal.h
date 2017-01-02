@@ -31,7 +31,14 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #endif
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef HAVE_LIBUSB
 #include <libusb.h>
+#endif
 
 #include "libjaylink.h"
 
@@ -52,8 +59,10 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 struct jaylink_context {
+#ifdef HAVE_LIBUSB
 	/** libusb context. */
 	struct libusb_context *usb_ctx;
+#endif
 	/**
 	 * List of allocated device instances.
 	 *
@@ -78,7 +87,7 @@ struct jaylink_device {
 	/** Number of references held on this device instance. */
 	size_t ref_count;
 	/** Host interface. */
-	enum jaylink_host_interface interface;
+	enum jaylink_host_interface iface;
 	/**
 	 * Serial number of the device.
 	 *
@@ -88,10 +97,12 @@ struct jaylink_device {
 	uint32_t serial_number;
 	/** Indicates whether the serial number is valid. */
 	bool valid_serial_number;
+#ifdef HAVE_LIBUSB
 	/** libusb device instance. */
 	struct libusb_device *usb_dev;
 	/** USB address of the device. */
 	uint8_t usb_address;
+#endif
 	/**
 	 * IPv4 address.
 	 *
@@ -169,6 +180,7 @@ struct jaylink_device_handle {
 	 * write operations only.
 	 */
 	size_t write_pos;
+#ifdef HAVE_LIBUSB
 	/** libusb device handle. */
 	struct libusb_device_handle *usb_devh;
 	/** USB interface number of the device. */
@@ -177,6 +189,7 @@ struct jaylink_device_handle {
 	uint8_t endpoint_in;
 	/** USB interface OUT endpoint of the device. */
 	uint8_t endpoint_out;
+#endif
 	/**
 	 * Socket descriptor.
 	 *
