@@ -253,7 +253,8 @@ JAYLINK_API int jaylink_device_get_serial_number(
  *
  * @retval JAYLINK_OK Success.
  * @retval JAYLINK_ERR_ARG Invalid arguments.
- * @retval JAYLINK_ERR_NOT_SUPPORTED Operation not supported.
+ * @retval JAYLINK_ERR_NOT_SUPPORTED Supported for devices with host interface
+ *                                   #JAYLINK_HIF_USB only.
  *
  * @see jaylink_device_get_serial_number()
  *
