@@ -59,6 +59,9 @@ AS_IF([test "x$HAVE_LIBUSB" = "xyes"],
 AS_IF([test "x$HAVE_LIBUSB" = "xyes"],
 	[JAYLINK_PKG_LIBS="libusb-1.0"])
 
+AS_IF([test "x$HAVE_LIBUSB" = "xyes"],
+	[libusb_msg="yes"], [libusb_msg="no (missing: libusb-1.0)"])
+
 AM_CONDITIONAL([HAVE_LIBUSB],
 	[test "x$HAVE_LIBUSB" = "xyes"])
 
@@ -120,4 +123,9 @@ echo " - Library version ................ $JAYLINK_VERSION_LIBRARY"
 echo " - Installation prefix ............ $prefix"
 echo " - Building on .................... $build"
 echo " - Building for ................... $host"
+
+echo
+echo "Enabled transports:"
+echo " - USB ............................ $libusb_msg"
+echo " - TCP ............................ yes"
 echo
