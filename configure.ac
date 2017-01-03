@@ -54,16 +54,7 @@ PKG_CHECK_MODULES([libusb], [libusb-1.0 >= 1.0.9],
 	[HAVE_LIBUSB=yes], [HAVE_LIBUSB=no])
 
 AS_IF([test "x$HAVE_LIBUSB" = "xyes"],
-	[AC_DEFINE([HAVE_LIBUSB], [1], [Define to 1 if libusb is available.])])
-
-AS_IF([test "x$HAVE_LIBUSB" = "xyes"],
-	[JAYLINK_PKG_LIBS="libusb-1.0"])
-
-AS_IF([test "x$HAVE_LIBUSB" = "xyes"],
 	[libusb_msg="yes"], [libusb_msg="no (missing: libusb-1.0)"])
-
-AM_CONDITIONAL([HAVE_LIBUSB],
-	[test "x$HAVE_LIBUSB" = "xyes"])
 
 # Checks for header files.
 
@@ -87,6 +78,24 @@ AC_ARG_ENABLE([subproject-build], AS_HELP_STRING([--enable-subproject-build],
 
 AM_CONDITIONAL([SUBPROJECT_BUILD],
 	[test "x$enable_subproject_build" = "xyes"])
+
+AC_ARG_WITH([libusb], [AS_HELP_STRING([--without-libusb],
+	[disable libusb support [default=detect]])])
+
+AS_IF([test "x$with_libusb" != "xno"],
+	[with_libusb="yes"])
+
+AS_IF([test "x$with_libusb$HAVE_LIBUSB" = "xyesyes"],
+	[AC_DEFINE([HAVE_LIBUSB], [1], [Define to 1 if libusb is available.])])
+
+AS_IF([test "x$with_libusb" != "xyes"],
+	[libusb_msg="no (disabled)"])
+
+AS_IF([test "x$with_libusb$HAVE_LIBUSB" = "xyesyes"],
+	[JAYLINK_PKG_LIBS="libusb-1.0"])
+
+AM_CONDITIONAL([HAVE_LIBUSB],
+	[test "x$with_libusb$HAVE_LIBUSB" = "xyesyes"])
 
 # Libtool interface version is not used for sub-project build as libjaylink is
 # built as libtool convenience library.
