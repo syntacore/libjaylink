@@ -135,6 +135,8 @@ enum jaylink_device_capability {
 	JAYLINK_DEV_CAP_SET_TARGET_POWER = 13,
 	/** Device supports target interface selection. */
 	JAYLINK_DEV_CAP_SELECT_TIF = 17,
+	/** Device supports retrieval of counter values. */
+	JAYLINK_DEV_CAP_GET_COUNTERS = 19,
 	/** Device supports capturing of SWO trace data. */
 	JAYLINK_DEV_CAP_SWO = 23,
 	/** Device supports file I/O operations. */
@@ -164,6 +166,17 @@ enum jaylink_hardware_info {
 	JAYLINK_HW_INFO_ITARGET = (1 << 2),
 	/** Peak current consumption of the target in mA. */
 	JAYLINK_HW_INFO_ITARGET_PEAK = (1 << 3)
+};
+
+/** Device counters. */
+enum jaylink_counter {
+	/** Time the device is connected to a target in milliseconds. */
+	JAYLINK_COUNTER_TARGET_TIME = (1 << 0),
+	/**
+	 * Number of times the device was connected or disconnected from a
+	 * target.
+	 */
+	JAYLINK_COUNTER_TARGET_CONNECTIONS = (1 << 1)
 };
 
 /** Device hardware types. */
@@ -411,6 +424,8 @@ JAYLINK_API int jaylink_get_firmware_version(
 		size_t *length);
 JAYLINK_API int jaylink_get_hardware_info(struct jaylink_device_handle *devh,
 		uint32_t mask, uint32_t *info);
+JAYLINK_API int jaylink_get_counters(struct jaylink_device_handle *devh,
+		uint32_t mask, uint32_t *values);
 JAYLINK_API int jaylink_get_hardware_version(
 		struct jaylink_device_handle *devh,
 		struct jaylink_hardware_version *version);
