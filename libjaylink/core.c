@@ -143,6 +143,9 @@ JAYLINK_API int jaylink_init(struct jaylink_context **ctx)
 	ret = jaylink_log_set_domain(context, JAYLINK_LOG_DOMAIN_DEFAULT);
 
 	if (ret != JAYLINK_OK) {
+#ifdef HAVE_LIBUSB
+		libusb_exit(context->usb_ctx);
+#endif
 #ifdef _WIN32
 		WSACleanup();
 #endif
