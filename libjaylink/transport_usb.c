@@ -239,7 +239,7 @@ JAYLINK_PRIV int transport_usb_start_write(struct jaylink_device_handle *devh,
 
 	ctx = devh->dev->ctx;
 
-	log_dbg(ctx, "Starting write operation (length = %zu bytes).", length);
+	log_dbgio(ctx, "Starting write operation (length = %zu bytes).", length);
 
 	if (devh->write_pos > 0)
 		log_warn(ctx, "Last write operation left %zu bytes in the "
@@ -264,7 +264,8 @@ JAYLINK_PRIV int transport_usb_start_read(struct jaylink_device_handle *devh,
 
 	ctx = devh->dev->ctx;
 
-	log_dbg(ctx, "Starting read operation (length = %zu bytes).", length);
+	log_dbgio(ctx, "Starting read operation (length = %zu bytes).",
+		length);
 
 	if (devh->bytes_available > 0)
 		log_dbg(ctx, "Last read operation left %zu bytes in the "
@@ -292,7 +293,7 @@ JAYLINK_PRIV int transport_usb_start_write_read(
 
 	ctx = devh->dev->ctx;
 
-	log_dbg(ctx, "Starting write / read operation (length = "
+	log_dbgio(ctx, "Starting write / read operation (length = "
 		"%zu / %zu bytes).", write_length, read_length);
 
 	if (devh->write_pos > 0)
@@ -350,7 +351,7 @@ static int usb_recv(struct jaylink_device_handle *devh, uint8_t *buffer,
 			return JAYLINK_ERR;
 		}
 
-		log_dbg(ctx, "Received %i bytes from device.", transferred);
+		log_dbgio(ctx, "Received %i bytes from device.", transferred);
 	}
 
 	/* Ignore a possible timeout if at least one byte was received. */
@@ -427,7 +428,7 @@ static int usb_send(struct jaylink_device_handle *devh, const uint8_t *buffer,
 		buffer += transferred;
 		length -= transferred;
 
-		log_dbg(ctx, "Sent %i bytes to device.", transferred);
+		log_dbgio(ctx, "Sent %i bytes to device.", transferred);
 	}
 
 	if (!length)
@@ -471,7 +472,7 @@ JAYLINK_PRIV int transport_usb_write(struct jaylink_device_handle *devh,
 		devh->write_length -= length;
 		devh->write_pos += length;
 
-		log_dbg(ctx, "Wrote %zu bytes into buffer.", length);
+		log_dbgio(ctx, "Wrote %zu bytes into buffer.", length);
 		return JAYLINK_OK;
 	}
 
@@ -506,7 +507,7 @@ JAYLINK_PRIV int transport_usb_write(struct jaylink_device_handle *devh,
 		length -= tmp;
 		buffer += tmp;
 
-		log_dbg(ctx, "Buffer filled up with %zu bytes.", tmp);
+		log_dbgio(ctx, "Buffer filled up with %zu bytes.", tmp);
 	}
 
 	/* Send buffered data to the device. */
@@ -547,7 +548,7 @@ JAYLINK_PRIV int transport_usb_read(struct jaylink_device_handle *devh,
 		devh->bytes_available -= length;
 		devh->read_pos += length;
 
-		log_dbg(ctx, "Read %zu bytes from buffer.", length);
+		log_dbgio(ctx, "Read %zu bytes from buffer.", length);
 		return JAYLINK_OK;
 	}
 
@@ -559,7 +560,7 @@ JAYLINK_PRIV int transport_usb_read(struct jaylink_device_handle *devh,
 		length -= devh->bytes_available;
 		devh->read_length -= devh->bytes_available;
 
-		log_dbg(ctx, "Read %zu bytes from buffer to flush it.",
+		log_dbgio(ctx, "Read %zu bytes from buffer to flush it.",
 			devh->bytes_available);
 
 		devh->bytes_available = 0;
@@ -599,7 +600,7 @@ JAYLINK_PRIV int transport_usb_read(struct jaylink_device_handle *devh,
 			length -= tmp;
 			devh->read_length -= tmp;
 
-			log_dbg(ctx, "Read %zu bytes from buffer.", tmp);
+			log_dbgio(ctx, "Read %zu bytes from buffer.", tmp);
 		} else {
 			ret = usb_recv(devh, buffer, &bytes_received);
 
@@ -610,7 +611,7 @@ JAYLINK_PRIV int transport_usb_read(struct jaylink_device_handle *devh,
 			length -= bytes_received;
 			devh->read_length -= bytes_received;
 
-			log_dbg(ctx, "Read %zu bytes from device.",
+			log_dbgio(ctx, "Read %zu bytes from device.",
 				bytes_received);
 		}
 	}
