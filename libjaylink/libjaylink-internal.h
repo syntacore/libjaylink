@@ -250,6 +250,8 @@ JAYLINK_PRIV void log_info(const struct jaylink_context *ctx,
 		const char *format, ...);
 JAYLINK_PRIV void log_dbg(const struct jaylink_context *ctx,
 		const char *format, ...);
+JAYLINK_PRIV void log_dbgio(const struct jaylink_context *ctx,
+		const char *format, ...);
 
 /*--- socket.c --------------------------------------------------------------*/
 

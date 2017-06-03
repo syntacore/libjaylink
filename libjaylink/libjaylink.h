@@ -77,7 +77,9 @@ enum jaylink_log_level {
 	/** Output informational messages. */
 	JAYLINK_LOG_LEVEL_INFO = 3,
 	/** Output debug messages. */
-	JAYLINK_LOG_LEVEL_DEBUG = 4
+	JAYLINK_LOG_LEVEL_DEBUG = 4,
+	/** Output I/O debug messages. */
+	JAYLINK_LOG_LEVEL_DEBUG_IO = 5
 };
 
 /** Default libjaylink log domain. */

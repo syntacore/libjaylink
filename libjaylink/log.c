@@ -50,7 +50,7 @@ JAYLINK_API int jaylink_log_set_level(struct jaylink_context *ctx,
 	if (!ctx)
 		return JAYLINK_ERR_ARG;
 
-	if (level > JAYLINK_LOG_LEVEL_DEBUG)
+	if (level > JAYLINK_LOG_LEVEL_DEBUG_IO)
 		return JAYLINK_ERR_ARG;
 
 	ctx->log_level = level;
@@ -246,6 +246,21 @@ JAYLINK_PRIV void log_dbg(const struct jaylink_context *ctx,
 
 	va_start(args, format);
 	ctx->log_callback(ctx, JAYLINK_LOG_LEVEL_DEBUG, format, args,
+		ctx->log_callback_data);
+	va_end(args);
+}
+
+/** @private */
+JAYLINK_PRIV void log_dbgio(const struct jaylink_context *ctx,
+		const char *format, ...)
+{
+	va_list args;
+
+	if (!ctx)
+		return;
+
+	va_start(args, format);
+	ctx->log_callback(ctx, JAYLINK_LOG_LEVEL_DEBUG_IO, format, args,
 		ctx->log_callback_data);
 	va_end(args);
 }
