@@ -177,6 +177,53 @@ static int handle_server_hello(struct jaylink_device_handle *devh)
 	return JAYLINK_OK;
 }
 
+static int set_socket_timeouts(struct jaylink_device_handle *devh)
+{
+	struct jaylink_context *ctx;
+
+	ctx = devh->dev->ctx;
+#ifdef _WIN32
+	DWORD timeout;
+
+	timeout = RECV_TIMEOUT;
+
+	if (!socket_set_option(devh->sock, SOL_SOCKET, SO_RCVTIMEO, &timeout,
+			sizeof(timeout))) {
+		log_err(ctx, "Failed to set socket receive timeout.");
+		return JAYLINK_ERR;
+	}
+
+	timeout = SEND_TIMEOUT;
+
+	if (!socket_set_option(devh->sock, SOL_SOCKET, SO_SNDTIMEO, &timeout,
+			sizeof(timeout))) {
+		log_err(ctx, "Failed to set socket send timeout.");
+		return JAYLINK_ERR;
+	}
+#else
+	struct timeval timeout;
+
+	timeout.tv_sec = RECV_TIMEOUT / 1000;
+	timeout.tv_usec = (RECV_TIMEOUT % 1000) * 1000;
+
+	if (!socket_set_option(devh->sock, SOL_SOCKET, SO_RCVTIMEO, &timeout,
+			sizeof(struct timeval))) {
+		log_err(ctx, "Failed to set socket receive timeout.");
+		return JAYLINK_ERR;
+	}
+
+	timeout.tv_sec = SEND_TIMEOUT / 1000;
+	timeout.tv_usec = (SEND_TIMEOUT % 1000) * 1000;
+
+	if (!socket_set_option(devh->sock, SOL_SOCKET, SO_SNDTIMEO, &timeout,
+			sizeof(struct timeval))) {
+		log_err(ctx, "Failed to set socket send timeout.");
+		return JAYLINK_ERR;
+	}
+#endif
+	return JAYLINK_OK;
+}
+
 JAYLINK_PRIV int transport_tcp_open(struct jaylink_device_handle *devh)
 {
 	int ret;
@@ -185,7 +232,6 @@ JAYLINK_PRIV int transport_tcp_open(struct jaylink_device_handle *devh)
 	struct addrinfo hints;
 	struct addrinfo *info;
 	struct addrinfo *rp;
-	struct timeval timeout;
 	int sock;
 
 	dev = devh->dev;
@@ -239,29 +285,14 @@ JAYLINK_PRIV int transport_tcp_open(struct jaylink_device_handle *devh)
 
 	log_dbg(ctx, "Device opened successfully.");
 
-	timeout.tv_sec = RECV_TIMEOUT / 1000;
-	timeout.tv_usec = (RECV_TIMEOUT % 1000) * 1000;
-
-	if (!socket_set_option(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout,
-			sizeof(struct timeval))) {
-		log_err(ctx, "Failed to set socket receive timeout.");
-		socket_close(sock);
-		cleanup_handle(devh);
-		return JAYLINK_ERR;
-	}
-
-	timeout.tv_sec = SEND_TIMEOUT / 1000;
-	timeout.tv_usec = (SEND_TIMEOUT % 1000) * 1000;
-
-	if (!socket_set_option(sock, SOL_SOCKET, SO_SNDTIMEO, &timeout,
-			sizeof(struct timeval))) {
-		log_err(ctx, "Failed to set socket send timeout.");
-		socket_close(sock);
-		cleanup_handle(devh);
-		return JAYLINK_ERR;
-	}
-
 	devh->sock = sock;
+	ret = set_socket_timeouts(devh);
+
+	if (ret != JAYLINK_OK) {
+		socket_close(sock);
+		cleanup_handle(devh);
+		return ret;
+	}
 
 	ret = handle_server_hello(devh);
 
