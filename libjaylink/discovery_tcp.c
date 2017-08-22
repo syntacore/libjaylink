@@ -96,12 +96,12 @@ static bool compare_devices(const void *a, const void *b)
 	return true;
 }
 
-static struct jaylink_device *find_device(const struct jaylink_context *ctx,
+static struct jaylink_device *find_device(struct list *list,
 		const struct jaylink_device *dev)
 {
 	struct list *item;
 
-	item = list_find_custom(ctx->devs, &compare_devices, dev);
+	item = list_find_custom(list, &compare_devices, dev);
 
 	if (item)
 		return item->data;
@@ -179,7 +179,14 @@ static struct jaylink_device *probe_device(struct jaylink_context *ctx,
 	if (tmp.has_nickname)
 		log_dbg(ctx, "Device: Nickname = %s.", tmp.nickname);
 
-	dev = find_device(ctx, &tmp);
+	dev = find_device(ctx->discovered_devs, &tmp);
+
+	if (dev) {
+		log_dbg(ctx, "Ignoring already discovered device.");
+		return NULL;
+	}
+
+	dev = find_device(ctx->devs, &tmp);
 
 	if (dev) {
 		log_dbg(ctx, "Using existing device instance.");
