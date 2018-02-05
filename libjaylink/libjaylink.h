@@ -169,7 +169,38 @@ enum jaylink_hardware_info {
 	/** Current consumption of the target in mA. */
 	JAYLINK_HW_INFO_ITARGET = (1 << 2),
 	/** Peak current consumption of the target in mA. */
-	JAYLINK_HW_INFO_ITARGET_PEAK = (1 << 3)
+	JAYLINK_HW_INFO_ITARGET_PEAK = (1 << 3),
+	/**
+	 * Device's IPv4 address in network byte order.
+	 *
+	 * If the address is 0.0.0.0 and DHCP is enabled, no address is
+         * assigned (yet).
+	 *
+	 * @note The value is valid only if the device is configured in DHCP
+	 *       mode.
+	 */
+	JAYLINK_HW_INFO_IPV4_ADDRESS = (1 << 16),
+	/**
+	 * IPv4 netmask in network byte order.
+	 *
+	 * @note The value is valid only if the device is configured in DHCP
+	 *       mode.
+	 */
+	JAYLINK_HW_INFO_IPV4_NETMASK = (1 << 17),
+	/**
+	 * Gateway IPv4 address in network byte order.
+	 *
+	 * @note The value is valid only if the device is configured in DHCP
+	 *       mode.
+	 */
+	JAYLINK_HW_INFO_IPV4_GATEWAY = (1 << 18),
+	/**
+	 * DNS server IPv4 address in network byte order.
+	 *
+	 * @note The value is valid only if the device is configured in DHCP
+	 *       mode.
+	 */
+	JAYLINK_HW_INFO_IPV4_DNS = (1 << 19)
 };
 
 /** Device counters. */
