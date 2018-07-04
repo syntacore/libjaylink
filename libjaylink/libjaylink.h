@@ -461,6 +461,9 @@ JAYLINK_API int jaylink_device_get_serial_number(
 JAYLINK_API int jaylink_device_get_usb_address(
 		const struct jaylink_device *dev,
 		enum jaylink_usb_address *address);
+JAYLINK_API int jaylink_device_get_usb_bus_ports(
+		const struct jaylink_device *dev, uint8_t *bus,
+		uint8_t **ports, size_t *port_numbers_len);
 JAYLINK_API int jaylink_device_get_ipv4_address(
 		const struct jaylink_device *dev, char *address);
 JAYLINK_API int jaylink_device_get_mac_address(
