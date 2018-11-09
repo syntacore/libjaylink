@@ -60,7 +60,8 @@ static const uint16_t pids[][2] = {
 	{0x1016, 0},
 	{0x1017, 0},
 	{0x1018, 0},
-	{0x1020, 0}
+	{0x1020, 0},
+	{0x1055, 0}
 };
 
 /** Maximum length of the USB string descriptor for the serial number. */
